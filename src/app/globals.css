@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* === ZMIENNE === */
+:root {
+  --background: #131313;
+  --foreground: #d9d9d9;
+  --accent: #E9C87D;
+}
+
+/* === TAILWIND THEME OVERRIDE === */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);     /* Font Inter z layout.tsx */
+  --font-mono: var(--font-geist-mono);
+}
+
+/* === GLOBAL === */
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  /* 🟡 DODANE – blokada poziomego scrolla i paska na dole */
+  overflow-x: hidden;
+}
+
+/* === FONTY === */
+.font-bungee {
+  font-family: var(--font-bungee), var(--font-inter), system-ui, sans-serif;
+}
+
+/* === LINKI === */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+/* === OBRAZY === */
+img {
+  user-select: none;
+}
+
+/* === ZAZNACZENIE === */
+::selection {
+  background: var(--accent);
+  color: #000;
+}
+
+/* =========================================================
+   === STYLOWANIE OPISÓW (shortDesc) W OFERTACH ===
+   ========================================================= */
+
+/* główny wrapper */
+.desc {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* złoty tekst Bungee */
+.desc .desc-gold {
+  color: #E9C87D;
+  font-family: Bungee, ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  letter-spacing: 0.5px;
+}
+
+/* wyśrodkowany blok */
+.desc .desc-center {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+/* akapity */
+.desc p {
+  margin: 0 0 0.9rem 0;
+}
+
+/* listy */
+.desc ul.desc-list {
+  margin: 0 0 0.8rem 1.3rem;
+  list-style: disc;
+}
+.desc ul.desc-list li {
+  margin: 0.25rem 0;
+}
+
+/* === Dla starego parsera (jeśli coś używa jeszcze tych klas) === */
+.gold-bungee {
+  color: #E9C87D;
+  font-family: Bungee, ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, 'Helvetica Neue', Arial;
+}
+.center-block {
+  text-align: center;
+}
+.desc strong {
+  font-weight: 700;
+  color: #fff;
+}
+
+/* scrollbar off dla szyny miniaturek */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 🟡 DODANE – całkowite ukrycie poziomego scrollbara (na Windows też) */
+::-webkit-scrollbar:horizontal { display: none; }

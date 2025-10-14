@@ -1,0 +1,65 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Category {
+  DOM
+  MIESZKANIE
+  DZIALKA
+  INNE
+}
+
+model Listing {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  slug      String   @unique
+  category  Category
+  price     Int
+  area      Float?
+  location  String?
+
+  // GEO – tylko raz!
+  lat Float?
+  lng Float?
+
+  listingNumber  String   @unique
+  isReserved     Boolean  @default(false)
+  bullets        String[] @default([])
+  coverImageUrl  String?
+  virtualTourUrl String?
+  contactPhone   String?
+  contactEmail   String?
+  shortDesc      String?
+  body           String?
+  images         Image[]
+
+  // RĘCZNA KOLEJNOŚĆ
+  sortIndex Int @default(0)
+
+  @@index([category])
+  @@index([listingNumber])
+  @@index([price])
+  @@index([area])
+  @@index([createdAt])
+  @@index([isReserved, createdAt])
+  @@index([sortIndex, createdAt])
+  @@index([lat, lng]) // pomocniczy index pod wyszukiwanie po promieniu
+}
+
+model Image {
+  id        String  @id @default(cuid())
+  url       String
+  alt       String?
+  order     Int     @default(0)
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId String
+}
