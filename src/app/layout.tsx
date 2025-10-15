@@ -23,7 +23,7 @@ const bungee = Bungee({ weight: "400", subsets: ["latin"], display: "swap", vari
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "M2 Nieruchomości – Bełchatów",
+    default: "M2 Nieruchomości – biuro sprzedaży",
     template: "%s | M2 Nieruchomości",
   },
   description:
