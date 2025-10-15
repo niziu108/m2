@@ -7,6 +7,7 @@ import PageLoader from "./PageLoader";
 import RouteLoader from "./RouteLoader";
 import CookieBar from "@/components/CookieBar";
 import Script from "next/script";
+import { Suspense } from "react";
 
 // === KONFIG SEO / URL ===
 const SITE_URL =
@@ -84,7 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Loadery */}
         <PageLoader />
-        <RouteLoader />
+        <Suspense fallback={null}>
+          <RouteLoader />
+        </Suspense>
 
         {/* Pasek cookies */}
         <CookieBar />

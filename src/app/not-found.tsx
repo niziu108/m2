@@ -1,10 +1,8 @@
-// app/not-found.tsx
 import { Suspense } from "react";
 import NotFoundClient from "@/components/NotFoundClient";
 
-// wyłącz SSG na 404, żeby Next nie próbował jej pre-renderować
-export const revalidate = 0;
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default function NotFound() {
   return (

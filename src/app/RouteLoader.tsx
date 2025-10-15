@@ -13,15 +13,12 @@ export default function RouteLoader() {
   const unmountTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // reset poprzednich timerów
     if (hideTimer.current) clearTimeout(hideTimer.current);
     if (unmountTimer.current) clearTimeout(unmountTimer.current);
 
-    // pokaż od razu
     setFadeOut(false);
     setShow(true);
 
-    // trzymaj MINIMUM 2 sekundy, potem zgaś w 300 ms
     hideTimer.current = setTimeout(() => {
       setFadeOut(true);
       unmountTimer.current = setTimeout(() => setShow(false), 300);
