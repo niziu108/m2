@@ -2,7 +2,9 @@
 import { Suspense } from "react";
 import NotFoundClient from "@/components/NotFoundClient";
 
-export const dynamic = "force-dynamic"; // nie próbuj prerenderować _not-found
+// wyłącz SSG na 404, żeby Next nie próbował jej pre-renderować
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 export default function NotFound() {
   return (
