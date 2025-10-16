@@ -10,7 +10,7 @@ export default function BackArrow() {
       onClick={() => router.back()}
       aria-label="Wróć"
       className="
-        fixed top-5 sm:top-7 left-3 z-50
+        fixed top-6 sm:top-8 left-3 z-50
         flex items-center justify-center
         w-6 h-6 sm:w-7 sm:h-7 rounded-full
         border border-[#E9C87D]
