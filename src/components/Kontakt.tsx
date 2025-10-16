@@ -25,7 +25,7 @@ function IconFacebook({ className = '' }: { className?: string }) {
   );
 }
 
-/* NOWA IKONA – YOUTUBE (dopasowana rozmiarem) */
+/* NOWA IKONA – YOUTUBE */
 function IconYouTube({ className = '' }: { className?: string }) {
   return (
     <svg
@@ -44,7 +44,7 @@ function IconYouTube({ className = '' }: { className?: string }) {
   );
 }
 
-/* Pomocniczy: fade-up z opóźnieniem */
+/* Animacja FadeUp */
 function FadeUp({
   show,
   delay = 0,
@@ -81,7 +81,7 @@ export default function Kontakt() {
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
           setInView(true);
-          io.unobserve(el); // tylko raz
+          io.unobserve(el);
         }
       },
       { threshold: 0.35 }
@@ -94,7 +94,8 @@ export default function Kontakt() {
     () => [
       { text: 'KONTAKT:', delay: 0, highlight: true },
       { text: 'tel. 605 071 605', delay: 120 },
-      { text: 'mail: biuro@m2.nieruchomosci.pl', delay: 220 },
+      { text: 'tel. 661 099 666', delay: 180 },
+      { text: 'mail: biuro@m2.nieruchomosci.pl', delay: 260 },
       { text: 'MEDIA SPOŁECZNOŚCIOWE:', delay: 380, highlight: true },
     ],
     []
@@ -117,9 +118,9 @@ export default function Kontakt() {
           lg:grid lg:grid-cols-2 lg:items-center lg:gap-12
         "
       >
-        {/* LEWO */}
+        {/* LEWA STRONA */}
         <div className="order-1 font-bungee tracking-tight w-full break-words">
-          {/* Nagłówek „KONTAKT:” */}
+          {/* Nagłówek KONTAKT */}
           <FadeUp show={inView} delay={lines[0].delay}>
             <div
               className="
@@ -133,7 +134,7 @@ export default function Kontakt() {
             </div>
           </FadeUp>
 
-          {/* Telefon */}
+          {/* Telefon 1 */}
           <FadeUp show={inView} delay={lines[1].delay}>
             <div
               className="
@@ -142,12 +143,37 @@ export default function Kontakt() {
                 max-[380px]:text-[clamp(14px,3.9vw,20px)]
               "
             >
-              tel. 605 071 605
+              <a
+                href="tel:+48605071605"
+                style={{ color: '#d9d9d9' }}
+                className="hover:text-[#E9C87D] focus:text-[#E9C87D] transition-colors"
+              >
+                tel. 605 071 605
+              </a>
+            </div>
+          </FadeUp>
+
+          {/* Telefon 2 */}
+          <FadeUp show={inView} delay={lines[2].delay}>
+            <div
+              className="
+                mt-1.5
+                text-[clamp(15px,4.2vw,30px)] lg:text-[clamp(18px,2.2vw,28px)]
+                max-[380px]:text-[clamp(14px,3.9vw,20px)]
+              "
+            >
+              <a
+                href="tel:+48661099666"
+                style={{ color: '#d9d9d9' }}
+                className="hover:text-[#E9C87D] focus:text-[#E9C87D] transition-colors"
+              >
+                tel. 661 099 666
+              </a>
             </div>
           </FadeUp>
 
           {/* Mail */}
-          <FadeUp show={inView} delay={lines[2].delay}>
+          <FadeUp show={inView} delay={lines[3].delay}>
             <div
               className="
                 mt-2
@@ -155,12 +181,18 @@ export default function Kontakt() {
                 max-[380px]:text-[clamp(13px,3.6vw,19px)]
               "
             >
-              mail: biuro@m2.nieruchomosci.pl
+              <a
+                href="mailto:biuro@m2.nieruchomosci.pl"
+                style={{ color: '#d9d9d9' }}
+                className="hover:text-[#E9C87D] focus:text-[#E9C87D] transition-colors"
+              >
+                mail: biuro@m2.nieruchomosci.pl
+              </a>
             </div>
           </FadeUp>
 
           {/* MEDIA SPOŁECZNOŚCIOWE */}
-          <FadeUp show={inView} delay={lines[3].delay}>
+          <FadeUp show={inView} delay={lines[4].delay}>
             <div
               className="
                 mt-8 lg:mt-12
@@ -175,7 +207,7 @@ export default function Kontakt() {
           </FadeUp>
 
           {/* IKONY */}
-          <FadeUp show={inView} delay={lines[3].delay + 120}>
+          <FadeUp show={inView} delay={lines[4].delay + 120}>
             <div className="mt-3 flex items-center gap-6 text-white">
               <a
                 href="https://www.instagram.com/m2.nieruchomosci_/"
@@ -208,14 +240,9 @@ export default function Kontakt() {
               </a>
             </div>
           </FadeUp>
-
-          <div className="sr-only">
-            <a href="tel:+48605071605">Zadzwoń: 605 071 605</a>
-            <a href="mailto:biuro@m2.nieruchomosci.pl">Napisz: biuro@m2.nieruchomosci.pl</a>
-          </div>
         </div>
 
-        {/* PRAWO – obrazek, też wjeżdża z dołu */}
+        {/* PRAWA STRONA */}
         <FadeUp show={inView} delay={200} className="order-2 w-full flex items-center justify-center">
           <div className="relative w-full max-w-[560px] lg:max-w-[720px] aspect-[4/3] lg:aspect-[5/4]">
             <Image
