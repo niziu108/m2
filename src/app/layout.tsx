@@ -8,6 +8,7 @@ import RouteLoader from "./RouteLoader";
 import CookieBar from "@/components/CookieBar";
 import Script from "next/script";
 import { Suspense } from "react";
+import StructuredData from "@/components/StructuredData"; // ⬅️ DODANE
 
 // === KONFIG SEO / URL ===
 const SITE_URL =
@@ -76,6 +77,45 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         {/* Globalne menu */}
         <GlobalMenu />
+
+        {/* 🔎 Globalne schema.org */}
+        <StructuredData
+          jsonLd={[
+            {
+              "@context": "https://schema.org",
+              "@type": "RealEstateAgent",
+              name: "M2 Nieruchomości",
+              url: SITE_URL,
+              logo: `${SITE_URL}/logo.webp`,
+              image: `${SITE_URL}/logo.webp`,
+              email: "biuro@m2.nieruchomosci.pl",
+              telephone: "+48 605 071 605",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Bełchatów",
+                addressRegion: "łódzkie",
+                addressCountry: "PL",
+              },
+              sameAs: [
+                // Podmień na realne profile:
+                "https://www.facebook.com/your-page",
+                "https://www.instagram.com/your-page",
+                "https://www.youtube.com/@M2_Nieruchomo%C5%9Bci",
+              ],
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              url: SITE_URL,
+              name: "M2 Nieruchomości",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${SITE_URL}/szukaj?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
+            },
+          ]}
+        />
 
         {/* Treść */}
         {children}
