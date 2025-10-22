@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import Gallery from './Gallery';
 import MortgageCalculator from './MortgageCalculator';
 import BackArrow from '@/components/BackArrow'; // ⬅️ DODANE
+import ViewTracker from './ViewTracker';        // ⬅️ DODANE
 
 // ── utils ───────────────────────────────────────────────────────────────
 function escapeHtml(s: string) {
@@ -175,6 +176,8 @@ export default async function Page({ params }: PageProps) {
             <MortgageCalculator price={data.price} />
           </div>
         </div>
+
+        <ViewTracker listingId={data.id.toString()} /> {/* ⬅️ DODANE */}
       </section>
     </main>
   );

@@ -63,3 +63,22 @@ model Image {
   listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
   listingId String
 }
+enum ViewSource {
+  INTERNAL
+  EXTERNAL
+  UNKNOWN
+}
+
+model ListingView {
+  id         String     @id @default(cuid())
+  listingId  String
+  source     ViewSource
+  referrer   String?
+  ua         String?
+  ipHash     String?
+  createdAt  DateTime   @default(now())
+
+  @@index([listingId, createdAt])
+  @@index([listingId, source])
+  @@index([ipHash, listingId, createdAt])
+}
