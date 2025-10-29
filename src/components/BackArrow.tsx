@@ -10,9 +10,11 @@ export default function BackArrow() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const fromSameOrigin =
-      document.referrer && new URL(document.referrer).origin === window.location.origin;
-    setCanGoBack(fromSameOrigin && window.history.length > 1);
+
+    // 🔹 Wystarczy sprawdzić długość historii
+    if (window.history.length > 1) {
+      setCanGoBack(true);
+    }
   }, []);
 
   const handleClick = () => {
@@ -20,7 +22,7 @@ export default function BackArrow() {
     setTimeout(() => router.back(), 10);
   };
 
-  if (!canGoBack) return null; // 🔹 ukryj strzałkę jeśli nie ma historii
+  if (!canGoBack) return null; // ukryj, jeśli nie ma historii
 
   return (
     <>
