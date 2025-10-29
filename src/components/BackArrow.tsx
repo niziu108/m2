@@ -1,22 +1,29 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function BackArrow() {
   const router = useRouter();
   const [showGuard, setShowGuard] = useState(false);
+  const [canGoBack, setCanGoBack] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const fromSameOrigin =
+      document.referrer && new URL(document.referrer).origin === window.location.origin;
+    setCanGoBack(fromSameOrigin && window.history.length > 1);
+  }, []);
 
   const handleClick = () => {
-    // pokaż natychmiast cienki overlay, żeby nie było "przeskoku"
     setShowGuard(true);
-    // odpal nawigację tuż po tym (mikro-opóźnienie)
     setTimeout(() => router.back(), 10);
   };
 
+  if (!canGoBack) return null; // 🔹 ukryj strzałkę jeśli nie ma historii
+
   return (
     <>
-      {/* Natychmiastowy, delikatny overlay pod RouteLoadera */}
       {showGuard && (
         <div
           className="
