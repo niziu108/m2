@@ -8,6 +8,19 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      // 🔁 przekierowanie z www → bez www
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.m2.nieruchomosci.pl',
+          },
+        ],
+        destination: 'https://m2.nieruchomosci.pl/:path*',
+        permanent: true,
+      },
+
       // aliasy z wyników Google
       { source: '/oferty',     destination: '/oferta',      permanent: true },
       { source: '/dom',        destination: '/domy',        permanent: true },
