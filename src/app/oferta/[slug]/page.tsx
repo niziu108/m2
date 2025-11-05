@@ -1,3 +1,4 @@
+// app/oferta/[slug]/page.tsx
 export const runtime = 'nodejs';
 
 import { prisma } from '@/lib/prisma';
@@ -7,6 +8,10 @@ import Gallery from './Gallery';
 import MortgageCalculator from './MortgageCalculator';
 import BackArrow from '@/components/BackArrow'; // ⬅️ DODANE
 import ViewTracker from './ViewTracker';        // ⬅️ DODANE
+
+// ── CONFIG ──────────────────────────────────────────────────────────────
+// Używamy bez slasha na końcu. Podmień, jeśli masz inną domenę.
+const SITE_URL = 'https://m2.nieruchomosci.pl';
 
 // ── utils ───────────────────────────────────────────────────────────────
 function escapeHtml(s: string) {
@@ -33,17 +38,49 @@ export function toPLN(n: number) {
 
 // ── Metadata (Next 15: params to Promise) ───────────────────────────────
 type GenProps = { params: Promise<{ slug: string }> };
+
 export async function generateMetadata({ params }: GenProps): Promise<Metadata> {
   const { slug } = await params;
+
+  // budujemy kanoniczny URL BEZ końcowego "/"
+  const canonicalUrl = `${SITE_URL}/oferta/${slug}`;
+
   const l = await prisma.listing.findUnique({
     where: { slug },
     select: { title: true, shortDesc: true, coverImageUrl: true },
   });
-  if (!l) return { title: 'Oferta' };
+
+  if (!l) {
+    // fallback dla nieznalezionych (Next pokaże 404, ale meta też będzie spójna)
+    return {
+      title: 'Oferta | M2 Nieruchomości',
+      description: 'Szczegóły oferty w M2 Nieruchomości.',
+      alternates: { canonical: canonicalUrl },
+      openGraph: {
+        url: canonicalUrl,
+        title: 'Oferta | M2 Nieruchomości',
+        description: 'Szczegóły oferty w M2 Nieruchomości.',
+      },
+    };
+  }
+
   return {
     title: `${l.title} | M2 Nieruchomości`,
     description: l.shortDesc ?? undefined,
-    openGraph: l.coverImageUrl ? { images: [{ url: l.coverImageUrl }] } : undefined,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      url: canonicalUrl,
+      title: `${l.title} | M2 Nieruchomości`,
+      description: l.shortDesc ?? undefined,
+      images: l.coverImageUrl ? [{ url: l.coverImageUrl }] : undefined,
+    },
+    // (opcjonalnie) Twitter — nie przeszkadza FB, a pomaga w X/Twitter Cards
+    // twitter: {
+    //   card: 'summary_large_image',
+    //   title: `${l.title} | M2 Nieruchomości`,
+    //   description: l.shortDesc ?? undefined,
+    //   images: l.coverImageUrl ? [l.coverImageUrl] : undefined,
+    // },
   };
 }
 

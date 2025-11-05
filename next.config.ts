@@ -2,6 +2,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // kanonicznie BEZ końcowego slasha
+  trailingSlash: false,
+
   eslint: { ignoreDuringBuilds: true, dirs: [] },
   typescript: { ignoreBuildErrors: true },
   images: { unoptimized: true },
@@ -17,6 +20,10 @@ const nextConfig: NextConfig = {
       { source: '/o-nas',      destination: '/#o-nas',      permanent: true },
       { source: '/onas',       destination: '/#o-nas',      permanent: true },
       { source: '/kontakt',    destination: '/#kontakt',    permanent: true },
+
+      // ⬇️ NA KOŃCU: ogólne usuwanie końcowego slasha
+      // /coś/  ->  /coś  (zachowuje query i działa dla wszystkich ścieżek)
+      { source: '/:path*/', destination: '/:path*', permanent: true },
     ];
   },
 };
