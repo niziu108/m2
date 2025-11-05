@@ -21,9 +21,9 @@ const nextConfig: NextConfig = {
       { source: '/onas',       destination: '/#o-nas',      permanent: true },
       { source: '/kontakt',    destination: '/#kontakt',    permanent: true },
 
-      // ⬇️ NA KOŃCU: ogólne usuwanie końcowego slasha
-      // /coś/  ->  /coś  (zachowuje query i działa dla wszystkich ścieżek)
-      { source: '/:path*/', destination: '/:path*', permanent: true },
+      // ⬇️ usuwanie końcowego slasha TYLKO gdy jest co najmniej jeden segment ścieżki
+      // /coś/  ->  /coś   (NIE tyka "/")
+      { source: '/:path+/', destination: '/:path+', permanent: true },
     ];
   },
 };
