@@ -29,7 +29,9 @@ function toPL(dateMs: number) {
 function getISOWeekInPoland(d: Date) {
   const zonedStr = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Europe/Warsaw',
-    year: 'numeric', month: '2-digit', day: '2-digit',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
   }).format(d);
   const zoned = new Date(zonedStr);
   const day = (zoned.getDay() + 6) % 7; // 0=pon
@@ -71,13 +73,17 @@ async function fetchV1(apiKey: string, placeId: string) {
 
   const text = await res.text();
   let json: any;
-  try { json = JSON.parse(text); } catch { json = null; }
+  try {
+    json = JSON.parse(text);
+  } catch {
+    json = null;
+  }
   if (!res.ok || !json) throw new Error(`V1_FAIL status=${res.status} body=${text}`);
 
   const googleUri: string | undefined = json?.googleMapsUri;
   const raw: V1Review[] = json?.reviews ?? [];
   return {
-    reviews: raw.map(r => ({
+    reviews: raw.map((r) => ({
       authorName: r.authorAttribution?.displayName ?? 'Użytkownik Google',
       authorPhoto: r.authorAttribution?.photoUri,
       rating: r.rating ?? 5,
@@ -88,17 +94,25 @@ async function fetchV1(apiKey: string, placeId: string) {
     source: 'v1' as const,
   };
 }
+
 async function fetchLegacy(apiKey: string, placeId: string) {
+  // KLUCZOWE: legacy endpoint NIE akceptuje "places/ChIJ..."
+  const legacyId = placeId.replace(/^places\//, '');
+
   const url =
     `https://maps.googleapis.com/maps/api/place/details/json` +
-    `?place_id=${encodeURIComponent(placeId)}` +
+    `?place_id=${encodeURIComponent(legacyId)}` +
     `&fields=url,reviews,rating,user_ratings_total` +
     `&language=pl&key=${apiKey}`;
 
   const res = await fetch(url, { next: { revalidate } });
   const text = await res.text();
   let json: any;
-  try { json = JSON.parse(text); } catch { json = null; }
+  try {
+    json = JSON.parse(text);
+  } catch {
+    json = null;
+  }
   if (!res.ok || !json || (json.status && json.status !== 'OK')) {
     throw new Error(`LEGACY_FAIL status=${res.status} body=${text}`);
   }
@@ -106,7 +120,7 @@ async function fetchLegacy(apiKey: string, placeId: string) {
   const uri = json?.result?.url as string | undefined;
   const raw = (json?.result?.reviews ?? []) as LegacyReview[];
   return {
-    reviews: raw.map(r => ({
+    reviews: raw.map((r) => ({
       authorName: r.author_name ?? 'Użytkownik Google',
       authorPhoto: r.profile_photo_url,
       rating: r.rating ?? 5,
@@ -119,7 +133,7 @@ async function fetchLegacy(apiKey: string, placeId: string) {
 }
 
 /* ======== In-memory cache po stronie serwera (10 min) ======== */
-type CacheEntry = { ts: number; body: any; };
+type CacheEntry = { ts: number; body: any };
 let MEM_CACHE: CacheEntry | null = null;
 const MEM_TTL_MS = 10 * 60 * 1000;
 
@@ -137,14 +151,21 @@ export async function GET() {
 
     const apiKey = process.env.GOOGLE_PLACES_API_KEY;
     const placeId = process.env.PLACE_ID;
+
+    // ZAMIANA: nie 500, tylko 200 + puste opinie
     if (!apiKey || !placeId) {
       const body = { reviews: [], source: null, error: 'Brak GOOGLE_PLACES_API_KEY lub PLACE_ID w .env' };
       MEM_CACHE = { ts: now, body };
-      return NextResponse.json(body, { status: 500 });
+      return NextResponse.json(body, { status: 200 });
     }
 
     let reviews: Array<{
-      authorName: string; authorPhoto?: string; rating: number; text: string; time: string; url?: string;
+      authorName: string;
+      authorPhoto?: string;
+      rating: number;
+      text: string;
+      time: string;
+      url?: string;
     }> = [];
     let source: 'v1' | 'legacy' | null = null;
     let warn: string | undefined;
@@ -172,8 +193,9 @@ export async function GET() {
       headers: { 'Cache-Control': 'public, max-age=300, stale-while-revalidate=60' },
     });
   } catch (e: unknown) {
+    // ZAMIANA: nie 500, tylko 200 + puste opinie (żeby UI nie wyglądał na zepsuty)
     const body = { reviews: [], source: null, error: String((e as Error)?.message || e) };
     MEM_CACHE = { ts: Date.now(), body };
-    return NextResponse.json(body, { status: 500 });
+    return NextResponse.json(body, { status: 200 });
   }
 }
