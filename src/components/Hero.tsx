@@ -65,10 +65,10 @@ export default function Hero() {
           "
         >
           <span className="block sm:hidden">
-            OTWIERAMY DRZWI <br /> DO TWOJEJ PRZYSZŁOŚCI...
+            ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
           </span>
           <span className="hidden sm:block">
-            OTWIERAMY DRZWI DO TWOJEJ PRZYSZŁOŚCI...
+            ZNAJDŹ MIEJSCE, KTÓRE POKOCHASZ.
           </span>
         </h1>
 
