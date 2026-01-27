@@ -68,7 +68,7 @@ export default function Hero() {
             ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
           </span>
           <span className="hidden sm:block">
-            ZNAJDŹ MIEJSCE, KTÓRE POKOCHASZ.
+            ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
           </span>
         </h1>
 
