@@ -41,7 +41,7 @@ export default function MortgageCalculator({ price }: { price: number }) {
         </div>
         <div className="text-right sm:text-left">
           <div className="opacity-75 mb-1">Kwota kredytu (szac.)</div>
-          <div className="font-[Bungee] text-[var(--gold-ink)] text-lg">
+          <div className="font-[Bungee] gold-grad text-lg">
             {formatPLN(Math.round(principal))}
           </div>
         </div>
@@ -114,7 +114,7 @@ export default function MortgageCalculator({ price }: { price: number }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
         <div className="p-3 rounded border border-black/10">
           <div className="text-xs opacity-70">Rata miesięczna</div>
-          <div className="font-[Bungee] text-[var(--gold-ink)]">
+          <div className="font-[Bungee] gold-grad">
             {formatPLN(Math.round(monthly))}
           </div>
         </div>

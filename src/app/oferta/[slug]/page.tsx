@@ -159,7 +159,7 @@ export default async function Page({ params }: PageProps) {
       
       <section className="px-3 sm:px-4 py-5 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
         {/* TYTUŁ */}
-        <h1 className="font-[Bungee] text-center text-[var(--gold-ink)] tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
+        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
           {String(data.title).toUpperCase()}
         </h1>
 
@@ -191,7 +191,7 @@ export default async function Page({ params }: PageProps) {
               {/* CENA */}
               <div className="mb-1">
                 <div className="text-xs tracking-wide uppercase opacity-70">Cena</div>
-                <div className="font-[Bungee] text-[var(--gold-ink)] text-[clamp(20px,3.8vw,36px)] leading-tight">
+                <div className="font-[Bungee] gold-grad text-[clamp(20px,3.8vw,36px)] leading-tight">
                   {toPLN(data.price)}
                 </div>
               </div>
@@ -252,7 +252,7 @@ export default async function Page({ params }: PageProps) {
         {/* KALKULATOR */}
         <div className="mt-8 md:mt-10">
           <div className="rounded-2xl border border-black/10 p-4 sm:p-5 md:p-6 bg-[var(--surface)]">
-            <h3 className="font-[Bungee] text-[var(--gold-ink)] mb-3 text-center">
+            <h3 className="font-[Bungee] gold-grad mb-3 text-center">
               Symulacja raty kredytu
             </h3>
             <MortgageCalculator price={data.price} />

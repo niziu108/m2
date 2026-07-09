@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { MouseEvent } from "react";
 
-const ACCENT = "#96701d";
+const ACCENT = "#E9C87D";
 const FG = "#3a362f";
 const BG = "#efece3";
 

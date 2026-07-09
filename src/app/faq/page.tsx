@@ -79,7 +79,7 @@ export default function Page() {
       <BackArrow />
 
       <section className="px-4 pt-10 pb-16 mx-auto w-full max-w-3xl">
-        <h1 className="font-[Bungee] text-center text-[var(--gold-ink)] tracking-[1px] text-[clamp(24px,5.2vw,44px)] mb-8">
+        <h1 className="font-[Bungee] gold-grad text-center tracking-[1px] text-[clamp(24px,5.2vw,44px)] mb-8">
           NAJCZĘSTSZE PYTANIA
         </h1>
 

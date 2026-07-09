@@ -7,7 +7,7 @@ export default function Loading() {
         style={{
           width: 220,
           height: 220,
-          backgroundColor: "#96701d",
+          backgroundColor: "#E9C87D",
           WebkitMask: 'url("/logo.webp") center / contain no-repeat',
           mask: 'url("/logo.webp") center / contain no-repeat',
         }}

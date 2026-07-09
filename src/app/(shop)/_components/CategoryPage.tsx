@@ -51,6 +51,14 @@ const SEO_COPY: Record<string, { h2: string; paras: string[] }> = {
   },
 };
 
+// Małe, ładne nagłówki na stronach wyszukiwarki
+const SEARCH_HEADING: Record<string, string> = {
+  DOM: 'Znajdź swój dom',
+  MIESZKANIE: 'Znajdź swoje mieszkanie',
+  DZIALKA: 'Znajdź swoją działkę',
+  INNE: 'Znajdź swoją nieruchomość',
+};
+
 export default async function CategoryPage({
   title,
   category,
@@ -164,8 +172,8 @@ export default async function CategoryPage({
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)]">
       <StructuredData jsonLd={breadcrumb} />
       <section className="px-4 pt-8 pb-6 border-b border-[#E9C87D]/20">
-        <h1 className="font-[Bungee] text-center text-[var(--gold-ink)] tracking-[2px] text-[clamp(32px,6vw,72px)] mb-6">
-          {title.toUpperCase()}
+        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] text-[clamp(22px,4.2vw,40px)] mb-6">
+          {SEARCH_HEADING[category] ?? 'Znajdź nieruchomość'}
         </h1>
         <div className="max-w-3xl mx-auto">
           <Filters
@@ -188,7 +196,7 @@ export default async function CategoryPage({
             </div>
           ) : (
             <div className="py-24 flex items-center justify-center text-center">
-              <h2 className="font-[Bungee] text-[var(--gold-ink)] text-[clamp(22px,5vw,48px)] tracking-[2px] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+              <h2 className="font-[Bungee] gold-grad text-[clamp(22px,5vw,48px)] tracking-[2px] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
                 W TEJ KATEGORII NIE MAMY OFERT,<br />ZAPRASZAMY WKRÓTCE.
               </h2>
             </div>
@@ -199,7 +207,7 @@ export default async function CategoryPage({
       {/* SEKCJA SEO + LINKOWANIE WEWNĘTRZNE */}
       <section className="px-4 pb-16 pt-4 border-t border-black/5">
         <div className="mx-auto w-full max-w-3xl text-[var(--foreground-soft)]">
-          <h2 className="font-[Bungee] text-[var(--gold-ink)] text-[clamp(18px,3.6vw,28px)] tracking-[1px] mb-4">
+          <h2 className="font-[Bungee] gold-grad text-[clamp(18px,3.6vw,28px)] tracking-[1px] mb-4">
             {seo.h2}
           </h2>
           <div className="space-y-3 text-sm sm:text-base leading-relaxed">

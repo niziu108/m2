@@ -89,7 +89,7 @@ export default function PageLoader() {
             style={{
               width: 260,
               height: 260,
-              backgroundColor: '#96701d', // kolor wypełnienia maski (głębokie złoto na jasnym)
+              backgroundColor: '#E9C87D', // kolor wypełnienia maski (głębokie złoto na jasnym)
               WebkitMaskImage: 'url("/logo.webp")',
               maskImage: 'url("/logo.webp")',
               WebkitMaskRepeat: 'no-repeat',

@@ -30,7 +30,7 @@ export default function Oferta() {
               // 📱 Mobile: tylko linie między kaflami (góra/dół bez ramek)
               i === 0 ? 'border-t-0' : 'border-t-2',
               i === 3 ? 'border-b-0' : '',
-              'border-[#E9C87D]/70',
+              'border-white/70',
               // 💻 Desktop: zero ramek na kaflach (linie rysujemy osobno, żeby nie dublować)
               'md:border-0',
             ].join(' ')}
@@ -46,7 +46,7 @@ export default function Oferta() {
             />
 
             {/* PRZYCIEMNIENIE */}
-            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-black/30" />
 
             {/* NAGŁÓWEK */}
             <div className="relative z-10 flex h-full w-full items-center justify-center text-center select-none p-4">
@@ -66,8 +66,8 @@ export default function Oferta() {
 
       {/* 💻 Desktop: JEDNA linia pozioma i JEDNA pionowa na środku (brak zewnętrznych obwódek) */}
       <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#E9C87D]/70" />
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[2px] bg-[#E9C87D]/70" />
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] bg-white/70" />
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[2px] bg-white/70" />
       </div>
     </section>
   );

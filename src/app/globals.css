@@ -8,8 +8,17 @@
   --foreground-soft: #5c574e;   /* przygaszony tekst */
   --line: rgba(20,18,14,0.12);  /* delikatne linie/ramki */
   --gold: #E9C87D;              /* jasne złoto (wypełnienia, na ciemnym) */
-  --gold-ink: #96701d;          /* głębokie złoto czytelne na jasnym (tekst/linie) */
-  --accent: var(--gold-ink);
+  --gold-ink: #E9C87D;          /* jasne złoto wszędzie (jak wcześniej) */
+  --accent: #b1861d;            /* głębsze złoto tylko do linków/zaznaczenia (czytelność) */
+}
+
+/* Złoty gradient do dużych nagłówków (czytelny na jasnym, premium) */
+.gold-grad {
+  background-image: linear-gradient(180deg, #f2d38b 0%, #E9C87D 42%, #b1861d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* === TAILWIND THEME OVERRIDE === */

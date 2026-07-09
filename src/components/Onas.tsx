@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-const YELLOW = '#96701d';
+const YELLOW = '#E9C87D';
 const TEXT = '#23201b';
 
 // wolniejsza, płynna animacja od dołu
@@ -39,8 +39,8 @@ export default function Onas() {
           whileInView="animate"
           variants={fadeUp}
           viewport={{ once: true, amount: 0.4 }}
-          className="text-center leading-none tracking-[0.06em] select-none"
-          style={{ color: YELLOW, fontFamily: 'Bungee, system-ui, sans-serif' }}
+          className="gold-grad text-center leading-none tracking-[0.06em] select-none"
+          style={{ fontFamily: 'Bungee, system-ui, sans-serif' }}
         >
           <span className="block text-[30px] md:text-[44px] lg:text-[52px]">
             POZNAJ NASZ ZESPÓŁ

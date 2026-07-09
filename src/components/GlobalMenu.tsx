@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 const BG = '#f4f2ec';
 const FG = '#23201b';
-const ACCENT = '#96701d';
+const ACCENT = '#E9C87D';
 
 type TargetId = 'hero' | 'jak-dzialamy' | 'oferta' | 'o-nas' | 'kontakt';
 type MenuItem = { label: string; id: TargetId };
