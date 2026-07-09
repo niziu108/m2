@@ -13,11 +13,11 @@ const CATS = [
 
 export default function Hero() {
   const router = useRouter();
-  const [cat, setCat] = useState("/domy");
+  const [cat, setCat] = useState("");
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(cat);
+    router.push(cat || "/domy");
   };
 
   return (
@@ -90,23 +90,27 @@ export default function Hero() {
         >
           <div className="flex flex-col sm:flex-row items-stretch gap-3 rounded-2xl bg-white/95 backdrop-blur p-3 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
             <div className="relative flex-1 text-left">
-              <label className="block text-[11px] uppercase tracking-[0.14em] text-black/50 mb-1 px-1">
-                Czego szukasz?
-              </label>
               <select
                 value={cat}
                 onChange={(e) => setCat(e.target.value)}
-                className="w-full appearance-none bg-white text-[#23201b] text-[16px] rounded-xl border border-black/10 pl-4 pr-10 py-3 focus:outline-none focus:border-[#c8951a] cursor-pointer"
+                style={{ accentColor: "#E9C87D" }}
+                className="w-full appearance-none bg-white text-[#23201b] text-[16px] rounded-xl border border-black/10 pl-4 pr-12 py-3.5 cursor-pointer focus:outline-none focus:border-[#c8951a] focus:ring-2 focus:ring-[#E9C87D]"
               >
+                <option value="" disabled hidden>Czego szukasz?</option>
                 {CATS.map((c) => (
                   <option key={c.value} value={c.value}>{c.label}</option>
                 ))}
               </select>
-              <span className="pointer-events-none absolute right-4 bottom-3.5 text-black/40 text-lg leading-none">⌄</span>
+              {/* Wyraźna strzałka w dół */}
+              <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b1861d" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
             </div>
             <button
               type="submit"
-              className="rounded-xl bg-[#E9C87D] text-[#2a2117] font-semibold text-[16px] px-8 py-3 sm:self-end hover:brightness-105 active:scale-[0.98] transition"
+              className="rounded-xl bg-[#E9C87D] text-[#2a2117] font-semibold text-[16px] px-8 py-3.5 hover:brightness-105 active:scale-[0.98] transition"
             >
               Szukaj
             </button>
