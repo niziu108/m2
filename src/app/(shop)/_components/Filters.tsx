@@ -43,6 +43,10 @@ export default function Filters({
 
   // pola
   const [q, setQ] = useState(defaults.q || '');
+  // dodatkowe filtry (promień, numer oferty) domyślnie schowane; rozwiń gdy już użyte
+  const [showMore, setShowMore] = useState<boolean>(
+    Boolean(defaults.q || defaults.r)
+  );
   const [pMin, setPMin] = useState<number>(() =>
     clamp(parseInt(defaults.pmin || ''), safe.pmin, safe.pmax) || safe.pmin
   );
@@ -231,30 +235,6 @@ export default function Filters({
           )}
         </div>
 
-        {/* PROMIEŃ */}
-        <div>
-          <label className="flt-lbl">Promień od lokalizacji</label>
-          <div className="flex flex-wrap gap-2">
-            {radiusChoices.map(val => {
-              const active = r===val;
-              return (
-                <button
-                  type="button"
-                  key={val}
-                  onClick={()=>{
-                    if (blockRadiusClickRef.current || openSug) return;
-                    setR(active ? 0 : val);
-                  }}
-                  className={`flt-pill ${active ? 'is-active' : ''}`}
-                  title={active ? 'Wyłącz' : `Ustaw ${val} km`}
-                >
-                  {val} km
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
         {/* CENA + METRAŻ */}
         <div className="grid sm:grid-cols-2 gap-5">
           <div>
@@ -312,17 +292,56 @@ export default function Filters({
           </div>
         </div>
 
-        {/* NUMER OFERTY */}
-        <div>
-          <label className="flt-lbl">Numer oferty</label>
-          <input
-            className="flt-input"
-            name="q"
-            placeholder="np. D19"
-            value={q}
-            onChange={(e)=>setQ(e.target.value)}
-          />
-        </div>
+        {/* WIĘCEJ FILTRÓW (promień + numer oferty) */}
+        <button
+          type="button"
+          onClick={() => setShowMore((s) => !s)}
+          className="flt-more"
+          aria-expanded={showMore}
+        >
+          {showMore ? 'Mniej filtrów' : 'Więcej filtrów'}
+          <span className={`flt-more-ic ${showMore ? 'is-open' : ''}`}>⌄</span>
+        </button>
+
+        {showMore && (
+          <div className="grid gap-5">
+            {/* PROMIEŃ */}
+            <div>
+              <label className="flt-lbl">Promień od lokalizacji</label>
+              <div className="flex flex-wrap gap-2">
+                {radiusChoices.map(val => {
+                  const active = r===val;
+                  return (
+                    <button
+                      type="button"
+                      key={val}
+                      onClick={()=>{
+                        if (blockRadiusClickRef.current || openSug) return;
+                        setR(active ? 0 : val);
+                      }}
+                      className={`flt-pill ${active ? 'is-active' : ''}`}
+                      title={active ? 'Wyłącz' : `Ustaw ${val} km`}
+                    >
+                      {val} km
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* NUMER OFERTY */}
+            <div>
+              <label className="flt-lbl">Numer oferty</label>
+              <input
+                className="flt-input"
+                name="q"
+                placeholder="np. D19"
+                value={q}
+                onChange={(e)=>setQ(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
 
         {/* AKCJE */}
         <div className="flex gap-3 pt-1">
@@ -381,6 +400,15 @@ export default function Filters({
           transition:border-color .2s ease, color .2s ease;
         }
         .flt-btn-ghost:hover{ border-color:#c8951a; color: var(--foreground) }
+
+        .flt-more{
+          display:inline-flex; align-items:center; gap:6px; align-self:start;
+          background:none; border:none; padding:2px 0; cursor:pointer;
+          font-size:13px; color:var(--accent); font-weight:500;
+        }
+        .flt-more:hover{ text-decoration:underline }
+        .flt-more-ic{ transition:transform .2s ease; display:inline-block; }
+        .flt-more-ic.is-open{ transform:rotate(180deg); }
 
         .flt-sug{
           position:absolute; z-index:50; margin-top:6px; width:100%;

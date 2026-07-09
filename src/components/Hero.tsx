@@ -1,13 +1,23 @@
 'use client';
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+const CATS = [
+  { label: "Domy", value: "/domy" },
+  { label: "Mieszkania", value: "/mieszkania" },
+  { label: "Działki", value: "/dzialki" },
+  { label: "Inne", value: "/inne" },
+];
 
 export default function Hero() {
-  const scrollToId = (id: string) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
+  const router = useRouter();
+  const [cat, setCat] = useState("/domy");
+
+  const onSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push(cat);
   };
 
   return (
@@ -73,31 +83,35 @@ export default function Hero() {
           </span>
         </h1>
 
-        {/* PRZYCISKI */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-          <button
-            onClick={() => scrollToId("oferta")}
-            className="
-              w-[220px] sm:w-auto px-8 py-2.5 text-[16px] font-inter font-light
-              tracking-[0.12em] uppercase text-[#dfba61] border border-[#dfba61]
-              bg-transparent transition-all duration-300
-              hover:bg-[#dfba61] hover:text-[#131313] active:scale-[0.97]
-            "
-          >
-            ZOBACZ OFERTĘ
-          </button>
-          <button
-            onClick={() => scrollToId("o-nas")}
-            className="
-              w-[220px] sm:w-auto px-8 py-2.5 text-[16px] font-inter font-light
-              tracking-[0.12em] uppercase text-[#dfba61] border border-[#dfba61]
-              bg-transparent transition-all duration-300
-              hover:bg-[#dfba61] hover:text-[#131313] active:scale-[0.97]
-            "
-          >
-            POZNAJ NAS
-          </button>
-        </div>
+        {/* WYSZUKIWARKA */}
+        <form
+          onSubmit={onSearch}
+          className="mt-8 w-full max-w-[520px] px-2"
+        >
+          <div className="flex flex-col sm:flex-row items-stretch gap-3 rounded-2xl bg-white/95 backdrop-blur p-3 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
+            <div className="relative flex-1 text-left">
+              <label className="block text-[11px] uppercase tracking-[0.14em] text-black/50 mb-1 px-1">
+                Czego szukasz?
+              </label>
+              <select
+                value={cat}
+                onChange={(e) => setCat(e.target.value)}
+                className="w-full appearance-none bg-white text-[#23201b] text-[16px] rounded-xl border border-black/10 pl-4 pr-10 py-3 focus:outline-none focus:border-[#c8951a] cursor-pointer"
+              >
+                {CATS.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute right-4 bottom-3.5 text-black/40 text-lg leading-none">⌄</span>
+            </div>
+            <button
+              type="submit"
+              className="rounded-xl bg-[#E9C87D] text-[#2a2117] font-semibold text-[16px] px-8 py-3 sm:self-end hover:brightness-105 active:scale-[0.98] transition"
+            >
+              Szukaj
+            </button>
+          </div>
+        </form>
       </div>
     </section>
   );
