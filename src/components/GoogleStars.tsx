@@ -8,7 +8,7 @@ export default function GoogleStars({ rating }: { rating: number }) {
       {Array.from({ length: total }).map((_, i) => {
         const state = i < full ? 'full' : i === full && half ? 'half' : 'empty';
         return (
-          <span key={i} className="text-[#E9C87D] text-lg leading-none">
+          <span key={i} className="text-[var(--gold-ink)] text-lg leading-none">
             {state === 'full' ? '★' : state === 'half' ? '☆' : '☆'}
           </span>
         );

@@ -1,13 +1,13 @@
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[9997] grid place-items-center bg-[#131313]">
+    <div className="fixed inset-0 z-[9997] grid place-items-center bg-[var(--background)]">
       <div
         aria-hidden
         className="m2-breathe"
         style={{
           width: 220,
           height: 220,
-          backgroundColor: "#E9C87D",
+          backgroundColor: "#96701d",
           WebkitMask: 'url("/logo.webp") center / contain no-repeat',
           mask: 'url("/logo.webp") center / contain no-repeat',
         }}

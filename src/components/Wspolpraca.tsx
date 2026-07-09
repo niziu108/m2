@@ -67,10 +67,10 @@ export default function Wspolpraca() {
   return (
     <section
       id="jak-dzialamy" // ✅ ID dla przewijania z menu
-      className="relative w-full min-h-screen flex flex-col items-center justify-center text-[#F3EFF5]"
+      className="relative w-full min-h-screen flex flex-col items-center justify-center text-[var(--foreground)]"
     >
       {/* PRZYCIEMNIONE TŁO */}
-      <div className="absolute inset-0 bg-black/70 -z-10" />
+      <div className="absolute inset-0 bg-[var(--surface)] -z-10" />
 
       <div className="w-full max-w-6xl mx-auto px-4 pt-10 md:pt-14 pb-20 md:pb-24">
         {/* HEADER */}
@@ -81,10 +81,10 @@ export default function Wspolpraca() {
           viewport={{ once: true, amount: 0.25 }}
           className="flex flex-col items-center gap-3 mb-12 md:mb-16 text-center"
         >
-          <span className="font-bungee uppercase text-2xl md:text-4xl leading-[1] tracking-[0.02em] text-[#F3EFF5]">
+          <span className="font-bungee uppercase text-2xl md:text-4xl leading-[1] tracking-[0.02em] text-[var(--foreground)]">
             DLACZEGO WARTO WSPÓŁPRACOWAĆ Z NAMI?
           </span>
-          <div className="h-[2px] w-24 bg-[#dfba61] mt-3"></div>
+          <div className="h-[2px] w-24 bg-[#96701d] mt-3"></div>
         </motion.div>
 
         {/* LISTA */}
@@ -98,7 +98,7 @@ export default function Wspolpraca() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
-                className="border-t border-[#dfba61]/60"
+                className="border-t border-[#96701d]/60"
               >
                 <button
                   onClick={() => setOpenIndex(opened ? null : i)}
@@ -106,14 +106,14 @@ export default function Wspolpraca() {
                 >
                   {/* NUMER */}
                   <span className="col-span-2 select-none">
-                    <span className="font-bungee block text-3xl md:text-5xl leading-none text-[#dfba61]">
+                    <span className="font-bungee block text-3xl md:text-5xl leading-none text-[#96701d]">
                       {s.number}
                     </span>
                   </span>
 
                   {/* TYTUŁ */}
                   <span className="col-span-9">
-                    <span className="font-bungee block uppercase tracking-[0.025em] text-2xl md:text-3xl leading-tight text-[#F3EFF5]">
+                    <span className="font-bungee block uppercase tracking-[0.025em] text-2xl md:text-3xl leading-tight text-[var(--foreground)]">
                       {s.title}
                     </span>
                   </span>
@@ -128,7 +128,7 @@ export default function Wspolpraca() {
                       xmlns="http://www.w3.org/2000/svg"
                       animate={{ rotate: opened ? 180 : 0 }}
                       transition={{ duration: 0.28 }}
-                      className="shrink-0 text-[#dfba61]"
+                      className="shrink-0 text-[#96701d]"
                     >
                       <path
                         d="M6 9l6 6 6-6"
@@ -149,9 +149,9 @@ export default function Wspolpraca() {
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.35 }}
-                      className="overflow-hidden border-t border-[#dfba61]/60"
+                      className="overflow-hidden border-t border-[#96701d]/60"
                     >
-                      <div className="pb-7 md:pb-8 pl-2 md:pl-[calc(16.666%)] pr-2 md:pr-8 text-[15px] md:text-[19px] leading-relaxed text-[#e6e6e6]/95 font-inter whitespace-pre-line">
+                      <div className="pb-7 md:pb-8 pl-2 md:pl-[calc(16.666%)] pr-2 md:pr-8 text-[15px] md:text-[19px] leading-relaxed text-[var(--foreground-soft)] font-inter whitespace-pre-line">
                         {s.content}
                       </div>
                     </motion.div>
@@ -160,7 +160,7 @@ export default function Wspolpraca() {
               </motion.div>
             );
           })}
-          <div className="border-t border-[#dfba61]/60" />
+          <div className="border-t border-[#96701d]/60" />
         </div>
       </div>
     </section>

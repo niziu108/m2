@@ -74,12 +74,12 @@ export default function Page() {
   ]);
 
   return (
-    <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] overflow-x-hidden">
+    <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)] overflow-x-hidden">
       <StructuredData jsonLd={[faqJsonLd, breadcrumb]} />
       <BackArrow />
 
       <section className="px-4 pt-10 pb-16 mx-auto w-full max-w-3xl">
-        <h1 className="font-[Bungee] text-center text-[#E9C87D] tracking-[1px] text-[clamp(24px,5.2vw,44px)] mb-8">
+        <h1 className="font-[Bungee] text-center text-[var(--gold-ink)] tracking-[1px] text-[clamp(24px,5.2vw,44px)] mb-8">
           NAJCZĘSTSZE PYTANIA
         </h1>
 
@@ -87,15 +87,15 @@ export default function Page() {
           {FAQ.map((item, i) => (
             <details
               key={i}
-              className="group rounded-2xl border border-white/10 bg-black/20 px-4 sm:px-5 py-3"
+              className="group rounded-2xl border border-black/10 bg-[var(--surface)] px-4 sm:px-5 py-3"
             >
-              <summary className="cursor-pointer list-none flex items-center justify-between gap-3 py-1 font-semibold text-[#f0f0f0]">
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-3 py-1 font-semibold text-[var(--foreground)]">
                 <span>{item.q}</span>
-                <span className="text-[#E9C87D] transition-transform group-open:rotate-45 text-2xl leading-none">
+                <span className="text-[var(--gold-ink)] transition-transform group-open:rotate-45 text-2xl leading-none">
                   +
                 </span>
               </summary>
-              <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#c9c9c9]">
+              <p className="mt-2 text-sm sm:text-base leading-relaxed text-[var(--foreground-soft)]">
                 {item.a}
               </p>
             </details>
@@ -103,20 +103,20 @@ export default function Page() {
         </div>
 
         {/* CTA + linkowanie wewnętrzne */}
-        <div className="mt-10 rounded-2xl border border-[#E9C87D]/25 bg-black/20 p-5 sm:p-6 text-center">
-          <p className="text-[#e8e8e8] mb-4">
+        <div className="mt-10 rounded-2xl border border-[#E9C87D]/25 bg-[var(--surface)] p-5 sm:p-6 text-center">
+          <p className="text-[var(--foreground)] mb-4">
             Masz pytanie, którego tu nie ma? Zadzwoń, chętnie pomożemy.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a
               href="tel:+48605071605"
-              className="rounded-xl border border-[#E9C87D] text-[#E9C87D]! font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313]! transition"
+              className="rounded-xl border border-[#E9C87D] text-[var(--gold-ink)]! font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313]! transition"
             >
               Zadzwoń: 605 071 605
             </a>
             <Link
               href="/#kontakt"
-              className="rounded-xl border border-white/20 text-[#e8e8e8] px-5 py-2.5 hover:border-white/40 transition"
+              className="rounded-xl border border-black/20 text-[var(--foreground)] px-5 py-2.5 hover:border-black/40 transition"
             >
               Kontakt
             </Link>
@@ -124,9 +124,9 @@ export default function Page() {
 
           <div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
             <span className="opacity-60">Zobacz oferty:</span>
-            <Link href="/domy" className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80">Domy</Link>
-            <Link href="/mieszkania" className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80">Mieszkania</Link>
-            <Link href="/dzialki" className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80">Działki</Link>
+            <Link href="/domy" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">Domy</Link>
+            <Link href="/mieszkania" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">Mieszkania</Link>
+            <Link href="/dzialki" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">Działki</Link>
           </div>
         </div>
       </section>

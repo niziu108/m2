@@ -73,19 +73,19 @@ export default function GoogleOpinie() {
 
   if (!data) {
     return (
-      <section className="px-4 py-10 lg:py-14 bg-[#131313] border-t border-white/5">
+      <section className="px-4 py-10 lg:py-14 bg-[var(--background)] border-t border-black/5">
         <div className="mx-auto w-full max-w-[min(1400px,95vw)]">
           <header className="mb-3 text-center">
-            <h2 className="font-[Bungee] text-[#E9C87D] tracking-[2px] text-[clamp(26px,5vw,48px)]">
+            <h2 className="font-[Bungee] text-[var(--gold-ink)] tracking-[2px] text-[clamp(26px,5vw,48px)]">
               OPINIE KLIENTÓW
             </h2>
-            <p className="text-xs text-white/60 mt-1">Ładuję opinie…</p>
+            <p className="text-xs text-black/50 mt-1">Ładuję opinie…</p>
           </header>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="h-[220px] rounded-2xl border border-white/10 bg-[#0b0b0b] animate-pulse"
+                className="h-[220px] rounded-2xl border border-black/10 bg-[var(--surface)] animate-pulse"
               />
             ))}
           </div>
@@ -96,13 +96,13 @@ export default function GoogleOpinie() {
 
   if (!reviews.length) {
     return (
-      <section className="px-4 py-10 lg:py-14 bg-[#131313] border-t border-white/5">
+      <section className="px-4 py-10 lg:py-14 bg-[var(--background)] border-t border-black/5">
         <div className="mx-auto w-full max-w-[min(1400px,95vw)]">
           <header className="mb-3 text-center">
-            <h2 className="font-[Bungee] text-[#E9C87D] tracking-[2px] text-[clamp(26px,5vw,48px)]">
+            <h2 className="font-[Bungee] text-[var(--gold-ink)] tracking-[2px] text-[clamp(26px,5vw,48px)]">
               OPINIE KLIENTÓW
             </h2>
-            <p className="text-xs text-white/60 mt-1">Brak opinii do pokazania.</p>
+            <p className="text-xs text-black/50 mt-1">Brak opinii do pokazania.</p>
           </header>
         </div>
       </section>
@@ -114,10 +114,10 @@ export default function GoogleOpinie() {
   const googleUrl = reviews.find((r) => r.url)?.url;
 
   return (
-    <section className="px-4 py-10 lg:py-14 bg-[#131313] border-t border-white/5">
+    <section className="px-4 py-10 lg:py-14 bg-[var(--background)] border-t border-black/5">
       <div className="mx-auto w-full max-w-[min(1400px,95vw)]">
         <header className="mb-2 text-center">
-          <h2 className="font-[Bungee] text-[#E9C87D] tracking-[2px] text-[clamp(26px,5vw,48px)]">
+          <h2 className="font-[Bungee] text-[var(--gold-ink)] tracking-[2px] text-[clamp(26px,5vw,48px)]">
             OPINIE KLIENTÓW
           </h2>
 
@@ -126,7 +126,7 @@ export default function GoogleOpinie() {
               href={googleUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 mt-1 text-xs text-white/70 hover:text-[#E9C87D] transition"
+              className="inline-flex items-center gap-1.5 mt-1 text-xs text-black/60 hover:text-[var(--gold-ink)] transition"
             >
               <span className="underline underline-offset-4">
                 zobacz wszystkie opinie w Google
@@ -140,7 +140,7 @@ export default function GoogleOpinie() {
           )}
 
           {"warn" in data! && (data as any).warn ? (
-            <p className="text-[11px] text-white/40 mt-1">{(data as any).warn}</p>
+            <p className="text-[11px] text-black/40 mt-1">{(data as any).warn}</p>
           ) : null}
 
           <div className="mt-4">
@@ -148,7 +148,7 @@ export default function GoogleOpinie() {
               href={REVIEW_URL}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-[#E9C87D] text-[#E9C87D]! font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313]! transition"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#E9C87D] text-[var(--gold-ink)]! font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313]! transition"
             >
               Zostaw opinię w Google
               <SquareArrowOutUpRight className="size-4" aria-hidden="true" />
@@ -170,7 +170,7 @@ export default function GoogleOpinie() {
                   style={{ flex: `0 0 ${itemBasis}` }}
                   className="px-2"
                 >
-                  <div className="rounded-2xl border border-white/10 bg-[#0b0b0b] h-full">
+                  <div className="rounded-2xl border border-black/10 bg-[var(--surface)] h-full">
                     <GoogleReviewCard r={r} />
                   </div>
                 </div>
@@ -184,7 +184,7 @@ export default function GoogleOpinie() {
               <button
                 onClick={() => go(-1)}
                 disabled={idx === 0}
-                className="pointer-events-auto ml-[-8px] inline-flex items-center justify-center rounded-full border border-white/15 bg-black/40 backdrop-blur px-3 py-3 disabled:opacity-40 hover:bg-black/60 transition"
+                className="pointer-events-auto ml-[-8px] inline-flex items-center justify-center rounded-full border border-black/15 bg-black/40 backdrop-blur px-3 py-3 disabled:opacity-40 hover:bg-black/60 transition"
                 aria-label="Poprzednia opinia"
               >
                 <ChevronLeft className="size-5" style={{ color: GOLD }} />
@@ -192,7 +192,7 @@ export default function GoogleOpinie() {
               <button
                 onClick={() => go(1)}
                 disabled={idx === maxIdx}
-                className="pointer-events-auto mr-[-8px] inline-flex items-center justify-center rounded-full border border-white/15 bg-black/40 backdrop-blur px-3 py-3 disabled:opacity-40 hover:bg-black/60 transition"
+                className="pointer-events-auto mr-[-8px] inline-flex items-center justify-center rounded-full border border-black/15 bg-black/40 backdrop-blur px-3 py-3 disabled:opacity-40 hover:bg-black/60 transition"
                 aria-label="Następna opinia"
               >
                 <ChevronRight className="size-5" style={{ color: GOLD }} />

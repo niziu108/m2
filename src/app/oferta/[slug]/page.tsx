@@ -153,20 +153,20 @@ export default async function Page({ params }: PageProps) {
   ]);
 
   return (
-    <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] overflow-x-hidden">
+    <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)] overflow-x-hidden">
       <StructuredData jsonLd={[jsonLdOffer, jsonLdBreadcrumbs]} />
       <BackArrow /> {/* ⬅️ Złota strzałka powrotu */}
       
       <section className="px-3 sm:px-4 py-5 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
         {/* TYTUŁ */}
-        <h1 className="font-[Bungee] text-center text-[#E9C87D] tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
+        <h1 className="font-[Bungee] text-center text-[var(--gold-ink)] tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
           {String(data.title).toUpperCase()}
         </h1>
 
         {/* GÓRA: galeria + panel info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 items-start min-w-0">
           {/* LEWA KARTA = GALERIA */}
-          <div className="rounded-2xl border border-white/10 p-2.5 sm:p-3 md:p-4 bg-black/20 h-full min-w-0">
+          <div className="rounded-2xl border border-black/10 p-2.5 sm:p-3 md:p-4 bg-[var(--surface)] h-full min-w-0">
             <Gallery images={pics} />
 
             {/* WIRTUALNY SPACER — pod galerią (tylko jeśli jest) */}
@@ -177,7 +177,7 @@ export default async function Page({ params }: PageProps) {
                   target="_blank"
                   rel="noreferrer"
                   className="mx-auto block w-full sm:w-auto text-center rounded-xl border px-5 py-2.5
-                             border-[#E9C87D] text-[#E9C87D] font-semibold tracking-wide select-none cursor-pointer"
+                             border-[#E9C87D] text-[var(--gold-ink)] font-semibold tracking-wide select-none cursor-pointer"
                 >
                   WIRTUALNY SPACER
                 </a>
@@ -186,46 +186,46 @@ export default async function Page({ params }: PageProps) {
           </div>
 
           {/* PRAWA KARTA = TABELA DANYCH */}
-          <aside className="rounded-2xl border border-white/10 p-4 sm:p-5 md:p-6 bg-black/20 h-full flex min-w-0">
+          <aside className="rounded-2xl border border-black/10 p-4 sm:p-5 md:p-6 bg-[var(--surface)] h-full flex min-w-0">
             <div className="w-full flex flex-col gap-3 sm:gap-4 md:my-auto min-w-0">
               {/* CENA */}
               <div className="mb-1">
                 <div className="text-xs tracking-wide uppercase opacity-70">Cena</div>
-                <div className="font-[Bungee] text-[#E9C87D] text-[clamp(20px,3.8vw,36px)] leading-tight">
+                <div className="font-[Bungee] text-[var(--gold-ink)] text-[clamp(20px,3.8vw,36px)] leading-tight">
                   {toPLN(data.price)}
                 </div>
               </div>
 
               {/* TABELA */}
               <dl className="grid grid-cols-1 gap-2.5 sm:gap-3 text-sm min-w-0">
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">Powierzchnia</dt>
                   <dd className="font-medium truncate">{data.area ? `${data.area} m²` : '—'}</dd>
                 </div>
 
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">Lokalizacja</dt>
                   <dd className="font-medium truncate">{data.location ?? '—'}</dd>
                 </div>
 
                 {showRooms && (
-                  <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                  <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                     <dt className="opacity-70">Liczba pokoi</dt>
                     <dd className="font-medium truncate">{roomsValue ?? '—'}</dd>
                   </div>
                 )}
 
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">Numer oferty</dt>
                   <dd className="font-medium truncate">{data.listingNumber ?? '—'}</dd>
                 </div>
 
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">Telefon</dt>
                   <dd className="font-medium truncate">{data.contactPhone ?? '—'}</dd>
                 </div>
 
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">E-mail</dt>
                   <dd className="font-medium truncate">{data.contactEmail ?? '—'}</dd>
                 </div>
@@ -251,8 +251,8 @@ export default async function Page({ params }: PageProps) {
 
         {/* KALKULATOR */}
         <div className="mt-8 md:mt-10">
-          <div className="rounded-2xl border border-white/10 p-4 sm:p-5 md:p-6 bg-black/20">
-            <h3 className="font-[Bungee] text-[#E9C87D] mb-3 text-center">
+          <div className="rounded-2xl border border-black/10 p-4 sm:p-5 md:p-6 bg-[var(--surface)]">
+            <h3 className="font-[Bungee] text-[var(--gold-ink)] mb-3 text-center">
               Symulacja raty kredytu
             </h3>
             <MortgageCalculator price={data.price} />

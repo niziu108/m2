@@ -18,7 +18,7 @@ export default function Card({ l }: { l: any }) {
   return (
     <Link
       href={`/oferta/${l.slug}`}
-      className="group block relative aspect-square rounded-2xl overflow-hidden border border-white/10 isolate bg-[#0f0f0f]"
+      className="group block relative aspect-square rounded-2xl overflow-hidden border border-black/10 isolate bg-[var(--surface)]"
     >
       {/* TŁO */}
       {l.coverImageUrl ? (
@@ -76,7 +76,7 @@ export default function Card({ l }: { l: any }) {
       {/* ✅ NAKŁADKA REZERWACJI */}
       {l.isReserved && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center pointer-events-none">
-          <span className="font-[Bungee] text-[#d9d9d9] text-[clamp(22px,4vw,42px)] tracking-[2px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+          <span className="font-[Bungee] text-white text-[clamp(22px,4vw,42px)] tracking-[2px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
             REZERWACJA
           </span>
         </div>

@@ -1,10 +1,15 @@
 @import "tailwindcss";
 
-/* === ZMIENNE === */
+/* === ZMIENNE (JASNY MOTYW) === */
 :root {
-  --background: #131313;
-  --foreground: #d9d9d9;
-  --accent: #E9C87D;
+  --background: #f4f2ec;        /* ciepła biel (tło) */
+  --surface: #ffffff;           /* karty */
+  --foreground: #23201b;        /* grafit (tekst) */
+  --foreground-soft: #5c574e;   /* przygaszony tekst */
+  --line: rgba(20,18,14,0.12);  /* delikatne linie/ramki */
+  --gold: #E9C87D;              /* jasne złoto (wypełnienia, na ciemnym) */
+  --gold-ink: #96701d;          /* głębokie złoto czytelne na jasnym (tekst/linie) */
+  --accent: var(--gold-ink);
 }
 
 /* === TAILWIND THEME OVERRIDE === */
@@ -68,7 +73,7 @@ img {
 
 /* złoty tekst Bungee */
 .desc .desc-gold {
-  color: #E9C87D;
+  color: var(--gold-ink);
   font-family: Bungee, ui-sans-serif, system-ui, -apple-system,
     Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial,
     "Apple Color Emoji", "Segoe UI Emoji";
@@ -98,7 +103,7 @@ img {
 
 /* === Dla starego parsera (jeśli coś używa jeszcze tych klas) === */
 .gold-bungee {
-  color: #E9C87D;
+  color: var(--gold-ink);
   font-family: Bungee, ui-sans-serif, system-ui, -apple-system,
     Segoe UI, Roboto, 'Helvetica Neue', Arial;
 }
@@ -107,7 +112,7 @@ img {
 }
 .desc strong {
   font-weight: 700;
-  color: #fff;
+  color: var(--foreground);
 }
 
 /* scrollbar off dla szyny miniaturek */

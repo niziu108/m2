@@ -41,7 +41,7 @@ export default function MortgageCalculator({ price }: { price: number }) {
         </div>
         <div className="text-right sm:text-left">
           <div className="opacity-75 mb-1">Kwota kredytu (szac.)</div>
-          <div className="font-[Bungee] text-[#E9C87D] text-lg">
+          <div className="font-[Bungee] text-[var(--gold-ink)] text-lg">
             {formatPLN(Math.round(principal))}
           </div>
         </div>
@@ -112,17 +112,17 @@ export default function MortgageCalculator({ price }: { price: number }) {
 
       {/* Wyniki */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
-        <div className="p-3 rounded border border-white/10">
+        <div className="p-3 rounded border border-black/10">
           <div className="text-xs opacity-70">Rata miesięczna</div>
-          <div className="font-[Bungee] text-[#E9C87D]">
+          <div className="font-[Bungee] text-[var(--gold-ink)]">
             {formatPLN(Math.round(monthly))}
           </div>
         </div>
-        <div className="p-3 rounded border border-white/10">
+        <div className="p-3 rounded border border-black/10">
           <div className="text-xs opacity-70">Suma do spłaty</div>
           <div className="font-medium">{formatPLN(Math.round(total))}</div>
         </div>
-        <div className="p-3 rounded border border-white/10">
+        <div className="p-3 rounded border border-black/10">
           <div className="text-xs opacity-70">Łączne odsetki</div>
           <div className="font-medium">{formatPLN(Math.round(interest))}</div>
         </div>
@@ -141,8 +141,8 @@ export default function MortgageCalculator({ price }: { price: number }) {
             90deg,
             #E9C87D 0%,
             #E9C87D var(--pct),
-            #ffffff1a var(--pct),
-            #ffffff1a 100%
+            #0000001a var(--pct),
+            #0000001a 100%
           );
           outline: none;
         }
@@ -169,7 +169,7 @@ export default function MortgageCalculator({ price }: { price: number }) {
         /* Firefox: oddzielnie progress + track */
         .range::-moz-range-track {
           height: 6px;
-          background: #ffffff1a;
+          background: #0000001a;
           border-radius: 9999px;
         }
         .range::-moz-range-progress {

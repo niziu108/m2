@@ -161,10 +161,10 @@ export default async function CategoryPage({
   ]);
 
   return (
-    <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9]">
+    <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)]">
       <StructuredData jsonLd={breadcrumb} />
       <section className="px-4 pt-8 pb-6 border-b border-[#E9C87D]/20">
-        <h1 className="font-[Bungee] text-center text-[#E9C87D] tracking-[2px] text-[clamp(32px,6vw,72px)] mb-6">
+        <h1 className="font-[Bungee] text-center text-[var(--gold-ink)] tracking-[2px] text-[clamp(32px,6vw,72px)] mb-6">
           {title.toUpperCase()}
         </h1>
         <div className="max-w-3xl mx-auto">
@@ -188,7 +188,7 @@ export default async function CategoryPage({
             </div>
           ) : (
             <div className="py-24 flex items-center justify-center text-center">
-              <h2 className="font-[Bungee] text-[#E9C87D] text-[clamp(22px,5vw,48px)] tracking-[2px] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+              <h2 className="font-[Bungee] text-[var(--gold-ink)] text-[clamp(22px,5vw,48px)] tracking-[2px] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
                 W TEJ KATEGORII NIE MAMY OFERT,<br />ZAPRASZAMY WKRÓTCE.
               </h2>
             </div>
@@ -197,9 +197,9 @@ export default async function CategoryPage({
       </section>
 
       {/* SEKCJA SEO + LINKOWANIE WEWNĘTRZNE */}
-      <section className="px-4 pb-16 pt-4 border-t border-white/5">
-        <div className="mx-auto w-full max-w-3xl text-[#c9c9c9]">
-          <h2 className="font-[Bungee] text-[#E9C87D] text-[clamp(18px,3.6vw,28px)] tracking-[1px] mb-4">
+      <section className="px-4 pb-16 pt-4 border-t border-black/5">
+        <div className="mx-auto w-full max-w-3xl text-[var(--foreground-soft)]">
+          <h2 className="font-[Bungee] text-[var(--gold-ink)] text-[clamp(18px,3.6vw,28px)] tracking-[1px] mb-4">
             {seo.h2}
           </h2>
           <div className="space-y-3 text-sm sm:text-base leading-relaxed">
@@ -214,15 +214,15 @@ export default async function CategoryPage({
               <Link
                 key={c.key}
                 href={c.path}
-                className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80"
+                className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80"
               >
                 {c.label}
               </Link>
             ))}
-            <Link href="/faq" className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80">
+            <Link href="/faq" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">
               Najczęstsze pytania
             </Link>
-            <Link href="/#kontakt" className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80">
+            <Link href="/#kontakt" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">
               Kontakt
             </Link>
           </div>

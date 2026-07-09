@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
-const BG = '#131313';
-const FG = '#d9d9d9';
-const ACCENT = '#E9C87D';
+const BG = '#f4f2ec';
+const FG = '#23201b';
+const ACCENT = '#96701d';
 
 type TargetId = 'hero' | 'jak-dzialamy' | 'oferta' | 'o-nas' | 'kontakt';
 type MenuItem = { label: string; id: TargetId };
@@ -80,7 +80,7 @@ export default function GlobalMenu() {
 
   // Klasy linków – większe na tel
   const linkCls =
-    'font-bungee uppercase tracking-wide text-[#E9C87D] ' +
+    'font-bungee uppercase tracking-wide text-[var(--gold-ink)] ' +
     'text-[clamp(28px,9vw,56px)] sm:text-[clamp(28px,6vw,60px)] ' +
     'hover:opacity-85 transition-opacity';
 

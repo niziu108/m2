@@ -76,7 +76,7 @@ export default function PageLoader() {
   return (
     <div
       id="page-loader-root"
-      className={`fixed inset-0 z-[9999] grid place-items-center bg-[#131313] transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[9999] grid place-items-center bg-[var(--background)] transition-opacity duration-300 ${
         hidden ? 'opacity-0' : 'opacity-100'
       }`}
     >
@@ -89,7 +89,7 @@ export default function PageLoader() {
             style={{
               width: 260,
               height: 260,
-              backgroundColor: '#E9C87D', // kolor wypełnienia maski (złoty)
+              backgroundColor: '#96701d', // kolor wypełnienia maski (głębokie złoto na jasnym)
               WebkitMaskImage: 'url("/logo.webp")',
               maskImage: 'url("/logo.webp")',
               WebkitMaskRepeat: 'no-repeat',

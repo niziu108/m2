@@ -74,7 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           inter.variable,
           bungee.variable,
           "antialiased",
-          "bg-[#131313] text-[#d9d9d9]",
+          "bg-[var(--background)] text-[var(--foreground)]",
         ].join(" ")}
       >
         {/* Globalne menu */}

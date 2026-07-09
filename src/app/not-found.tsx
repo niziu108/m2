@@ -6,7 +6,7 @@ export const revalidate = 0;
 
 export default function NotFound() {
   return (
-    <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] grid place-items-center p-8">
+    <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)] grid place-items-center p-8">
       <Suspense fallback={<span>Ładowanie…</span>}>
         <NotFoundClient />
       </Suspense>

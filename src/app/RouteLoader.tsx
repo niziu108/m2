@@ -35,7 +35,7 @@ export default function RouteLoader() {
   return (
     <div
       className={`fixed inset-0 z-[10000] grid place-items-center pointer-events-auto
-                  bg-[#131313] bg-opacity-95 transition-opacity duration-300
+                  bg-[var(--background)] bg-opacity-95 transition-opacity duration-300
                   ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
       aria-hidden="true"
     >

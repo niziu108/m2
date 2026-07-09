@@ -333,66 +333,65 @@ export default function Filters({
 
       <style jsx global>{`
         .flt-card{
-          background: rgba(255,255,255,.03);
-          border: 1px solid rgba(255,255,255,.08);
+          background: var(--surface);
+          border: 1px solid var(--line);
           border-radius: 18px;
           padding: 20px;
-          -webkit-backdrop-filter: blur(6px);
-          backdrop-filter: blur(6px);
+          box-shadow: 0 10px 30px rgba(20,18,14,.06);
         }
         @media (min-width:640px){ .flt-card{ padding:26px } }
 
         .flt-lbl{
           display:block; font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-          color:#8f8f8f; margin-bottom:8px;
+          color: var(--foreground-soft); margin-bottom:8px;
         }
         .flt-input{
-          width:100%; background:rgba(255,255,255,.04);
-          border:1px solid rgba(255,255,255,.10); border-radius:12px;
-          padding:13px 15px; font-size:16px; color:#ededed;
+          width:100%; background:#ffffff;
+          border:1px solid var(--line); border-radius:12px;
+          padding:13px 15px; font-size:16px; color: var(--foreground);
           transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;
         }
-        .flt-input::placeholder{ color:#7c7c7c }
+        .flt-input::placeholder{ color:#9a958c }
         .flt-input:focus{
-          outline:none; border-color:#E9C87D; background:rgba(233,200,125,.06);
-          box-shadow:0 0 0 3px rgba(233,200,125,.12);
+          outline:none; border-color:#c8951a; background:rgba(233,200,125,.08);
+          box-shadow:0 0 0 3px rgba(233,200,125,.28);
         }
         .flt-input::-webkit-outer-spin-button,
         .flt-input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
         .flt-pair{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px }
-        .flt-dash{ color:#6a6a6a; text-align:center }
+        .flt-dash{ color:#9a958c; text-align:center }
 
         .flt-pill{
           height:40px; padding:0 16px; border-radius:999px; font-size:13px;
-          border:1px solid rgba(255,255,255,.12); color:#cfcfcf; background:transparent;
+          border:1px solid var(--line); color: var(--foreground-soft); background:transparent;
           transition:all .18s ease; cursor:pointer;
         }
-        .flt-pill:hover{ border-color:rgba(233,200,125,.6); color:#fff }
-        .flt-pill.is-active{ background:#E9C87D; color:#131313; border-color:#E9C87D; font-weight:600 }
+        .flt-pill:hover{ border-color:#c8951a; color: var(--foreground) }
+        .flt-pill.is-active{ background:#E9C87D; color:#2a2117; border-color:#E9C87D; font-weight:600 }
 
         .flt-btn-primary{
-          height:50px; padding:0 26px; border-radius:12px; background:#E9C87D; color:#131313;
+          height:50px; padding:0 26px; border-radius:12px; background:#E9C87D; color:#2a2117;
           font-weight:600; letter-spacing:.02em; transition:transform .12s ease, filter .2s ease;
         }
-        .flt-btn-primary:hover{ filter:brightness(1.05) }
+        .flt-btn-primary:hover{ filter:brightness(1.03) }
         .flt-btn-primary:active{ transform:scale(.98) }
         .flt-btn-ghost{
           height:50px; padding:0 20px; border-radius:12px; background:transparent;
-          border:1px solid rgba(255,255,255,.14); color:#cfcfcf;
+          border:1px solid var(--line); color: var(--foreground-soft);
           transition:border-color .2s ease, color .2s ease;
         }
-        .flt-btn-ghost:hover{ border-color:rgba(255,255,255,.30); color:#fff }
+        .flt-btn-ghost:hover{ border-color:#c8951a; color: var(--foreground) }
 
         .flt-sug{
           position:absolute; z-index:50; margin-top:6px; width:100%;
-          background:#161616; border:1px solid rgba(255,255,255,.10); border-radius:12px;
-          max-height:260px; overflow:auto; box-shadow:0 14px 34px rgba(0,0,0,.5);
+          background:#ffffff; border:1px solid var(--line); border-radius:12px;
+          max-height:260px; overflow:auto; box-shadow:0 14px 34px rgba(20,18,14,.16);
         }
         .flt-sug-item{
-          display:block; width:100%; text-align:left; padding:11px 14px; font-size:14px; color:#dcdcdc;
+          display:block; width:100%; text-align:left; padding:11px 14px; font-size:14px; color: var(--foreground);
           transition:background .15s ease;
         }
-        .flt-sug-item:hover{ background:rgba(255,255,255,.05) }
+        .flt-sug-item:hover{ background:rgba(20,18,14,.05) }
       `}</style>
     </form>
   );

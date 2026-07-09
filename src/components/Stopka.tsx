@@ -5,9 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { MouseEvent } from "react";
 
-const ACCENT = "#E9C87D";
-const FG = "#d9d9d9";
-const BG = "#131313";
+const ACCENT = "#96701d";
+const FG = "#3a362f";
+const BG = "#efece3";
 
 export default function Stopka() {
   const pathname = usePathname();
@@ -21,10 +21,10 @@ export default function Stopka() {
   };
 
   const linkCls =
-    "font-bungee uppercase tracking-[0.035em] hover:opacity-90 text-[#E9C87D]";
+    "font-bungee uppercase tracking-[0.035em] hover:opacity-90 text-[var(--gold-ink)]";
 
   return (
-    <footer className="text-[#d9d9d9]" style={{ backgroundColor: BG }}>
+    <footer className="text-[var(--foreground)]" style={{ backgroundColor: BG }}>
       {/* Cieniutka żółta linia na samej górze stopki */}
       <div className="w-full border-t-[0.5px]" style={{ borderColor: ACCENT }} />
 
@@ -34,39 +34,39 @@ export default function Stopka() {
           {/* Lewa: DANE FIRMY */}
           <div className="order-2 md:order-1">
             <div className="space-y-2 md:space-y-1 text-base leading-7">
-              <div className="font-bungee uppercase tracking-[0.035em] text-[#E9C87D]">
+              <div className="font-bungee uppercase tracking-[0.035em] text-[var(--gold-ink)]">
                 DANE FIRMY:
               </div>
               <div>M2 Nieruchomości</div>
               <div>NIP: 7691829620</div>
 
 
-              <div className="font-bungee uppercase pt-2 tracking-[0.035em] text-[#E9C87D]">
+              <div className="font-bungee uppercase pt-2 tracking-[0.035em] text-[var(--gold-ink)]">
                 ADRES:
               </div>
               <div>97-400, Bełchatów</div>
               <div>Mazury 10</div>
               <div>Działamy mobilnie</div>
 
-              <div className="font-bungee uppercase pt-2 tracking-[0.035em] text-[#E9C87D]">
+              <div className="font-bungee uppercase pt-2 tracking-[0.035em] text-[var(--gold-ink)]">
                 KONTAKT:
               </div>
 
               {/* Wymuszamy jasny kolor (nie żółty) */}
-              <div className="text-[#f3f3f3]">
+              <div className="text-[#23201b]">
                 <a
                   href="tel:+48605071605"
                   className="hover:underline text-inherit"
-                  style={{ color: "#f3f3f3" }}
+                  style={{ color: "#23201b" }}
                 >
                   605 071 605
                 </a>
               </div>
-              <div className="text-[#f3f3f3]">
+              <div className="text-[#23201b]">
                 <a
                   href="mailto:biuro@m2.nieruchomosci.pl"
                   className="hover:underline text-inherit"
-                  style={{ color: "#f3f3f3" }}
+                  style={{ color: "#23201b" }}
                 >
                   biuro@m2.nieruchomosci.pl
                 </a>

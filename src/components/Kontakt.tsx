@@ -7,10 +7,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 function IconInstagram({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}
-      fill="none" stroke="white" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+      fill="none" stroke="#26231e" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
       <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
       <circle cx="12" cy="12" r="4.2" />
-      <circle cx="17.3" cy="6.7" r="1.2" fill="white" stroke="none" />
+      <circle cx="17.3" cy="6.7" r="1.2" fill="#26231e" stroke="none" />
     </svg>
   );
 }
@@ -18,7 +18,7 @@ function IconInstagram({ className = '' }: { className?: string }) {
 function IconFacebook({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}
-      fill="none" stroke="white" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+      fill="none" stroke="#26231e" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
       <rect x="3.5" y="3.5" width="17" height="17" rx="4.2" />
       <path d="M13 10h2.5M13 10v-2c0-1 .7-1.5 1.7-1.5H16M13 10h-1.6V20" />
     </svg>
@@ -33,13 +33,13 @@ function IconYouTube({ className = '' }: { className?: string }) {
       aria-hidden="true"
       className={className}
       fill="none"
-      stroke="white"
+      stroke="#26231e"
       strokeWidth={2.2}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
       <rect x="3.5" y="3.5" width="17" height="17" rx="4.2" />
-      <polygon points="10,8.5 10,15.5 16,12" fill="white" stroke="none" />
+      <polygon points="10,8.5 10,15.5 16,12" fill="#26231e" stroke="none" />
     </svg>
   );
 }
@@ -107,7 +107,7 @@ export default function Kontakt() {
       ref={sectionRef}
       aria-label="Sekcja kontaktowa"
       className="
-        relative w-full h-[100svh] overflow-hidden bg-[#131313] text-[#d9d9d9]
+        relative w-full h-[100svh] overflow-hidden bg-[var(--background)] text-[var(--foreground)]
         pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]
       "
     >
@@ -124,7 +124,7 @@ export default function Kontakt() {
           <FadeUp show={inView} delay={lines[0].delay}>
             <div
               className="
-                text-[#E9C87D]
+                text-[var(--gold-ink)]
                 text-[clamp(22px,8.2vw,52px)] lg:text-[clamp(28px,4.2vw,48px)]
                 max-[380px]:text-[clamp(20px,7.6vw,36px)]
                 leading-[1.04]
@@ -145,8 +145,8 @@ export default function Kontakt() {
             >
               <a
                 href="tel:+48605071605"
-                style={{ color: '#d9d9d9' }}
-                className="hover:text-[#E9C87D] focus:text-[#E9C87D] transition-colors"
+                style={{ color: '#23201b' }}
+                className="hover:text-[var(--gold-ink)] focus:text-[var(--gold-ink)] transition-colors"
               >
                 tel. 605 071 605
               </a>
@@ -164,8 +164,8 @@ export default function Kontakt() {
             >
               <a
                 href="tel:+48661099666"
-                style={{ color: '#d9d9d9' }}
-                className="hover:text-[#E9C87D] focus:text-[#E9C87D] transition-colors"
+                style={{ color: '#23201b' }}
+                className="hover:text-[var(--gold-ink)] focus:text-[var(--gold-ink)] transition-colors"
               >
                 tel. 661 099 666
               </a>
@@ -183,8 +183,8 @@ export default function Kontakt() {
             >
               <a
                 href="mailto:biuro@m2.nieruchomosci.pl"
-                style={{ color: '#d9d9d9' }}
-                className="hover:text-[#E9C87D] focus:text-[#E9C87D] transition-colors"
+                style={{ color: '#23201b' }}
+                className="hover:text-[var(--gold-ink)] focus:text-[var(--gold-ink)] transition-colors"
               >
                 mail: biuro@m2.nieruchomosci.pl
               </a>
@@ -196,7 +196,7 @@ export default function Kontakt() {
             <div
               className="
                 mt-8 lg:mt-12
-                text-[#E9C87D]
+                text-[var(--gold-ink)]
                 text-[clamp(22px,8.2vw,52px)] lg:text-[clamp(28px,4.2vw,48px)]
                 max-[380px]:text-[clamp(20px,7.6vw,36px)]
                 leading-[1.04]
@@ -246,7 +246,7 @@ export default function Kontakt() {
         <FadeUp show={inView} delay={200} className="order-2 w-full flex items-center justify-center">
           <div className="relative w-full max-w-[560px] lg:max-w-[720px] aspect-[4/3] lg:aspect-[5/4]">
             <Image
-              src="/kontakt.png"
+              src="/kontakt-dark.png"
               alt="Kontakt – ilustracja"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"

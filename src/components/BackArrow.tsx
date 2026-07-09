@@ -30,7 +30,7 @@ export default function BackArrow() {
         <div
           className="
             fixed inset-0 z-[9999]
-            bg-[#131313]/95
+            bg-[var(--background)]/95
             opacity-100
             transition-opacity duration-200
           "
@@ -46,7 +46,7 @@ export default function BackArrow() {
           flex items-center justify-center
           w-6 h-6 sm:w-7 sm:h-7 rounded-full
           border border-[#E9C87D]
-          text-[#E9C87D]
+          text-[var(--gold-ink)]
           hover:bg-[#E9C87D]/10
           active:scale-[0.96]
           transition-all duration-200

@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-const YELLOW = '#E9C87D';
-const TEXT = '#d9d9d9';
+const YELLOW = '#96701d';
+const TEXT = '#23201b';
 
 // wolniejsza, płynna animacja od dołu
 const fadeUp = {
@@ -156,7 +156,7 @@ function Person({
       {/* Opis — tagline kursywą */}
       <div
         className="mt-2 text-[15px] md:text-[16px] leading-relaxed text-balance"
-        style={{ color: '#cfcfcf' }}
+        style={{ color: '#5c574e' }}
       >
         {role}
         <br />

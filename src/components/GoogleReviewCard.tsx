@@ -11,7 +11,7 @@ export type Review = {
 
 export default function GoogleReviewCard({ r }: { r: Review }) {
   return (
-    <article className="h-full rounded-2xl border border-white/10 bg-[#0f0f0f] p-4 flex flex-col">
+    <article className="h-full rounded-2xl border border-black/10 bg-[var(--surface)] p-4 flex flex-col">
       <header className="flex items-center gap-3 mb-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -21,15 +21,15 @@ export default function GoogleReviewCard({ r }: { r: Review }) {
         />
         <div className="leading-tight">
           <div className="font-medium">{r.authorName}</div>
-          <div className="text-xs text-white/60">{r.time || ""}</div>
+          <div className="text-xs text-black/50">{r.time || ""}</div>
         </div>
       </header>
 
-      <div className="mb-3">
+      <div className="mb-3 text-[#c8951a] tracking-[1px]">
         {"★★★★★☆☆☆☆☆".slice(0, Math.max(0, Math.min(5, r.rating || 0)))}
       </div>
 
-      <p className="text-sm text-white/80 line-clamp-[10] whitespace-pre-line">
+      <p className="text-sm text-black/70 line-clamp-[10] whitespace-pre-line">
         {r.text}
       </p>
 
@@ -38,7 +38,7 @@ export default function GoogleReviewCard({ r }: { r: Review }) {
           href={r.url}
           target="_blank"
           rel="noreferrer"
-          className="mt-4 text-xs text-[#E9C87D] hover:underline"
+          className="mt-4 text-xs text-[var(--gold-ink)] hover:underline"
         >
           Zobacz w Google
         </a>

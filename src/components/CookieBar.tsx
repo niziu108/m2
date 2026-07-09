@@ -89,7 +89,7 @@ export default function CookieBar() {
             href="/polityka-prywatnosci"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 text-[#E9C87D]"
+            className="underline underline-offset-2 text-[var(--gold-ink)]"
           >
             Polityce prywatności
           </Link>.

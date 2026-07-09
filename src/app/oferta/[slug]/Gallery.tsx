@@ -14,7 +14,7 @@ export default function Gallery({ images }: { images: string[] }) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="aspect-video rounded-2xl border border-white/10 bg-black/30 grid place-items-center min-w-0">
+      <div className="aspect-video rounded-2xl border border-black/10 bg-black/30 grid place-items-center min-w-0">
         brak zdjęć
       </div>
     );
@@ -48,7 +48,7 @@ export default function Gallery({ images }: { images: string[] }) {
   return (
     <>
       {/* DUŻE ZDJĘCIE */}
-      <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/20 min-w-0">
+      <div className="relative rounded-2xl overflow-hidden border border-black/10 bg-black/20 min-w-0">
         <div className="aspect-video relative min-w-0">
           <img
             src={cldOptimize(curr, 1400)}
@@ -107,7 +107,7 @@ export default function Gallery({ images }: { images: string[] }) {
                   key={i}
                   onClick={() => setIdx(i)}
                   className={`shrink-0 w-[120px] sm:w-[140px] md:w-[160px] aspect-[4/3] overflow-hidden border rounded ${
-                    i === idx ? 'border-[#E9C87D] ring-2 ring-[#E9C87D33]' : 'border-white/10'
+                    i === idx ? 'border-[#E9C87D] ring-2 ring-[#E9C87D33]' : 'border-black/10'
                   }`}
                 >
                   <img src={cldOptimize(src, 320)} alt="" loading="lazy" className="w-full h-full object-cover" />
@@ -130,7 +130,7 @@ export default function Gallery({ images }: { images: string[] }) {
               e.stopPropagation();
               setOpen(false);
             }}
-            className="absolute top-3 right-3 sm:top-6 sm:right-6 px-4 h-10 rounded-xl border border-white/30 text-white/90 hover:bg-white/10"
+            className="absolute top-3 right-3 sm:top-6 sm:right-6 px-4 h-10 rounded-xl border border-black/30 text-white/90 hover:bg-white/10"
           >
             Zamknij ✕
           </button>
@@ -143,7 +143,7 @@ export default function Gallery({ images }: { images: string[] }) {
                   e.stopPropagation();
                   prev();
                 }}
-                className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full border border-white/30 text-white hover:bg-white/10"
+                className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full border border-black/30 text-white hover:bg-white/10"
               >
                 ‹
               </button>
@@ -152,7 +152,7 @@ export default function Gallery({ images }: { images: string[] }) {
                   e.stopPropagation();
                   next();
                 }}
-                className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full border border-white/30 text-white hover:bg-white/10"
+                className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full border border-black/30 text-white hover:bg-white/10"
               >
                 ›
               </button>
