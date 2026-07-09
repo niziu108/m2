@@ -172,7 +172,7 @@ export default async function CategoryPage({
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)]">
       <StructuredData jsonLd={breadcrumb} />
       <section className="px-4 pt-8 pb-6 border-b border-[#E9C87D]/20">
-        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] text-[clamp(22px,4.2vw,40px)] mb-6">
+        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] leading-tight px-14 sm:px-16 text-[clamp(22px,4.2vw,40px)] mb-6">
           {SEARCH_HEADING[category] ?? 'Znajdź nieruchomość'}
         </h1>
         <div className="max-w-3xl mx-auto">

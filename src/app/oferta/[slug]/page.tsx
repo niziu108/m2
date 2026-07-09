@@ -159,7 +159,7 @@ export default async function Page({ params }: PageProps) {
       
       <section className="px-3 sm:px-4 py-5 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
         {/* TYTUŁ */}
-        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
+        <h1 className="font-[Bungee] gold-grad text-center leading-tight px-14 sm:px-16 tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
           {String(data.title).toUpperCase()}
         </h1>
 
