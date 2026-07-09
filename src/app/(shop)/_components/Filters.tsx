@@ -201,129 +201,198 @@ export default function Filters({
   const radiusChoices = [10, 20, 30, 40];
 
   return (
-    <form onSubmit={onSubmit} className={`grid gap-4 ${isPending ? 'opacity-80 pointer-events-none' : ''}`}>
-      {/* Numer oferty */}
-      <input
-        className="input rounded-none"
-        name="q"
-        placeholder="Numer oferty"
-        value={q}
-        onChange={(e)=>setQ(e.target.value)}
-      />
+    <form onSubmit={onSubmit} className={isPending ? 'opacity-80 pointer-events-none' : ''}>
+      <div className="flt-card grid gap-5">
+        {/* LOKALIZACJA */}
+        <div className="relative" ref={sugRef}>
+          <label className="flt-lbl">Lokalizacja</label>
+          <input
+            ref={inputRef}
+            className="flt-input"
+            placeholder="np. Bełchatów, ulica…"
+            value={loc}
+            onChange={(e)=>{ setLoc(e.target.value); setOpenSug(true); }}
+            onFocus={()=>{ if (!suppressNextSugRef.current && loc) setOpenSug(true); }}
+          />
+          {openSug && hits.length>0 && (
+            <div className="flt-sug">
+              {hits.map((h, i)=>(
+                <button
+                  type="button"
+                  key={i}
+                  onMouseDown={(e)=>{ e.preventDefault(); pickHit(h); }}
+                  onTouchStart={(e)=>{ e.preventDefault(); pickHit(h); }}
+                  className="flt-sug-item"
+                >
+                  {h.display_name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
-      {/* LOKALIZACJA */}
-      <div className="relative" ref={sugRef}>
-        <input
-          ref={inputRef}
-          className="input rounded-none w-full"
-          placeholder="Lokalizacja (np. Bełchatów, ulica...)"
-          value={loc}
-          onChange={(e)=>{ setLoc(e.target.value); setOpenSug(true); }}
-          onFocus={()=>{ if (!suppressNextSugRef.current && loc) setOpenSug(true); }}
-        />
-        {openSug && hits.length>0 && (
-          <div className="absolute z-50 mt-1 w-full bg-[#1b1b1b] border border-[#ffffff1a] rounded-md max-h-64 overflow-auto">
-            {hits.map((h, i)=>(
-              <button
-                type="button"
-                key={i}
-                onMouseDown={(e)=>{ e.preventDefault(); pickHit(h); }}   // one-click desktop
-                onTouchStart={(e)=>{ e.preventDefault(); pickHit(h); }}  // one-touch mobile
-                className="block w-full text-left px-3 py-2 hover:bg-white/5"
-              >
-                {h.display_name}
-              </button>
-            ))}
+        {/* PROMIEŃ */}
+        <div>
+          <label className="flt-lbl">Promień od lokalizacji</label>
+          <div className="flex flex-wrap gap-2">
+            {radiusChoices.map(val => {
+              const active = r===val;
+              return (
+                <button
+                  type="button"
+                  key={val}
+                  onClick={()=>{
+                    if (blockRadiusClickRef.current || openSug) return;
+                    setR(active ? 0 : val);
+                  }}
+                  className={`flt-pill ${active ? 'is-active' : ''}`}
+                  title={active ? 'Wyłącz' : `Ustaw ${val} km`}
+                >
+                  {val} km
+                </button>
+              )
+            })}
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* PRZYCISKI PROMIENIA */}
-      <div className="flex flex-wrap gap-2">
-        {radiusChoices.map(val => {
-          const active = r===val;
-          return (
-            <button
-              type="button"
-              key={val}
-              onClick={()=>{
-                // jeśli właśnie wybrano podpowiedź LUB dropdown jest otwarty – ignoruj ten klik
-                if (blockRadiusClickRef.current || openSug) return;
-                setR(active ? 0 : val);
-              }}
-              className={`h-9 px-3 rounded-md border ${active ? 'bg-[#E9C87D] text-black' : 'text-[#ffffff1]'}`}
-              style={{ borderColor: '#E9C87D' }}
-              title={active ? 'Wyłącz' : `Ustaw ${val} km`}
-            >
-              +{val} km
-            </button>
-          )
-        })}
-      </div>
+        {/* CENA + METRAŻ */}
+        <div className="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label className="flt-lbl">Cena (zł)</label>
+            <div className="flt-pair">
+              <input
+                type="number" inputMode="numeric" className="flt-input"
+                placeholder={`od ${safe.pmin.toLocaleString('pl-PL')}`}
+                min={safe.pmin} max={safe.pmax}
+                value={pMin > safe.pmin ? pMin : ''}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setPMin(v === '' ? safe.pmin : clamp(parseInt(v) || safe.pmin, safe.pmin, safe.pmax));
+                }}
+              />
+              <span className="flt-dash">–</span>
+              <input
+                type="number" inputMode="numeric" className="flt-input"
+                placeholder={`do ${safe.pmax.toLocaleString('pl-PL')}`}
+                min={safe.pmin} max={safe.pmax}
+                value={pMax < safe.pmax ? pMax : ''}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setPMax(v === '' ? safe.pmax : clamp(parseInt(v) || safe.pmax, safe.pmin, safe.pmax));
+                }}
+              />
+            </div>
+          </div>
 
-      {/* CENA */}
-      <div>
-        <div className="text-sm mb-1 opacity-80">Cena (zł)</div>
-        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="flt-lbl">Metraż (m²)</label>
+            <div className="flt-pair">
+              <input
+                type="number" inputMode="numeric" className="flt-input"
+                placeholder={`od ${safe.amin}`}
+                min={safe.amin} max={safe.amax}
+                value={aMin > safe.amin ? aMin : ''}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setAMin(v === '' ? safe.amin : clamp(parseInt(v) || safe.amin, safe.amin, safe.amax));
+                }}
+              />
+              <span className="flt-dash">–</span>
+              <input
+                type="number" inputMode="numeric" className="flt-input"
+                placeholder={`do ${safe.amax}`}
+                min={safe.amin} max={safe.amax}
+                value={aMax < safe.amax ? aMax : ''}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setAMax(v === '' ? safe.amax : clamp(parseInt(v) || safe.amax, safe.amin, safe.amax));
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* NUMER OFERTY */}
+        <div>
+          <label className="flt-lbl">Numer oferty</label>
           <input
-            type="number" inputMode="numeric" className="input rounded-none"
-            placeholder={`od ${safe.pmin.toLocaleString('pl-PL')}`}
-            min={safe.pmin} max={safe.pmax}
-            value={pMin > safe.pmin ? pMin : ''}
-            onChange={(e) => {
-              const v = e.target.value;
-              setPMin(v === '' ? safe.pmin : clamp(parseInt(v) || safe.pmin, safe.pmin, safe.pmax));
-            }}
-          />
-          <input
-            type="number" inputMode="numeric" className="input rounded-none"
-            placeholder={`do ${safe.pmax.toLocaleString('pl-PL')}`}
-            min={safe.pmin} max={safe.pmax}
-            value={pMax < safe.pmax ? pMax : ''}
-            onChange={(e) => {
-              const v = e.target.value;
-              setPMax(v === '' ? safe.pmax : clamp(parseInt(v) || safe.pmax, safe.pmin, safe.pmax));
-            }}
+            className="flt-input"
+            name="q"
+            placeholder="np. D19"
+            value={q}
+            onChange={(e)=>setQ(e.target.value)}
           />
         </div>
-      </div>
 
-      {/* METRAŻ */}
-      <div>
-        <div className="text-sm mb-1 opacity-80">Metraż (m²)</div>
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            type="number" inputMode="numeric" className="input rounded-none"
-            placeholder={`od ${safe.amin}`}
-            min={safe.amin} max={safe.amax}
-            value={aMin > safe.amin ? aMin : ''}
-            onChange={(e) => {
-              const v = e.target.value;
-              setAMin(v === '' ? safe.amin : clamp(parseInt(v) || safe.amin, safe.amin, safe.amax));
-            }}
-          />
-          <input
-            type="number" inputMode="numeric" className="input rounded-none"
-            placeholder={`do ${safe.amax}`}
-            min={safe.amin} max={safe.amax}
-            value={aMax < safe.amax ? aMax : ''}
-            onChange={(e) => {
-              const v = e.target.value;
-              setAMax(v === '' ? safe.amax : clamp(parseInt(v) || safe.amax, safe.amin, safe.amax));
-            }}
-          />
+        {/* AKCJE */}
+        <div className="flex gap-3 pt-1">
+          <button type="submit" className="flt-btn-primary flex-1 sm:flex-none">Szukaj</button>
+          <button type="button" onClick={onReset} className="flt-btn-ghost">Wyczyść</button>
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <button type="submit" className="h-12 rounded-none px-4 bg-[#E9C87D] text-black font-medium">Filtruj</button>
-        <button type="button" onClick={onReset} className="h-12 rounded-none px-4 bg-black/40 border border-white/10">
-          Wyczyść
-        </button>
       </div>
 
       <style jsx global>{`
-        .input{background:#00000066;border:1px solid #ffffff1a;padding:12px 14px;width:100%;font-size:16px}
+        .flt-card{
+          background: rgba(255,255,255,.03);
+          border: 1px solid rgba(255,255,255,.08);
+          border-radius: 18px;
+          padding: 20px;
+          -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+        }
+        @media (min-width:640px){ .flt-card{ padding:26px } }
+
+        .flt-lbl{
+          display:block; font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+          color:#8f8f8f; margin-bottom:8px;
+        }
+        .flt-input{
+          width:100%; background:rgba(255,255,255,.04);
+          border:1px solid rgba(255,255,255,.10); border-radius:12px;
+          padding:13px 15px; font-size:16px; color:#ededed;
+          transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;
+        }
+        .flt-input::placeholder{ color:#7c7c7c }
+        .flt-input:focus{
+          outline:none; border-color:#E9C87D; background:rgba(233,200,125,.06);
+          box-shadow:0 0 0 3px rgba(233,200,125,.12);
+        }
+        .flt-input::-webkit-outer-spin-button,
+        .flt-input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
+        .flt-pair{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px }
+        .flt-dash{ color:#6a6a6a; text-align:center }
+
+        .flt-pill{
+          height:40px; padding:0 16px; border-radius:999px; font-size:13px;
+          border:1px solid rgba(255,255,255,.12); color:#cfcfcf; background:transparent;
+          transition:all .18s ease; cursor:pointer;
+        }
+        .flt-pill:hover{ border-color:rgba(233,200,125,.6); color:#fff }
+        .flt-pill.is-active{ background:#E9C87D; color:#131313; border-color:#E9C87D; font-weight:600 }
+
+        .flt-btn-primary{
+          height:50px; padding:0 26px; border-radius:12px; background:#E9C87D; color:#131313;
+          font-weight:600; letter-spacing:.02em; transition:transform .12s ease, filter .2s ease;
+        }
+        .flt-btn-primary:hover{ filter:brightness(1.05) }
+        .flt-btn-primary:active{ transform:scale(.98) }
+        .flt-btn-ghost{
+          height:50px; padding:0 20px; border-radius:12px; background:transparent;
+          border:1px solid rgba(255,255,255,.14); color:#cfcfcf;
+          transition:border-color .2s ease, color .2s ease;
+        }
+        .flt-btn-ghost:hover{ border-color:rgba(255,255,255,.30); color:#fff }
+
+        .flt-sug{
+          position:absolute; z-index:50; margin-top:6px; width:100%;
+          background:#161616; border:1px solid rgba(255,255,255,.10); border-radius:12px;
+          max-height:260px; overflow:auto; box-shadow:0 14px 34px rgba(0,0,0,.5);
+        }
+        .flt-sug-item{
+          display:block; width:100%; text-align:left; padding:11px 14px; font-size:14px; color:#dcdcdc;
+          transition:background .15s ease;
+        }
+        .flt-sug-item:hover{ background:rgba(255,255,255,.05) }
       `}</style>
     </form>
   );

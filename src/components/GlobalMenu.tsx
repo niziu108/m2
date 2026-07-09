@@ -84,41 +84,13 @@ export default function GlobalMenu() {
     'text-[clamp(28px,9vw,56px)] sm:text-[clamp(28px,6vw,60px)] ' +
     'hover:opacity-85 transition-opacity';
 
-  // Desktop: styl linków w górnym pasku
-  const deskWhite =
-    'text-[13px] font-medium uppercase tracking-[0.14em] text-[#e9e9e9] hover:text-[#E9C87D] transition-colors';
-  const deskGold =
-    'text-[15px] font-semibold uppercase tracking-[0.16em] text-[#E9C87D] hover:opacity-85 transition-opacity';
-
   return (
     <>
-      {/* GÓRNY PASEK – tylko desktop (lg+) */}
-      <nav
-        aria-label="Menu główne"
-        className="hidden lg:grid grid-cols-3 items-center fixed top-0 inset-x-0 h-14 z-[95] px-8
-                   bg-[#131313]/85 backdrop-blur-md border-b border-[#E9C87D]/25"
-      >
-        {/* Lewa */}
-        <div className="flex items-center gap-7 justify-start">
-          <button onClick={() => handleGo('hero')} className={deskWhite}>Strona główna</button>
-          <button onClick={() => handleGo('jak-dzialamy')} className={deskWhite}>Jak działamy?</button>
-        </div>
-        {/* Środek */}
-        <div className="flex justify-center">
-          <button onClick={() => handleGo('oferta')} className={deskGold}>Oferta</button>
-        </div>
-        {/* Prawa */}
-        <div className="flex items-center gap-7 justify-end">
-          <button onClick={() => handleGo('o-nas')} className={deskWhite}>O nas</button>
-          <button onClick={() => handleGo('kontakt')} className={deskWhite}>Kontakt</button>
-        </div>
-      </nav>
-
-      {/* BURGER/CRoss – tylko mobile/tablet (< lg) */}
+      {/* BURGER/CRoss – zawsze PRZYWIERZCHNIE w prawym górnym rogu */}
       <motion.button
         aria-label={open ? 'Zamknij menu' : 'Otwórz menu'}
         onClick={() => setOpen((s) => !s)}
-        className="lg:hidden fixed top-2 right-3 sm:top-3 sm:right-4 z-[110] p-2 rounded-lg"
+        className="fixed top-2 right-3 sm:top-3 sm:right-4 z-[110] p-2 rounded-lg"
         animate={{ rotate: open ? 180 : 0 }}
         transition={{ type: 'tween', duration: 0.35 }}
         style={{ color: ACCENT, background: 'transparent', willChange: 'transform' }}

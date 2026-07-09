@@ -3,8 +3,8 @@
 import Image from "next/image";
 
 export default function Hero() {
-  const scrollToOferta = () => {
-    const section = document.getElementById("oferta");
+  const scrollToId = (id: string) => {
+    const section = document.getElementById(id);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
     }
@@ -73,30 +73,31 @@ export default function Hero() {
           </span>
         </h1>
 
-        {/* PRZYCISK */}
-        <button
-          onClick={scrollToOferta}
-          className="
-            mt-10
-            px-8
-            py-2.5
-            text-[16px]
-            font-inter
-            font-light
-            tracking-[0.12em]
-            uppercase
-            text-[#dfba61]
-            border border-[#dfba61]
-            bg-transparent
-            transition-all
-            duration-300
-            hover:bg-[#dfba61]
-            hover:text-[#F3EFF5]
-            active:scale-[0.97]
-          "
-        >
-          ZOBACZ OFERTĘ
-        </button>
+        {/* PRZYCISKI */}
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+          <button
+            onClick={() => scrollToId("oferta")}
+            className="
+              w-[220px] sm:w-auto px-8 py-2.5 text-[16px] font-inter font-light
+              tracking-[0.12em] uppercase text-[#dfba61] border border-[#dfba61]
+              bg-transparent transition-all duration-300
+              hover:bg-[#dfba61] hover:text-[#131313] active:scale-[0.97]
+            "
+          >
+            ZOBACZ OFERTĘ
+          </button>
+          <button
+            onClick={() => scrollToId("o-nas")}
+            className="
+              w-[220px] sm:w-auto px-8 py-2.5 text-[16px] font-inter font-light
+              tracking-[0.12em] uppercase text-[#dfba61] border border-[#dfba61]
+              bg-transparent transition-all duration-300
+              hover:bg-[#dfba61] hover:text-[#131313] active:scale-[0.97]
+            "
+          >
+            POZNAJ NAS
+          </button>
+        </div>
       </div>
     </section>
   );

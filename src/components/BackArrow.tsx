@@ -42,7 +42,7 @@ export default function BackArrow() {
         onClick={handleClick}
         aria-label="Wróć"
         className="
-          fixed top-5 sm:top-7 lg:top-[4.75rem] left-3 z-[10000]
+          fixed top-5 sm:top-7 left-3 z-[10000]
           flex items-center justify-center
           w-6 h-6 sm:w-7 sm:h-7 rounded-full
           border border-[#E9C87D]

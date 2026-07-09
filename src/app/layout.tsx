@@ -75,7 +75,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           bungee.variable,
           "antialiased",
           "bg-[#131313] text-[#d9d9d9]",
-          "lg:pt-14", // miejsce na górny pasek nawigacji na desktopie
         ].join(" ")}
       >
         {/* Globalne menu */}
