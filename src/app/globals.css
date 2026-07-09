@@ -12,9 +12,10 @@
   --accent: #b1861d;            /* głębsze złoto tylko do linków/zaznaczenia (czytelność) */
 }
 
-/* Złoty gradient do dużych nagłówków (czytelny na jasnym, premium) */
+/* Złoty gradient do dużych nagłówków (poziomy i symetryczny,
+   żeby przy zawinięciu tekstu na telefonie każda linia wyglądała tak samo) */
 .gold-grad {
-  background-image: linear-gradient(180deg, #f2d38b 0%, #E9C87D 42%, #b1861d 100%);
+  background-image: linear-gradient(90deg, #c8951a 0%, #E9C87D 50%, #c8951a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

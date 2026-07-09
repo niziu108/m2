@@ -26,7 +26,7 @@ export default function Card({ l }: { l: any }) {
           src={cldOptimize(l.coverImageUrl, 800)}
           alt={`${l.title}${l.location ? ' – ' + l.location : ''}`}
           loading="lazy"
-          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+          className={`absolute inset-0 w-full h-full object-cover ${
             l.isReserved ? 'opacity-70' : ''
           }`}
         />
@@ -37,7 +37,7 @@ export default function Card({ l }: { l: any }) {
       )}
 
       {/* PRZYCIEMNIENIE PODSTAWOWE */}
-      <div className="absolute inset-0 bg-black/35 group-hover:bg-black/30 transition-colors" />
+      <div className="absolute inset-0 bg-black/35" />
 
       {/* TYTUŁ + LOGO */}
       <div className="absolute inset-x-0 top-4 text-center px-4 flex flex-col items-center">

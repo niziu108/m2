@@ -54,7 +54,6 @@ export default function Oferta() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                whileHover={{ scale: 1.06 }}
                 className="font-[Bungee] uppercase text-[#E9C87D] text-[clamp(22px,4vw,52px)] tracking-[2px] drop-shadow-[0_0_10px_rgba(0,0,0,0.85)]"
               >
                 {item.title}
