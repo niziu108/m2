@@ -7,12 +7,16 @@ const nextConfig = {
   async redirects() {
     return [
       // aliasy z wyników Google
-      { source: '/oferty', destination: '/oferta', permanent: true },
+      { source: '/oferty', destination: '/domy', permanent: true },
+      { source: '/oferta', destination: '/domy', permanent: true },
       { source: '/dom', destination: '/domy', permanent: true },
       { source: '/mieszkanie', destination: '/mieszkania', permanent: true },
+      { source: '/dzialka', destination: '/dzialki', permanent: true },
+      { source: '/dzialka-na-sprzedaz', destination: '/dzialki', permanent: true },
 
       // sekcje z home jako aliasy
-      { source: '/o-nas', destination: '/#o-nas', permanent: true }
+      { source: '/o-nas', destination: '/#o-nas', permanent: true },
+      { source: '/kontakt', destination: '/#kontakt', permanent: true }
     ];
   }
 };

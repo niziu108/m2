@@ -1,228 +1,143 @@
-export const runtime = 'nodejs';
+// src/lib/schema.ts
+// Helpery do danych strukturalnych (schema.org / JSON-LD).
+// Uwaga: to jest zwykły moduł z funkcjami, NIE komponent strony.
 
-import { prisma } from '@/lib/prisma';
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import Gallery from './Gallery';
-import MortgageCalculator from './MortgageCalculator';
-import BackArrow from '@/components/BackArrow';
-import StructuredData from "@/components/StructuredData"; // ⬅️ DODANE
-import { listingToJsonLd, breadcrumbJsonLd } from "@/lib/schema"; // ⬅️ DODANE
+type OfferType = 'mieszkanie' | 'dom' | 'dzialka' | 'inne';
 
-// ── utils ───────────────────────────────────────────────────────────────
-function escapeHtml(s: string) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-function applyInlineTags(s: string) {
-  let x = escapeHtml(s);
-  x = x
-    .replaceAll('[[gold]]', '<span class="gold-bungee">')
-    .replaceAll('[[/gold]]', '</span>')
-    .replaceAll('[[center]]', '<div class="center-block">')
-    .replaceAll('[[/center]]', '</div>')
-    .replaceAll('[[bold]]', '<strong>')
-    .replaceAll('[[/bold]]', '</strong>');
-  return x;
-}
-function renderShortDesc(src?: string) {
-  if (!src) return '';
-  return applyInlineTags(src).replace(/\n/g, '<br/>');
-}
-export function toPLN(n: number) {
-  return n.toLocaleString('pl-PL') + ' zł';
-}
-
-// ── Metadata (Next 15: params to Promise) ───────────────────────────────
-type GenProps = { params: Promise<{ slug: string }> };
-export async function generateMetadata({ params }: GenProps): Promise<Metadata> {
-  const { slug } = await params;
-  const l = await prisma.listing.findUnique({
-    where: { slug },
-    select: { title: true, shortDesc: true, coverImageUrl: true },
-  });
-  if (!l) return { title: 'Oferta' };
-  return {
-    title: `${l.title} | M2 Nieruchomości`,
-    description: l.shortDesc ?? undefined,
-    openGraph: l.coverImageUrl ? { images: [{ url: l.coverImageUrl }] } : undefined,
+export type ListingSchemaInput = {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  type: OfferType;
+  price: number;
+  currency?: string; // domyślnie PLN
+  availability?: string; // "InStock" | "SoldOut" | pełny URL schema.org
+  areaM2?: number;
+  rooms?: number;
+  bathrooms?: number;
+  floor?: number;
+  yearBuilt?: number;
+  address?: {
+    streetAddress?: string;
+    addressLocality?: string;
+    postalCode?: string;
+    addressRegion?: string;
+    addressCountry?: string;
   };
+  geo?: { lat: number; lng: number };
+  images?: string[];
+  url: string;
+  seller?: { name: string; telephone?: string; email?: string };
+};
+
+// Zamień skróconą wartość dostępności na pełny URL schema.org
+function availabilityUrl(v?: string): string {
+  if (!v) return 'https://schema.org/InStock';
+  if (v.startsWith('http')) return v;
+  return `https://schema.org/${v}`;
 }
 
-// ── Page (Next 15: params to Promise) ───────────────────────────────────
-type PageProps = { params: Promise<{ slug: string }> };
+// Czytelna nazwa kategorii do pola "category"
+function categoryLabel(t: OfferType): string {
+  switch (t) {
+    case 'mieszkanie': return 'Mieszkanie na sprzedaż';
+    case 'dom':        return 'Dom na sprzedaż';
+    case 'dzialka':    return 'Działka na sprzedaż';
+    default:           return 'Nieruchomość na sprzedaż';
+  }
+}
 
-export default async function Page({ params }: PageProps) {
-  const { slug } = await params;
+/**
+ * JSON-LD dla pojedynczej oferty.
+ * Używamy typu Product + Offer, bo to daje w Google wynik z ceną i dostępnością.
+ */
+export function listingToJsonLd(input: ListingSchemaInput): Record<string, any> {
+  const currency = input.currency || 'PLN';
 
-  const data = await prisma.listing.findUnique({
-    where: { slug },
-    include: { images: { orderBy: { order: 'asc' } } },
-  });
-  if (!data) notFound();
+  const additionalProperty: Record<string, any>[] = [];
+  if (typeof input.areaM2 === 'number' && input.areaM2 > 0) {
+    additionalProperty.push({
+      '@type': 'PropertyValue',
+      name: 'Powierzchnia',
+      value: input.areaM2,
+      unitCode: 'MTK', // metr kwadratowy
+      unitText: 'm²',
+    });
+  }
+  if (typeof input.rooms === 'number' && input.rooms > 0) {
+    additionalProperty.push({ '@type': 'PropertyValue', name: 'Liczba pokoi', value: input.rooms });
+  }
+  if (typeof input.floor === 'number') {
+    additionalProperty.push({ '@type': 'PropertyValue', name: 'Piętro', value: input.floor });
+  }
+  if (typeof input.yearBuilt === 'number' && input.yearBuilt > 0) {
+    additionalProperty.push({ '@type': 'PropertyValue', name: 'Rok budowy', value: input.yearBuilt });
+  }
 
-  const pics = [
-    ...(data.coverImageUrl ? [data.coverImageUrl] : []),
-    ...data.images.map((i) => i.url),
-  ];
+  const seller = input.seller
+    ? {
+        '@type': 'RealEstateAgent',
+        name: input.seller.name,
+        ...(input.seller.telephone ? { telephone: input.seller.telephone } : {}),
+        ...(input.seller.email ? { email: input.seller.email } : {}),
+      }
+    : undefined;
 
-  // "Liczba pokoi" tylko dla DOM/MIESZKANIE
-  const showRooms = data.category === 'DOM' || data.category === 'MIESZKANIE';
-  const roomsValue =
-    (data as any).rooms ??
-    (Array.isArray((data as any).bullets) && (data as any).bullets[0]) ??
-    null;
+  const hasAddress =
+    input.address &&
+    (input.address.addressLocality || input.address.streetAddress || input.address.postalCode);
 
-  // ⬅️ DODANE: absolutny URL strony oferty (do schema)
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://m2.nieruchomosci.pl";
-  const offerUrl = `${SITE_URL}/oferta/${data.slug}`;
-
-  // ⬅️ DODANE: zmapuj dane oferty do JSON-LD
-  const jsonLdOffer = listingToJsonLd({
-    id: String(data.id),
-    slug: data.slug,
-    title: data.title,
-    description: data.shortDesc || undefined,
-    type:
-      data.category === 'MIESZKANIE' ? 'mieszkanie'
-      : data.category === 'DOM' ? 'dom'
-      : data.category === 'DZIALKA' ? 'dzialka'
-      : 'inne',
-    price: Number(data.price),
-    currency: "PLN",
-    availability: (data as any).availability || "InStock",
-    areaM2: data.area || undefined,
-    rooms: typeof roomsValue === 'number' ? roomsValue : undefined,
-    bathrooms: (data as any).bathrooms || undefined,
-    floor: (data as any).floor || undefined,
-    yearBuilt: (data as any).yearBuilt || undefined,
-    address: {
-      streetAddress: (data as any).streetAddress || undefined,
-      addressLocality: (data as any).city || (data.location ?? "Bełchatów"),
-      postalCode: (data as any).postalCode || undefined,
-      addressRegion: (data as any).region || "łódzkie",
-      addressCountry: "PL",
+  const node: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: input.title,
+    ...(input.description ? { description: input.description } : {}),
+    ...(input.images && input.images.length ? { image: input.images } : {}),
+    sku: input.slug,
+    category: categoryLabel(input.type),
+    brand: { '@type': 'Brand', name: 'M2 Nieruchomości' },
+    ...(additionalProperty.length ? { additionalProperty } : {}),
+    offers: {
+      '@type': 'Offer',
+      url: input.url,
+      price: Math.round(input.price),
+      priceCurrency: currency,
+      availability: availabilityUrl(input.availability),
+      itemCondition: 'https://schema.org/UsedCondition',
+      ...(seller ? { seller } : {}),
+      ...(hasAddress
+        ? {
+            availableAtOrFrom: {
+              '@type': 'Place',
+              address: {
+                '@type': 'PostalAddress',
+                ...(input.address?.streetAddress ? { streetAddress: input.address.streetAddress } : {}),
+                ...(input.address?.addressLocality ? { addressLocality: input.address.addressLocality } : {}),
+                ...(input.address?.postalCode ? { postalCode: input.address.postalCode } : {}),
+                ...(input.address?.addressRegion ? { addressRegion: input.address.addressRegion } : {}),
+                addressCountry: input.address?.addressCountry || 'PL',
+              },
+              ...(input.geo ? { geo: { '@type': 'GeoCoordinates', latitude: input.geo.lat, longitude: input.geo.lng } } : {}),
+            },
+          }
+        : {}),
     },
-    geo: (data as any).lat && (data as any).lng ? { lat: (data as any).lat, lng: (data as any).lng } : undefined,
-    images: pics, // ważne: pełne https URL z Cloudinary
-    url: offerUrl,
-    seller: { name: "M2 Nieruchomości", telephone: "+48 605 071 605", email: "biuro@m2.nieruchomosci.pl" },
-  });
+  };
 
-  // ⬅️ DODANE: breadcrumbs
-  const jsonLdBreadcrumbs = breadcrumbJsonLd([
-    { name: "Strona główna", item: SITE_URL },
-    { name: "Oferty", item: `${SITE_URL}/oferty` },
-    { name: data.title, item: offerUrl },
-  ]);
+  return node;
+}
 
-  return (
-    <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] overflow-x-hidden">
-      {/* ⬅️ DODANE: JSON-LD oferty + breadcrumbs */}
-      <StructuredData jsonLd={[jsonLdOffer, jsonLdBreadcrumbs]} />
-
-      <BackArrow />
-
-      <section className="px-3 sm:px-4 py-5 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
-        {/* TYTUŁ */}
-        <h1 className="font-[Bungee] text-center text-[#E9C87D] tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
-          {String(data.title).toUpperCase()}
-        </h1>
-
-        {/* GÓRA: galeria + panel info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 items-start min-w-0">
-          {/* LEWA KARTA = GALERIA */}
-          <div className="rounded-2xl border border-white/10 p-2.5 sm:p-3 md:p-4 bg-black/20 h-full min-w-0">
-            <Gallery images={pics} />
-
-            {data.virtualTourUrl && (
-              <div className="mt-3">
-                <a
-                  href={data.virtualTourUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mx-auto block w-full sm:w-auto text-center rounded-xl border px-5 py-2.5
-                             border-[#E9C87D] text-[#E9C87D] font-semibold tracking-wide select-none cursor-pointer"
-                >
-                  WIRTUALNY SPACER
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* PRAWA KARTA = TABELA DANYCH */}
-          <aside className="rounded-2xl border border-white/10 p-4 sm:p-5 md:p-6 bg-black/20 h-full flex min-w-0">
-            <div className="w-full flex flex-col gap-3 sm:gap-4 md:my-auto min-w-0">
-              {/* CENA */}
-              <div className="mb-1">
-                <div className="text-xs tracking-wide uppercase opacity-70">Cena</div>
-                <div className="font-[Bungee] text-[#E9C87D] text-[clamp(20px,3.8vw,36px)] leading-tight">
-                  {toPLN(data.price)}
-                </div>
-              </div>
-
-              {/* TABELA */}
-              <dl className="grid grid-cols-1 gap-2.5 sm:gap-3 text-sm min-w-0">
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                  <dt className="opacity-70">Powierzchnia</dt>
-                  <dd className="font-medium truncate">{data.area ? `${data.area} m²` : '—'}</dd>
-                </div>
-
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                  <dt className="opacity-70">Lokalizacja</dt>
-                  <dd className="font-medium truncate">{data.location ?? '—'}</dd>
-                </div>
-
-                {showRooms && (
-                  <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                    <dt className="opacity-70">Liczba pokoi</dt>
-                    <dd className="font-medium truncate">{roomsValue ?? '—'}</dd>
-                  </div>
-                )}
-
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                  <dt className="opacity-70">Numer oferty</dt>
-                  <dd className="font-medium truncate">{data.listingNumber ?? '—'}</dd>
-                </div>
-
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                  <dt className="opacity-70">Telefon</dt>
-                  <dd className="font-medium truncate">{data.contactPhone ?? '—'}</dd>
-                </div>
-
-                <div className="flex justify-between items-center rounded-lg border border-white/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                  <dt className="opacity-70">E-mail</dt>
-                  <dd className="font-medium truncate">{data.contactEmail ?? '—'}</dd>
-                </div>
-              </dl>
-            </div>
-          </aside>
-        </div>
-
-        {/* OPIS */}
-        <div className="mt-7 md:mt-8">
-          {data.shortDesc && (
-            <div
-              className="desc text-base sm:text-lg leading-relaxed space-y-4"
-              dangerouslySetInnerHTML={{ __html: renderShortDesc(data.shortDesc) }}
-            />
-          )}
-          {data.body && (
-            <article className="prose prose-invert prose-base sm:prose-lg max-w-none mt-6">
-              {data.body}
-            </article>
-          )}
-        </div>
-
-        {/* KALKULATOR */}
-        <div className="mt-8 md:mt-10">
-          <div className="rounded-2xl border border-white/10 p-4 sm:p-5 md:p-6 bg-black/20">
-            <h3 className="font-[Bungee] text-[#E9C87D] mb-3 text-center">
-              Symulacja raty kredytu
-            </h3>
-            <MortgageCalculator price={data.price} />
-          </div>
-        </div>
-      </section>
-    </main>
-  );
+/** BreadcrumbList z listy elementów { name, item(absolutny URL) }. */
+export function breadcrumbJsonLd(items: { name: string; item: string }[]): Record<string, any> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: it.name,
+      item: it.item,
+    })),
+  };
 }

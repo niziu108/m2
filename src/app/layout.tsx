@@ -9,11 +9,11 @@ import CookieBar from "@/components/CookieBar";
 import Script from "next/script";
 import { Suspense } from "react";
 import StructuredData from "@/components/StructuredData"; // ⬅️ DODANE
+import { SITE_URL } from "@/lib/site";
+import { getPlaceRating } from "@/lib/place";
 
 // === KONFIG SEO / URL ===
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://m2.nieruchomosci.pl";
-const OG_IMAGE = "/logo.webp";
+const OG_IMAGE = "/og.jpg";
 
 // === FONTY ===
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -25,43 +25,44 @@ const bungee = Bungee({ weight: "400", subsets: ["latin"], display: "swap", vari
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "M2 Nieruchomości – biuro sprzedaży",
+    default: "Biuro nieruchomości Bełchatów | M2 Nieruchomości",
     template: "%s | M2 Nieruchomości",
   },
   description:
-    "M2 Nieruchomości – domy, mieszkania i działki w Bełchatowie i okolicy. Profesjonalna obsługa, realne zdjęcia, wsparcie na każdym etapie.",
+    "Biuro nieruchomości M2 w Bełchatowie. Domy, mieszkania i działki na sprzedaż w Bełchatowie i okolicy do 40 km. Sprzedaż, wycena i pełna obsługa. Zadzwoń: 605 071 605.",
   keywords: [
+    "biuro nieruchomości Bełchatów",
     "nieruchomości Bełchatów",
-    "domy na sprzedaż",
+    "domy na sprzedaż Bełchatów",
     "mieszkania Bełchatów",
-    "działki",
-    "biuro nieruchomości",
+    "działki Bełchatów",
     "M2 Nieruchomości",
   ],
   openGraph: {
     type: "website",
     url: SITE_URL,
-    title: "M2 Nieruchomości – domy, mieszkania i działki",
+    title: "Biuro nieruchomości Bełchatów | M2 Nieruchomości",
     description:
-      "Otwieramy drzwi do Twojej przyszłości. Sprawdź aktualne oferty M2 Nieruchomości.",
+      "Domy, mieszkania i działki na sprzedaż w Bełchatowie i okolicy. Sprawdź aktualne oferty M2 Nieruchomości.",
     siteName: "M2 Nieruchomości",
-    images: [{ url: OG_IMAGE }],
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "M2 Nieruchomości Bełchatów" }],
     locale: "pl_PL",
   },
   twitter: {
     card: "summary_large_image",
-    title: "M2 Nieruchomości",
+    title: "Biuro nieruchomości Bełchatów | M2 Nieruchomości",
     description:
-      "Domy, mieszkania i działki – Bełchatów i okolice. Zobacz ofertę.",
+      "Domy, mieszkania i działki w Bełchatowie i okolicy. Zobacz ofertę M2 Nieruchomości.",
     images: [OG_IMAGE],
   },
   alternates: {
-    canonical: SITE_URL,
+    canonical: "/",
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const fbPixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
+  const rating = await getPlaceRating();
 
   return (
     <html lang="pl">
@@ -84,35 +85,87 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {
               "@context": "https://schema.org",
               "@type": "RealEstateAgent",
+              "@id": `${SITE_URL}/#organization`,
               name: "M2 Nieruchomości",
+              description:
+                "Biuro nieruchomości w Bełchatowie. Sprzedaż domów, mieszkań i działek w Bełchatowie i okolicy do 40 km.",
               url: SITE_URL,
               logo: `${SITE_URL}/logo.webp`,
-              image: `${SITE_URL}/logo.webp`,
+              image: `${SITE_URL}/og.jpg`,
               email: "biuro@m2.nieruchomosci.pl",
-              telephone: "+48 605 071 605",
+              telephone: "+48605071605",
+              priceRange: "$$",
+              currenciesAccepted: "PLN",
               address: {
                 "@type": "PostalAddress",
+                streetAddress: "Mazury 10",
                 addressLocality: "Bełchatów",
+                postalCode: "97-400",
                 addressRegion: "łódzkie",
                 addressCountry: "PL",
               },
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: 51.3689,
+                longitude: 19.3564,
+              },
+              areaServed: [
+                { "@type": "City", name: "Bełchatów" },
+                { "@type": "AdministrativeArea", name: "powiat bełchatowski" },
+              ],
+              contactPoint: [
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+48605071605",
+                  contactType: "sales",
+                  areaServed: "PL",
+                  availableLanguage: "pl",
+                },
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+48661099666",
+                  contactType: "sales",
+                  areaServed: "PL",
+                  availableLanguage: "pl",
+                },
+              ],
+              openingHoursSpecification: [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: [
+                    "Monday", "Tuesday", "Wednesday", "Thursday",
+                    "Friday", "Saturday", "Sunday",
+                  ],
+                  opens: "08:00",
+                  closes: "20:00",
+                },
+              ],
+              ...(rating
+                ? {
+                    aggregateRating: {
+                      "@type": "AggregateRating",
+                      ratingValue: rating.ratingValue,
+                      reviewCount: rating.reviewCount,
+                      bestRating: 5,
+                      worstRating: 1,
+                    },
+                  }
+                : {}),
               sameAs: [
-                // Podmień na realne profile:
-                "https://www.facebook.com/your-page",
-                "https://www.instagram.com/your-page",
+                "https://www.facebook.com/M2.posrednik/",
+                "https://www.instagram.com/m2.nieruchomosci_/",
                 "https://www.youtube.com/@M2_Nieruchomo%C5%9Bci",
+                "https://www.otodom.pl/pl/firmy/biura-nieruchomosci/m2nieruchomosci-ID7928002",
               ],
             },
             {
               "@context": "https://schema.org",
               "@type": "WebSite",
+              "@id": `${SITE_URL}/#website`,
               url: SITE_URL,
               name: "M2 Nieruchomości",
-              potentialAction: {
-                "@type": "SearchAction",
-                target: `${SITE_URL}/szukaj?q={search_term_string}`,
-                "query-input": "required name=search_term_string",
-              },
+              inLanguage: "pl-PL",
+              publisher: { "@id": `${SITE_URL}/#organization` },
             },
           ]}
         />

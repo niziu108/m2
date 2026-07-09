@@ -1,22 +1,19 @@
 // src/app/sitemap.xml/route.ts
 import 'server-only';
 import { prisma } from '@/lib/prisma';
-
-const SITE =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
-  'https://www.m2.nieruchomosci.pl';
+import { SITE_URL as SITE } from '@/lib/site';
 
 const iso = (d: Date) => new Date(d).toISOString();
 
 export async function GET() {
   // Strony statyczne
   const staticUrls = [
-    { loc: `${SITE}/`, changefreq: 'weekly', priority: '1.0' },
-    { loc: `${SITE}/domy`, changefreq: 'weekly', priority: '0.9' },
-    { loc: `${SITE}/mieszkania`, changefreq: 'weekly', priority: '0.9' },
-    { loc: `${SITE}/dzialki`, changefreq: 'weekly', priority: '0.8' },
+    { loc: `${SITE}/`, changefreq: 'daily', priority: '1.0' },
+    { loc: `${SITE}/domy`, changefreq: 'daily', priority: '0.9' },
+    { loc: `${SITE}/mieszkania`, changefreq: 'daily', priority: '0.9' },
+    { loc: `${SITE}/dzialki`, changefreq: 'daily', priority: '0.9' },
     { loc: `${SITE}/inne`, changefreq: 'weekly', priority: '0.7' },
-    { loc: `${SITE}/kontakt`, changefreq: 'monthly', priority: '0.6' },
+    { loc: `${SITE}/polityka-prywatnosci`, changefreq: 'yearly', priority: '0.2' },
   ];
 
   // Oferty z bazy
@@ -27,7 +24,6 @@ export async function GET() {
     const listings = await prisma.listing.findMany({
       select: { slug: true, updatedAt: true },
       orderBy: { updatedAt: 'desc' },
-      where: { slug: { not: null } },
       take: 5000,
     });
 

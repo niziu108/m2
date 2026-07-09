@@ -18,10 +18,11 @@ export default function Hero() {
     >
       {/* TŁO */}
       <Image
-        src="/m2nieruchomosci.png"
-        alt="Tło sekcji hero M2 Nieruchomości"
+        src="/hero.webp"
+        alt="M2 Nieruchomości Bełchatów, biuro nieruchomości"
         fill
         priority
+        fetchPriority="high"
         sizes="100vw"
         className="object-cover"
       />

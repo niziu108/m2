@@ -8,10 +8,18 @@ import Gallery from './Gallery';
 import MortgageCalculator from './MortgageCalculator';
 import BackArrow from '@/components/BackArrow'; // ⬅️ DODANE
 import ViewTracker from './ViewTracker';        // ⬅️ DODANE
+import StructuredData from '@/components/StructuredData';
+import { listingToJsonLd, breadcrumbJsonLd } from '@/lib/schema';
+import { SITE_URL } from '@/lib/site';
 
 // ── CONFIG ──────────────────────────────────────────────────────────────
-// Używamy bez slasha na końcu. Podmień, jeśli masz inną domenę.
-const SITE_URL = 'https://m2.nieruchomosci.pl';
+// mapowanie kategorii -> strona kategorii (breadcrumby + typ oferty)
+const CATEGORY_INFO: Record<string, { label: string; path: string; type: 'dom' | 'mieszkanie' | 'dzialka' | 'inne' }> = {
+  DOM:        { label: 'Domy',       path: '/domy',       type: 'dom' },
+  MIESZKANIE: { label: 'Mieszkania', path: '/mieszkania', type: 'mieszkanie' },
+  DZIALKA:    { label: 'Działki',    path: '/dzialki',    type: 'dzialka' },
+  INNE:       { label: 'Inne',       path: '/inne',       type: 'inne' },
+};
 
 // ── utils ───────────────────────────────────────────────────────────────
 function escapeHtml(s: string) {
@@ -108,8 +116,45 @@ export default async function Page({ params }: PageProps) {
     (Array.isArray((data as any).bullets) && (data as any).bullets[0]) ??
     null;
 
+  // ── DANE STRUKTURALNE (schema.org) ──────────────────────────────────────
+  const cat = CATEGORY_INFO[data.category] ?? CATEGORY_INFO.INNE;
+  const offerUrl = `${SITE_URL}/oferta/${data.slug}`;
+
+  const jsonLdOffer = listingToJsonLd({
+    id: String(data.id),
+    slug: data.slug,
+    title: data.title,
+    description: data.shortDesc || undefined,
+    type: cat.type,
+    price: Number(data.price),
+    currency: 'PLN',
+    availability: data.isReserved ? 'LimitedAvailability' : 'InStock',
+    areaM2: data.area || undefined,
+    rooms: typeof roomsValue === 'number' ? roomsValue : undefined,
+    address: {
+      addressLocality: data.location || 'Bełchatów',
+      addressRegion: 'łódzkie',
+      addressCountry: 'PL',
+    },
+    geo: data.lat != null && data.lng != null ? { lat: data.lat, lng: data.lng } : undefined,
+    images: pics,
+    url: offerUrl,
+    seller: {
+      name: 'M2 Nieruchomości',
+      telephone: '+48605071605',
+      email: 'biuro@m2.nieruchomosci.pl',
+    },
+  });
+
+  const jsonLdBreadcrumbs = breadcrumbJsonLd([
+    { name: 'Strona główna', item: SITE_URL },
+    { name: cat.label, item: `${SITE_URL}${cat.path}` },
+    { name: data.title, item: offerUrl },
+  ]);
+
   return (
     <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] overflow-x-hidden">
+      <StructuredData jsonLd={[jsonLdOffer, jsonLdBreadcrumbs]} />
       <BackArrow /> {/* ⬅️ Złota strzałka powrotu */}
       
       <section className="px-3 sm:px-4 py-5 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
