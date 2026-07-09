@@ -263,45 +263,55 @@ export default function Filters({
 
       {/* CENA */}
       <div>
-        <div className="flex justify-between text-sm mb-1">
-          <span>Cena: {pMin.toLocaleString('pl-PL')} zł</span>
-          <span>{pMax.toLocaleString('pl-PL')} zł</span>
-        </div>
-        <div className="relative h-8">
-          <div className="absolute left:0 right:0 top-1/2 -translate-y-1/2 h-1 bg-white/10 rounded" />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#E9C87D]"
-            style={{
-              left: `${((pMin - safe.pmin) / (safe.pmax - safe.pmin)) * 100}%`,
-              right:`${100 - ((pMax - safe.pmin) / (safe.pmax - safe.pmin)) * 100}%`,
+        <div className="text-sm mb-1 opacity-80">Cena (zł)</div>
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="number" inputMode="numeric" className="input rounded-none"
+            placeholder={`od ${safe.pmin.toLocaleString('pl-PL')}`}
+            min={safe.pmin} max={safe.pmax}
+            value={pMin > safe.pmin ? pMin : ''}
+            onChange={(e) => {
+              const v = e.target.value;
+              setPMin(v === '' ? safe.pmin : clamp(parseInt(v) || safe.pmin, safe.pmin, safe.pmax));
             }}
           />
-          <input type="range" min={safe.pmin} max={safe.pmax} value={pMin}
-                 onChange={(e)=>setPMin(parseInt(e.target.value))} className="range"/>
-          <input type="range" min={safe.pmin} max={safe.pmax} value={pMax}
-                 onChange={(e)=>setPMax(parseInt(e.target.value))} className="range"/>
+          <input
+            type="number" inputMode="numeric" className="input rounded-none"
+            placeholder={`do ${safe.pmax.toLocaleString('pl-PL')}`}
+            min={safe.pmin} max={safe.pmax}
+            value={pMax < safe.pmax ? pMax : ''}
+            onChange={(e) => {
+              const v = e.target.value;
+              setPMax(v === '' ? safe.pmax : clamp(parseInt(v) || safe.pmax, safe.pmin, safe.pmax));
+            }}
+          />
         </div>
       </div>
 
       {/* METRAŻ */}
       <div>
-        <div className="flex justify-between text-sm mb-1">
-          <span>Metraż: {aMin} m²</span>
-          <span>{aMax} m²</span>
-        </div>
-        <div className="relative h-8">
-          <div className="absolute left:0 right:0 top-1/2 -translate-y-1/2 h-1 bg-white/10 rounded" />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 h-1 bg-[#E9C87D]"
-            style={{
-              left: `${((aMin - safe.amin) / (safe.amax - safe.amin)) * 100}%`,
-              right:`${100 - ((aMax - safe.amin) / (safe.amax - safe.amin)) * 100}%`,
+        <div className="text-sm mb-1 opacity-80">Metraż (m²)</div>
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="number" inputMode="numeric" className="input rounded-none"
+            placeholder={`od ${safe.amin}`}
+            min={safe.amin} max={safe.amax}
+            value={aMin > safe.amin ? aMin : ''}
+            onChange={(e) => {
+              const v = e.target.value;
+              setAMin(v === '' ? safe.amin : clamp(parseInt(v) || safe.amin, safe.amin, safe.amax));
             }}
           />
-          <input type="range" min={safe.amin} max={safe.amax} value={aMin}
-                 onChange={(e)=>setAMin(parseInt(e.target.value))} className="range"/>
-          <input type="range" min={safe.amin} max={safe.amax} value={aMax}
-                 onChange={(e)=>setAMax(parseInt(e.target.value))} className="range"/>
+          <input
+            type="number" inputMode="numeric" className="input rounded-none"
+            placeholder={`do ${safe.amax}`}
+            min={safe.amin} max={safe.amax}
+            value={aMax < safe.amax ? aMax : ''}
+            onChange={(e) => {
+              const v = e.target.value;
+              setAMax(v === '' ? safe.amax : clamp(parseInt(v) || safe.amax, safe.amin, safe.amax));
+            }}
+          />
         </div>
       </div>
 
@@ -313,25 +323,7 @@ export default function Filters({
       </div>
 
       <style jsx global>{`
-        .input{background:#00000066;border:1px solid #ffffff1a;padding:12px 14px;width:100%}
-        .range{
-          -webkit-appearance:none;appearance:none;
-          position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
-          background:transparent;height:0;
-          pointer-events:none;
-          accent-color:#E9C87D;outline:none;
-        }
-        .range::-webkit-slider-thumb{
-          -webkit-appearance:none;appearance:none;
-          width:18px;height:18px;border-radius:9999px;background:#E9C87D;border:2px solid #1a1a1a;
-          cursor:pointer;position:relative;z-index:10;
-          pointer-events:auto;
-        }
-        .range::-moz-range-thumb{
-          width:18px;height:18px;border-radius:9999px;background:#E9C87D;border:2px solid #1a1a1a;cursor:pointer;
-          pointer-events:auto;
-        }
-        .range::-webkit-slider-thumb:active { cursor:grabbing; }
+        .input{background:#00000066;border:1px solid #ffffff1a;padding:12px 14px;width:100%;font-size:16px}
       `}</style>
     </form>
   );

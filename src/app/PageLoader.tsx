@@ -2,20 +2,29 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+
+// Pokaż loader tylko RAZ na sesję i tylko gdy wchodzimy od razu na stronę główną.
+// Dzięki temu nie miga przy każdym kliknięciu/przejściu.
+let alreadyShown = false;
 
 /**
- * Globalny page loader
+ * Loader wejściowy (tylko strona główna, pierwsze wejście)
  * - pokazuje logo.webp na ciemnym tle #131313
  * - używa maski (mask-image) jeśli przeglądarka wspiera, wtedy wypełnia kolorem
- * - preloader trzyma min. 2s i chowa się płynnie po pełnym załadowaniu strony
+ * - trzyma min. 2s i chowa się płynnie po pełnym załadowaniu strony
  */
 export default function PageLoader() {
+  const pathname = usePathname();
+  const [active] = useState(() => pathname === '/' && !alreadyShown);
   const [supportsMask, setSupportsMask] = useState<boolean | null>(null);
   const [minTimeDone, setMinTimeDone] = useState(false);
   const [pageLoaded, setPageLoaded] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
+    if (!active) return;
+    alreadyShown = true;
     // 1) wykrycie wsparcia dla mask-image
     try {
       const ok =
@@ -59,6 +68,8 @@ export default function PageLoader() {
       return () => clearTimeout(t);
     }
   }, [minTimeDone, pageLoaded]);
+
+  if (!active) return null;
 
   const readyToShowLogo = supportsMask !== null;
 

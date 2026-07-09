@@ -4,10 +4,8 @@ import "./globals.css";
 import GlobalMenu from "@/components/GlobalMenu";
 import Stopka from "@/components/Stopka";
 import PageLoader from "./PageLoader";
-import RouteLoader from "./RouteLoader";
 import CookieBar from "@/components/CookieBar";
 import Script from "next/script";
-import { Suspense } from "react";
 import StructuredData from "@/components/StructuredData"; // ⬅️ DODANE
 import { SITE_URL } from "@/lib/site";
 import { getPlaceRating } from "@/lib/place";
@@ -77,6 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           bungee.variable,
           "antialiased",
           "bg-[#131313] text-[#d9d9d9]",
+          "lg:pt-14", // miejsce na górny pasek nawigacji na desktopie
         ].join(" ")}
       >
         {/* Globalne menu */}
@@ -179,11 +178,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Stopka */}
         <Stopka />
 
-        {/* Loadery */}
+        {/* Loader tylko przy wejściu na stronę główną (bez migania przy nawigacji) */}
         <PageLoader />
-        <Suspense fallback={null}>
-          <RouteLoader />
-        </Suspense>
 
         {/* Pasek cookies */}
         <CookieBar />

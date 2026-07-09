@@ -37,8 +37,8 @@ i pozwala zaprezentować nieruchomość w najlepszym świetle.`,
   {
     number: '04.',
     title: 'MAKSYMALNA WIDOCZNOŚĆ OFERTY',
-    content: `Twoja oferta trafia na Otodom, OLX, Facebooka, naszą stronę internetową  
-oraz do wewnętrznej bazy klientów poszukujących.  
+    content: `Twoja oferta trafia na Otodom, OLX, Facebooka, tylkodzialki.pl, naszą stronę internetową
+oraz do wewnętrznej bazy klientów poszukujących.
 
 Dbamy o to, by dotarła do właściwych osób — szybko i skutecznie.`,
   },
