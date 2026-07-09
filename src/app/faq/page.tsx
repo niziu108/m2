@@ -110,7 +110,7 @@ export default function Page() {
           <div className="flex flex-wrap justify-center gap-3">
             <a
               href="tel:+48605071605"
-              className="rounded-xl border border-[#E9C87D] text-[#E9C87D] font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313] transition"
+              className="rounded-xl border border-[#E9C87D] text-[#E9C87D]! font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313]! transition"
             >
               Zadzwoń: 605 071 605
             </a>

@@ -148,7 +148,7 @@ export default function GoogleOpinie() {
               href={REVIEW_URL}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-[#E9C87D] text-[#E9C87D] font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313] transition"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#E9C87D] text-[#E9C87D]! font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313]! transition"
             >
               Zostaw opinię w Google
               <SquareArrowOutUpRight className="size-4" aria-hidden="true" />
