@@ -1,6 +1,7 @@
 // src/app/oferta/[slug]/Gallery.tsx
 'use client';
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { cldOptimize } from '@/lib/img';
 
 export default function Gallery({ images }: { images: string[] }) {
   const [idx, setIdx] = useState(0);
@@ -50,7 +51,7 @@ export default function Gallery({ images }: { images: string[] }) {
       <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/20 min-w-0">
         <div className="aspect-video relative min-w-0">
           <img
-            src={curr}
+            src={cldOptimize(curr, 1400)}
             alt=""
             className="absolute inset-0 w-full h-full object-cover cursor-zoom-in"
             onClick={() => setOpen(true)}
@@ -109,7 +110,7 @@ export default function Gallery({ images }: { images: string[] }) {
                     i === idx ? 'border-[#E9C87D] ring-2 ring-[#E9C87D33]' : 'border-white/10'
                   }`}
                 >
-                  <img src={src} alt="" className="w-full h-full object-cover" />
+                  <img src={cldOptimize(src, 320)} alt="" loading="lazy" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -164,7 +165,7 @@ export default function Gallery({ images }: { images: string[] }) {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={curr}
+              src={cldOptimize(curr, 2000)}
               alt=""
               className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl mx-auto"
             />

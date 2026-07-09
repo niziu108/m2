@@ -58,6 +58,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || "x5XpIsvO_hH7WMe3Iqti-pJRp_4fevGQGDXDSa5KMuo",
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

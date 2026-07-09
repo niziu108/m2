@@ -6,6 +6,10 @@ import { ChevronLeft, ChevronRight, SquareArrowOutUpRight } from "lucide-react";
 
 const GOLD = "#E9C87D";
 
+// Link prowadzący prosto do wystawienia opinii w wizytówce Google
+const REVIEW_URL =
+  "https://search.google.com/local/writereview?placeid=ChIJM50TlD4bGkcRCI5xxkS1cIo";
+
 /** 1 na tel, 3 na desktopie */
 function useVisibleCount() {
   const [n, setN] = useState<number>(
@@ -138,6 +142,18 @@ export default function GoogleOpinie() {
           {"warn" in data! && (data as any).warn ? (
             <p className="text-[11px] text-white/40 mt-1">{(data as any).warn}</p>
           ) : null}
+
+          <div className="mt-4">
+            <a
+              href={REVIEW_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#E9C87D] text-[#E9C87D] font-semibold px-5 py-2.5 hover:bg-[#E9C87D] hover:text-[#131313] transition"
+            >
+              Zostaw opinię w Google
+              <SquareArrowOutUpRight className="size-4" aria-hidden="true" />
+            </a>
+          </div>
         </header>
 
         <div className="relative">

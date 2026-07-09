@@ -3,9 +3,53 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import Filters from './Filters';
 import Card from './Card';
+import StructuredData from '@/components/StructuredData';
+import { breadcrumbJsonLd } from '@/lib/schema';
+import { SITE_URL } from '@/lib/site';
+
+// mapa kategorii -> ścieżka + etykieta (linkowanie wewnętrzne)
+const CATS: { key: 'DOM' | 'MIESZKANIE' | 'DZIALKA' | 'INNE'; label: string; path: string }[] = [
+  { key: 'DOM',        label: 'Domy',       path: '/domy' },
+  { key: 'MIESZKANIE', label: 'Mieszkania', path: '/mieszkania' },
+  { key: 'DZIALKA',    label: 'Działki',    path: '/dzialki' },
+  { key: 'INNE',       label: 'Inne',       path: '/inne' },
+];
+
+// Teksty SEO pod frazy lokalne (naturalne, bez upychania)
+const SEO_COPY: Record<string, { h2: string; paras: string[] }> = {
+  DOM: {
+    h2: 'Domy na sprzedaż w Bełchatowie i okolicy',
+    paras: [
+      'Szukasz domu na sprzedaż w Bełchatowie lub okolicznych miejscowościach? W M2 Nieruchomości znajdziesz aktualne oferty domów jednorodzinnych, parterowych i z ogrodem, z realnymi zdjęciami i pełnym opisem. Każdą nieruchomość oglądamy osobiście, więc to co widzisz w ofercie zgadza się ze stanem faktycznym.',
+      'Działamy na terenie Bełchatowa i powiatu bełchatowskiego, w promieniu do 40 km. Jako biuro mobilne dojedziemy do Ciebie i pokażemy dom w dogodnym terminie, także w weekend. Jeśli chcesz sprzedać dom, pomożemy w wycenie i poprowadzimy całą transakcję.',
+    ],
+  },
+  MIESZKANIE: {
+    h2: 'Mieszkania na sprzedaż w Bełchatowie',
+    paras: [
+      'Przeglądasz mieszkania na sprzedaż w Bełchatowie? Zebraliśmy dla Ciebie aktualne oferta z cenami, metrażami i liczbą pokoi. Filtry po cenie, powierzchni i lokalizacji pomogą szybko znaleźć mieszkanie dopasowane do Twoich potrzeb i budżetu.',
+      'Kupujesz albo sprzedajesz mieszkanie? Doradzimy przy wycenie, przygotowaniu oferty i formalnościach. Obsługujemy Bełchatów i okolice, a kontakt z nami jest możliwy przez siedem dni w tygodniu.',
+    ],
+  },
+  DZIALKA: {
+    h2: 'Działki na sprzedaż w Bełchatowie i powiecie bełchatowskim',
+    paras: [
+      'Działki budowlane, rolne i rekreacyjne na sprzedaż w Bełchatowie i okolicy. W ofertach znajdziesz powierzchnię, lokalizację i cenę, a w razie pytań o warunki zabudowy czy media pomożemy je wyjaśnić przed zakupem.',
+      'Planujesz sprzedaż działki? Wycenimy grunt i znajdziemy kupca. Znamy lokalny rynek powiatu bełchatowskiego, dlatego dobierzemy realną cenę i skrócimy czas sprzedaży.',
+    ],
+  },
+  INNE: {
+    h2: 'Pozostałe nieruchomości na sprzedaż w Bełchatowie',
+    paras: [
+      'W tej sekcji zebraliśmy pozostałe nieruchomości: lokale użytkowe, obiekty komercyjne i oferty, które nie mieszczą się w standardowych kategoriach. Wszystkie dotyczą Bełchatowa i okolicy.',
+      'Masz nietypową nieruchomość do sprzedania? Skontaktuj się z nami, pomożemy z wyceną i sprzedażą niezależnie od rodzaju obiektu.',
+    ],
+  },
+};
 
 export default async function CategoryPage({
   title,
@@ -109,8 +153,16 @@ export default async function CategoryPage({
     });
   }
 
+  const seo = SEO_COPY[category] ?? SEO_COPY.INNE;
+  const selfPath = CATS.find((c) => c.key === category)?.path ?? '/';
+  const breadcrumb = breadcrumbJsonLd([
+    { name: 'Strona główna', item: SITE_URL },
+    { name: title, item: `${SITE_URL}${selfPath}` },
+  ]);
+
   return (
     <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9]">
+      <StructuredData jsonLd={breadcrumb} />
       <section className="px-4 pt-8 pb-6 border-b border-[#E9C87D]/20">
         <h1 className="font-[Bungee] text-center text-[#E9C87D] tracking-[2px] text-[clamp(32px,6vw,72px)] mb-6">
           {title.toUpperCase()}
@@ -141,6 +193,39 @@ export default async function CategoryPage({
               </h2>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* SEKCJA SEO + LINKOWANIE WEWNĘTRZNE */}
+      <section className="px-4 pb-16 pt-4 border-t border-white/5">
+        <div className="mx-auto w-full max-w-3xl text-[#c9c9c9]">
+          <h2 className="font-[Bungee] text-[#E9C87D] text-[clamp(18px,3.6vw,28px)] tracking-[1px] mb-4">
+            {seo.h2}
+          </h2>
+          <div className="space-y-3 text-sm sm:text-base leading-relaxed">
+            {seo.paras.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <span className="opacity-60">Zobacz również:</span>
+            {CATS.filter((c) => c.key !== category).map((c) => (
+              <Link
+                key={c.key}
+                href={c.path}
+                className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80"
+              >
+                {c.label}
+              </Link>
+            ))}
+            <Link href="/faq" className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80">
+              Najczęstsze pytania
+            </Link>
+            <Link href="/#kontakt" className="text-[#E9C87D] underline underline-offset-4 hover:opacity-80">
+              Kontakt
+            </Link>
+          </div>
         </div>
       </section>
     </main>

@@ -134,6 +134,9 @@ export default function Stopka() {
                   <Link href="/#kontakt" className={linkCls}>KONTAKT</Link>
                 )}
               </li>
+              <li>
+                <Link href="/faq" className={linkCls}>FAQ</Link>
+              </li>
             </ul>
           </nav>
         </div>

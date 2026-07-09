@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { cldOptimize } from '@/lib/img'
 
 export function toPLN(n: number) {
   return n.toLocaleString('pl-PL') + ' zł'
@@ -22,8 +23,9 @@ export default function Card({ l }: { l: any }) {
       {/* TŁO */}
       {l.coverImageUrl ? (
         <img
-          src={l.coverImageUrl}
-          alt={l.title}
+          src={cldOptimize(l.coverImageUrl, 800)}
+          alt={`${l.title}${l.location ? ' – ' + l.location : ''}`}
+          loading="lazy"
           className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
             l.isReserved ? 'opacity-70' : ''
           }`}

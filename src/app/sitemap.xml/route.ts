@@ -13,6 +13,7 @@ export async function GET() {
     { loc: `${SITE}/mieszkania`, changefreq: 'daily', priority: '0.9' },
     { loc: `${SITE}/dzialki`, changefreq: 'daily', priority: '0.9' },
     { loc: `${SITE}/inne`, changefreq: 'weekly', priority: '0.7' },
+    { loc: `${SITE}/faq`, changefreq: 'monthly', priority: '0.6' },
     { loc: `${SITE}/polityka-prywatnosci`, changefreq: 'yearly', priority: '0.2' },
   ];
 
