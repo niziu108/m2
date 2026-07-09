@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const CATS = [
   { label: "Domy", value: "/domy" },
@@ -14,6 +14,19 @@ const CATS = [
 export default function Hero() {
   const router = useRouter();
   const [cat, setCat] = useState("");
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  // zamykanie po kliknięciu poza listą
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
+
+  const selectedLabel = CATS.find((c) => c.value === cat)?.label;
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,24 +102,51 @@ export default function Hero() {
           className="mt-8 w-full max-w-[520px] px-2"
         >
           <div className="flex flex-col sm:flex-row items-stretch gap-3 rounded-2xl bg-white/95 backdrop-blur p-3 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
-            <div className="relative flex-1 text-left">
-              <select
-                value={cat}
-                onChange={(e) => setCat(e.target.value)}
-                style={{ accentColor: "#E9C87D" }}
-                className="w-full appearance-none bg-white text-[#23201b] text-[16px] rounded-xl border border-black/10 pl-4 pr-12 py-3.5 cursor-pointer focus:outline-none focus:border-[#c8951a] focus:ring-2 focus:ring-[#E9C87D]"
+            <div ref={boxRef} className="relative flex-1 text-left">
+              <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                className="w-full flex items-center justify-between bg-white text-[16px] rounded-xl border border-black/10 pl-4 pr-3 py-3.5 focus:outline-none focus:border-[#c8951a] focus:ring-2 focus:ring-[#E9C87D]"
               >
-                <option value="" disabled hidden>Czego szukasz?</option>
-                {CATS.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
-                ))}
-              </select>
-              {/* Wyraźna strzałka w dół */}
-              <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b1861d" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <span className={selectedLabel ? "text-[#23201b]" : "text-black/50"}>
+                  {selectedLabel ?? "Czego szukasz?"}
+                </span>
+                <svg
+                  width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="#b1861d" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+                  className={`transition-transform ${open ? "rotate-180" : ""}`}
+                >
                   <path d="M6 9l6 6 6-6" />
                 </svg>
-              </span>
+              </button>
+
+              {open && (
+                <ul
+                  role="listbox"
+                  className="absolute z-50 mt-2 w-full rounded-xl border border-black/10 bg-white shadow-[0_14px_34px_rgba(0,0,0,0.25)] overflow-hidden"
+                >
+                  {CATS.map((c) => {
+                    const active = cat === c.value;
+                    return (
+                      <li
+                        key={c.value}
+                        role="option"
+                        aria-selected={active}
+                        onClick={() => { setCat(c.value); setOpen(false); }}
+                        className={`px-4 py-3 cursor-pointer text-[16px] transition-colors ${
+                          active
+                            ? "bg-[#E9C87D] text-[#2a2117] font-semibold"
+                            : "text-[#23201b] hover:bg-[#E9C87D]/30"
+                        }`}
+                      >
+                        {c.label}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </div>
             <button
               type="submit"
