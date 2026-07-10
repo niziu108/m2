@@ -48,7 +48,7 @@ export default function Gallery({ images }: { images: string[] }) {
   return (
     <>
       {/* DUŻE ZDJĘCIE */}
-      <div className="relative rounded-2xl overflow-hidden border border-black/10 bg-black/20 min-w-0">
+      <div className="relative overflow-hidden sm:rounded-2xl border-0 sm:border sm:border-black/10 bg-black/20 min-w-0">
         <div className="aspect-video relative min-w-0">
           <img
             src={cldOptimize(curr, 1400)}
@@ -61,14 +61,14 @@ export default function Gallery({ images }: { images: string[] }) {
               <button
                 onClick={prev}
                 aria-label="prev"
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center bg-black/50 hover:bg-black/70 text-white rounded-full"
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-11 w-11 grid place-items-center bg-black/60 hover:bg-black/80 text-white rounded-full text-2xl leading-none shadow-lg"
               >
                 ‹
               </button>
               <button
                 onClick={next}
                 aria-label="next"
-                className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center bg-black/50 hover:bg-black/70 text-white rounded-full"
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-11 w-11 grid place-items-center bg-black/60 hover:bg-black/80 text-white rounded-full text-2xl leading-none shadow-lg"
               >
                 ›
               </button>
@@ -130,7 +130,7 @@ export default function Gallery({ images }: { images: string[] }) {
               e.stopPropagation();
               setOpen(false);
             }}
-            className="absolute top-3 right-3 sm:top-6 sm:right-6 px-4 h-10 rounded-xl border border-black/30 text-white/90 hover:bg-white/10"
+            className="absolute top-3 right-3 sm:top-6 sm:right-6 px-4 h-10 rounded-xl bg-black/60 hover:bg-black/80 text-white ring-1 ring-white/25 shadow-lg"
           >
             Zamknij ✕
           </button>
@@ -143,7 +143,8 @@ export default function Gallery({ images }: { images: string[] }) {
                   e.stopPropagation();
                   prev();
                 }}
-                className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full border border-black/30 text-white hover:bg-white/10"
+                aria-label="Poprzednie zdjęcie"
+                className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 h-12 w-12 grid place-items-center rounded-full bg-black/60 hover:bg-black/80 text-white text-3xl leading-none shadow-lg ring-1 ring-white/25"
               >
                 ‹
               </button>
@@ -152,7 +153,8 @@ export default function Gallery({ images }: { images: string[] }) {
                   e.stopPropagation();
                   next();
                 }}
-                className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full border border-black/30 text-white hover:bg-white/10"
+                aria-label="Następne zdjęcie"
+                className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 h-12 w-12 grid place-items-center rounded-full bg-black/60 hover:bg-black/80 text-white text-3xl leading-none shadow-lg ring-1 ring-white/25"
               >
                 ›
               </button>

@@ -157,7 +157,7 @@ export default async function Page({ params }: PageProps) {
       <StructuredData jsonLd={[jsonLdOffer, jsonLdBreadcrumbs]} />
       <BackArrow /> {/* ⬅️ Złota strzałka powrotu */}
       
-      <section className="px-3 sm:px-4 py-5 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
+      <section className="px-0 sm:px-4 py-4 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
         {/* TYTUŁ */}
         <h1 className="font-[Bungee] gold-grad text-center leading-tight px-14 sm:px-16 tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
           {String(data.title).toUpperCase()}
@@ -166,7 +166,7 @@ export default async function Page({ params }: PageProps) {
         {/* GÓRA: galeria + panel info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 items-start min-w-0">
           {/* LEWA KARTA = GALERIA */}
-          <div className="rounded-2xl border border-black/10 p-2.5 sm:p-3 md:p-4 bg-[var(--surface)] h-full min-w-0">
+          <div className="sm:rounded-2xl border-0 sm:border sm:border-black/10 p-0 sm:p-3 md:p-4 sm:bg-[var(--surface)] h-full min-w-0">
             <Gallery images={pics} />
 
             {/* WIRTUALNY SPACER — pod galerią (tylko jeśli jest) */}
@@ -186,7 +186,7 @@ export default async function Page({ params }: PageProps) {
           </div>
 
           {/* PRAWA KARTA = TABELA DANYCH */}
-          <aside className="rounded-2xl border border-black/10 p-4 sm:p-5 md:p-6 bg-[var(--surface)] h-full flex min-w-0">
+          <aside className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-2 sm:p-5 md:p-6 bg-[var(--surface)] h-full flex min-w-0">
             <div className="w-full flex flex-col gap-3 sm:gap-4 md:my-auto min-w-0">
               {/* CENA */}
               <div className="mb-1">
@@ -235,7 +235,7 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         {/* OPIS */}
-        <div className="mt-7 md:mt-8">
+        <div className="mt-7 md:mt-8 px-3 sm:px-0">
           {data.shortDesc && (
             <div
               className="desc text-base sm:text-lg leading-relaxed space-y-4"
@@ -251,7 +251,7 @@ export default async function Page({ params }: PageProps) {
 
         {/* KALKULATOR */}
         <div className="mt-8 md:mt-10">
-          <div className="rounded-2xl border border-black/10 p-4 sm:p-5 md:p-6 bg-[var(--surface)]">
+          <div className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-4 sm:p-5 md:p-6 bg-[var(--surface)]">
             <h3 className="font-[Bungee] gold-grad mb-3 text-center">
               Symulacja raty kredytu
             </h3>
