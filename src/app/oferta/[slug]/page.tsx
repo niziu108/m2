@@ -5,7 +5,6 @@ import { prisma } from '@/lib/prisma';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Gallery from './Gallery';
-import MortgageCalculator from './MortgageCalculator';
 import BackArrow from '@/components/BackArrow'; // ⬅️ DODANE
 import ViewTracker from './ViewTracker';        // ⬅️ DODANE
 import StructuredData from '@/components/StructuredData';
@@ -249,13 +248,81 @@ export default async function Page({ params }: PageProps) {
           )}
         </div>
 
-        {/* KALKULATOR */}
+        {/* KARTA KONTAKTU DO TEJ OFERTY */}
         <div className="mt-8 md:mt-10">
-          <div className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-4 sm:p-5 md:p-6 bg-[var(--surface)]">
-            <h3 className="font-[Bungee] gold-grad mb-3 text-center">
-              Symulacja raty kredytu
+          <div className="sm:rounded-2xl border-0 sm:border sm:border-[#E9C87D]/30 px-3 py-5 sm:p-6 md:p-8 bg-[var(--surface)] text-center">
+            <h3 className="font-[Bungee] gold-grad mb-2 text-[clamp(18px,3vw,28px)]">
+              Zainteresowała Cię ta oferta?
             </h3>
-            <MortgageCalculator price={data.price} />
+            <p className="text-[var(--foreground-soft)] mb-5 max-w-xl mx-auto">
+              Zadzwoń lub napisz, chętnie umówimy oglądanie i odpowiemy na wszystkie pytania.
+              {data.listingNumber ? ` Podaj numer oferty: ${data.listingNumber}.` : ''}
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <a
+                href={`tel:${(data.contactPhone ?? '605 071 605').replace(/\s+/g, '')}`}
+                className="rounded-xl bg-[#E9C87D] text-[#131313] font-semibold px-6 py-3 select-none"
+              >
+                Zadzwoń: {data.contactPhone ?? '605 071 605'}
+              </a>
+              <a
+                href={`mailto:${data.contactEmail ?? 'biuro@m2.nieruchomosci.pl'}?subject=${encodeURIComponent(
+                  `Zapytanie o ofertę: ${data.title}${data.listingNumber ? ` (nr ${data.listingNumber})` : ''}`
+                )}`}
+                className="rounded-xl border border-[#E9C87D] text-[var(--gold-ink)] font-semibold px-6 py-3 select-none"
+              >
+                Napisz wiadomość
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* NAJCZĘSTSZE PYTANIA */}
+        <div className="mt-8 md:mt-10">
+          <div className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-5 sm:p-6 md:p-8 bg-[var(--surface)]">
+            <h3 className="font-[Bungee] gold-grad mb-4 text-center text-[clamp(18px,3vw,28px)]">
+              Najczęstsze pytania
+            </h3>
+            <div className="space-y-3 max-w-2xl mx-auto">
+              {[
+                {
+                  q: 'Czy mogę umówić się na oglądanie tej nieruchomości?',
+                  a: 'Tak. Zadzwoń lub napisz, a ustalimy dogodny termin, także w weekend. Dojeżdżamy na miejsce razem z Tobą.',
+                },
+                {
+                  q: 'Czy cena podlega negocjacji?',
+                  a: 'Warunki zawsze warto omówić bezpośrednio. Przekażemy Twoją propozycję właścicielowi i pomożemy dojść do porozumienia.',
+                },
+                {
+                  q: 'Ile kosztuje pomoc biura przy zakupie?',
+                  a: 'Wynagrodzenie ustalamy jasno i z góry, bez ukrytych kosztów. Szczegóły przedstawimy przy kontakcie.',
+                },
+                {
+                  q: 'Pomożecie z formalnościami i dokumentami?',
+                  a: 'Tak. Prowadzimy Cię przez cały proces, od rezerwacji po akt notarialny, i pomagamy skompletować dokumenty.',
+                },
+              ].map((item, i) => (
+                <details
+                  key={i}
+                  className="group rounded-xl border border-black/10 px-4 py-3 bg-[var(--background)]"
+                >
+                  <summary className="cursor-pointer list-none flex items-center justify-between gap-3 font-semibold select-none">
+                    <span>{item.q}</span>
+                    <span className="text-[var(--gold-ink)] transition-transform group-open:rotate-45 text-2xl leading-none">
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-2 text-sm sm:text-base leading-relaxed text-[var(--foreground-soft)]">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+            <p className="mt-5 text-center text-sm">
+              <a href="/faq" className="text-[var(--gold-ink)] underline underline-offset-4 select-none">
+                Zobacz wszystkie pytania
+              </a>
+            </p>
           </div>
         </div>
 

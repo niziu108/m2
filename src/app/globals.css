@@ -63,6 +63,18 @@ a:hover {
 /* === OBRAZY === */
 img {
   user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+/* Zdjęcia nie łapią zaznaczenia (żaden złoty tint po tapnięciu/przeciągnięciu) */
+img::selection {
+  background: transparent;
+}
+
+/* Brak szarego/niebieskiego prostokąta po tapnięciu na mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* === ZAZNACZENIE === */

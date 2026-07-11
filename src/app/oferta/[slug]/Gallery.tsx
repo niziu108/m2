@@ -7,6 +7,8 @@ export default function Gallery({ images }: { images: string[] }) {
   const [idx, setIdx] = useState(0);
   const [open, setOpen] = useState(false);
   const railRef = useRef<HTMLDivElement>(null);
+  const touchX = useRef<number | null>(null);
+  const touchMoved = useRef(false);
 
   useEffect(() => {
     if (idx >= images.length) setIdx(0);
@@ -45,16 +47,43 @@ export default function Gallery({ images }: { images: string[] }) {
   const canScroll = images.length > 5;
   const scrollBy = (dx: number) => railRef.current?.scrollBy({ left: dx, behavior: 'smooth' });
 
+  // Przewijanie zdjęć palcem (mobile)
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.touches[0].clientX;
+    touchMoved.current = false;
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchX.current === null) return;
+    if (Math.abs(e.touches[0].clientX - touchX.current) > 10) touchMoved.current = true;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    touchX.current = null;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) next();
+      else prev();
+    }
+  };
+
   return (
     <>
       {/* DUŻE ZDJĘCIE */}
-      <div className="relative overflow-hidden sm:rounded-2xl border-0 sm:border sm:border-black/10 bg-black/20 min-w-0">
-        <div className="aspect-video relative min-w-0">
+      <div className="relative overflow-hidden sm:rounded-2xl border-0 sm:border sm:border-black/10 bg-[var(--surface)] min-w-0">
+        <div
+          className="aspect-video relative min-w-0"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <img
             src={cldOptimize(curr, 1400)}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover cursor-zoom-in"
-            onClick={() => setOpen(true)}
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-cover cursor-zoom-in select-none"
+            onClick={() => {
+              if (!touchMoved.current) setOpen(true);
+            }}
           />
           {images.length > 1 && (
             <>
@@ -165,11 +194,15 @@ export default function Gallery({ images }: { images: string[] }) {
           <div
             className="max-w-[92vw] sm:max-w-[95vw] max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
             <img
               src={cldOptimize(curr, 2000)}
               alt=""
-              className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl mx-auto"
+              draggable={false}
+              className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl mx-auto select-none"
             />
           </div>
         </div>
