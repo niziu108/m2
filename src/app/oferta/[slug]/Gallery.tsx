@@ -79,8 +79,8 @@ export default function Gallery({ images }: { images: string[] }) {
           <img
             src={cldOptimize(curr, 1400)}
             alt=""
-            draggable={false}
-            className="absolute inset-0 w-full h-full object-cover cursor-zoom-in select-none"
+            data-savable
+            className="absolute inset-0 w-full h-full object-cover cursor-zoom-in"
             onClick={() => {
               if (!touchMoved.current) setOpen(true);
             }}
@@ -201,8 +201,8 @@ export default function Gallery({ images }: { images: string[] }) {
             <img
               src={cldOptimize(curr, 2000)}
               alt=""
-              draggable={false}
-              className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl mx-auto select-none"
+              data-savable
+              className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl mx-auto"
             />
           </div>
         </div>
