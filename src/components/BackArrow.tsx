@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-export default function BackArrow() {
+export default function BackArrow({ label = 'Wróć' }: { label?: string }) {
   const router = useRouter();
   const [showGuard, setShowGuard] = useState(false);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -40,14 +40,16 @@ export default function BackArrow() {
 
       <button
         onClick={handleClick}
-        aria-label="Wróć"
+        aria-label={label}
         className="
-          fixed top-5 sm:top-7 left-3 z-[10000]
-          flex items-center justify-center
-          w-6 h-6 sm:w-7 sm:h-7 rounded-full
+          fixed top-4 sm:top-6 left-3 z-[10000]
+          inline-flex items-center gap-1.5
+          rounded-full px-3 py-1.5
           border border-[#E9C87D]
+          bg-[var(--background)]/85 backdrop-blur-[2px]
           text-[var(--gold-ink)]
-          hover:bg-[#E9C87D]/10
+          text-[12px] sm:text-[13px] font-semibold
+          hover:bg-[#E9C87D]/20
           active:scale-[0.96]
           transition-all duration-200
         "
@@ -59,10 +61,11 @@ export default function BackArrow() {
           strokeWidth='2.4'
           strokeLinecap='round'
           strokeLinejoin='round'
-          className='w-3.5 h-3.5 sm:w-4 sm:h-4'
+          className='w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0'
         >
           <path d='M15 18l-6-6 6-6' />
         </svg>
+        {label}
       </button>
     </>
   );

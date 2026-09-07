@@ -155,9 +155,9 @@ export default async function Page({ params }: PageProps) {
   return (
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)] overflow-x-hidden">
       <StructuredData jsonLd={[jsonLdOffer, jsonLdBreadcrumbs]} />
-      <BackArrow /> {/* ⬅️ Złota strzałka powrotu */}
+      <BackArrow label="Wróć do listy ofert" />
       
-      <section className="px-0 sm:px-4 py-4 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
+      <section className="px-0 sm:px-4 pt-14 pb-4 sm:pt-16 sm:pb-6 mx-auto w-full max-w-[min(1400px,95vw)]">
         {/* GÓRA: galeria + panel info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 items-start min-w-0">
           {/* LEWA KARTA = GALERIA */}
