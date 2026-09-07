@@ -101,11 +101,22 @@ export default function Hero() {
             lg:max-w-[60%]
           "
         >
-          <span className="block sm:hidden">
+          <span className="block">
             ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
           </span>
-          <span className="hidden sm:block">
-            ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
+
+          {/* druga linia nagłówka: fraza, na którą chcemy być w Google */}
+          <span
+            className="
+              mt-3 block
+              text-white/90
+              text-[clamp(11px,3vw,17px)]
+              tracking-[0.1em] sm:tracking-[0.16em]
+              leading-[1.45]
+              drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]
+            "
+          >
+            BIURO NIERUCHOMOŚCI BEŁCHATÓW
           </span>
         </h1>
 
@@ -119,8 +130,7 @@ export default function Hero() {
             drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]
           "
         >
-          Biuro nieruchomości w Bełchatowie. Domy, mieszkania i działki na sprzedaż
-          w Bełchatowie i okolicy do 40 km.
+          Domy, mieszkania i działki na sprzedaż w Bełchatowie i okolicy do 40 km.
         </p>
 
         {/* WYSZUKIWARKA */}
