@@ -28,6 +28,10 @@ const FAQ: { q: string; a: string }[] = [
     a: 'Wysokość wynagrodzenia biura ustalamy indywidualnie i zawsze jasno, przed podpisaniem umowy. Prowizję poznajesz z góry, bez ukrytych kosztów. Skontaktuj się z nami, a przedstawimy warunki dla Twojej nieruchomości.',
   },
   {
+    q: 'Czy kupujący płaci prowizję?',
+    a: 'Nie. W M2 Nieruchomości kupujący nie płaci prowizji. Do ceny oferty nie doliczamy wynagrodzenia dla biura, więc prezentacja nieruchomości, negocjacje i pomoc przy formalnościach nic Cię nie kosztują.',
+  },
+  {
     q: 'Jak sprzedać dom lub mieszkanie w Bełchatowie?',
     a: 'Zaczynamy od oględzin nieruchomości i wyceny. Przygotowujemy ofertę ze zdjęciami i opisem, publikujemy ją i szukamy kupca, a następnie prowadzimy Cię przez negocjacje i formalności aż do aktu notarialnego. Ty nie musisz zajmować się całą papierologią.',
   },

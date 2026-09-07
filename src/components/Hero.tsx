@@ -101,14 +101,10 @@ export default function Hero() {
             lg:max-w-[60%]
           "
         >
-          <span className="block">
-            ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
-          </span>
-
-          {/* druga linia nagłówka: fraza, na którą chcemy być w Google */}
+          {/* pierwsza linia nagłówka: fraza, na którą chcemy być w Google */}
           <span
             className="
-              mt-3 block
+              mb-3 block
               text-white/90
               text-[clamp(11px,3vw,17px)]
               tracking-[0.1em] sm:tracking-[0.16em]
@@ -117,6 +113,10 @@ export default function Hero() {
             "
           >
             BIURO NIERUCHOMOŚCI BEŁCHATÓW
+          </span>
+
+          <span className="block">
+            ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
           </span>
         </h1>
 

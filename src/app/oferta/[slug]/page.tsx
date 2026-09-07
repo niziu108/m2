@@ -291,7 +291,7 @@ export default async function Page({ params }: PageProps) {
                 },
                 {
                   q: 'Ile kosztuje pomoc biura przy zakupie?',
-                  a: 'Wynagrodzenie ustalamy jasno i z góry, bez ukrytych kosztów. Szczegóły przedstawimy przy kontakcie.',
+                  a: 'Nic. Kupujący nie płaci u nas prowizji, więc do ceny oferty nie doliczamy żadnego wynagrodzenia dla biura. Pokazanie nieruchomości, negocjacje i pomoc w formalnościach masz bez dodatkowych opłat.',
                 },
                 {
                   q: 'Pomożecie z formalnościami i dokumentami?',
