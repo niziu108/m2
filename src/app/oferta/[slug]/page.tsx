@@ -158,11 +158,6 @@ export default async function Page({ params }: PageProps) {
       <BackArrow /> {/* ⬅️ Złota strzałka powrotu */}
       
       <section className="px-0 sm:px-4 py-4 sm:py-6 mx-auto w-full max-w-[min(1400px,95vw)]">
-        {/* TYTUŁ */}
-        <h1 className="font-[Bungee] gold-grad text-center leading-tight px-14 sm:px-16 tracking-[0.5px] sm:tracking-[1px] md:tracking-[2px] text-[clamp(22px,5.2vw,56px)] mb-4 sm:mb-5 md:mb-6">
-          {String(data.title).toUpperCase()}
-        </h1>
-
         {/* GÓRA: galeria + panel info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 items-start min-w-0">
           {/* LEWA KARTA = GALERIA */}
@@ -188,6 +183,11 @@ export default async function Page({ params }: PageProps) {
           {/* PRAWA KARTA = TABELA DANYCH */}
           <aside className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-2 sm:p-5 md:p-6 bg-[var(--surface)] h-full flex min-w-0">
             <div className="w-full flex flex-col gap-3 sm:gap-4 md:my-auto min-w-0">
+              {/* TYTUŁ OFERTY */}
+              <h1 className="text-[clamp(19px,2.6vw,28px)] font-semibold leading-snug tracking-tight text-[var(--foreground)]">
+                {data.title}
+              </h1>
+
               {/* CENA */}
               <div className="mb-1">
                 <div className="text-xs tracking-wide uppercase opacity-70">Cena</div>
