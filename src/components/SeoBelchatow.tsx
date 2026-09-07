@@ -43,7 +43,7 @@ export default function SeoBelchatow() {
     <section
       id="biuro-nieruchomosci-belchatow"
       aria-label="Biuro nieruchomości Bełchatów"
-      className="w-full bg-[var(--surface)] py-14 md:py-20"
+      className="w-full bg-[var(--background)] py-14 md:py-20"
     >
       <div className="mx-auto max-w-5xl px-4">
         <h2
@@ -74,7 +74,7 @@ export default function SeoBelchatow() {
           {PUNKTY.map((punkt) => (
             <li
               key={punkt.t}
-              className="rounded-2xl border border-[#E9C87D]/45 bg-[var(--background)] px-4 py-5 text-center"
+              className="rounded-2xl border border-[#E9C87D]/45 bg-[var(--surface)] px-4 py-5 text-center"
             >
               <span className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#E9C87D]">
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="#2a2117" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

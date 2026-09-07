@@ -14,12 +14,14 @@ export default function Home() {
   return (
     <main>
       <Hero />
+
+      {/* 🔹 Kim jesteśmy, ile to kosztuje i gdzie działamy.
+             Zaraz pod hero, bo to pierwsze pytanie kogoś z Google. */}
+      <SeoBelchatow />
+
       <Wspolpraca />
       <Oferta />
       <Onas />
-
-      {/* 🔹 Kim jesteśmy i gdzie działamy (ważne dla Google: „biuro nieruchomości Bełchatów") */}
-      <SeoBelchatow />
 
       {/* 🔹 Opinie Google — sekcja między „O nas” a „Kontakt” */}
       <GoogleOpinie title="Opinie naszych klientów" limit={9} />
