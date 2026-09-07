@@ -52,10 +52,9 @@ export default function Filters({
 
   // pola
   const [q, setQ] = useState(defaults.q || '');
-  // dodatkowe filtry (promień, numer oferty) domyślnie schowane; rozwiń gdy już użyte
-  const [showMore, setShowMore] = useState<boolean>(
-    Boolean(defaults.q || defaults.r)
-  );
+  // Panel filtrów jest zwinięty, żeby oferty były widoczne od razu.
+  // Co jest ustawione, widać w podsumowaniu obok przycisku.
+  const [openFilters, setOpenFilters] = useState(false);
   const [pMin, setPMin] = useState<number>(() =>
     clamp(parseInt(defaults.pmin || ''), safe.pmin, safe.pmax) || safe.pmin
   );
@@ -196,6 +195,9 @@ export default function Filters({
     }
     if (loc) params.set('loc', loc);
 
+    // zwijamy panel, żeby wyniki były widoczne od razu po kliknięciu
+    setOpenFilters(false);
+
     startTransition(()=>{
       router.replace(params.toString() ? `${pathname}?${params}` : pathname, { scroll: false });
     });
@@ -233,9 +235,28 @@ export default function Filters({
 
   const radiusChoices = [10, 20, 30, 40];
 
+  // Krótka informacja co jest ustawione, gdy panel filtrów jest zwinięty
+  const podsumowanie = useMemo(() => {
+    const bits: string[] = [];
+    const miejsce = (loc || '').split(',')[0].trim();
+    if (miejsce) bits.push(r > 0 ? `${miejsce} +${r} km` : miejsce);
+    if (pMin > safe.pmin || pMax < safe.pmax) {
+      const od = pMin > safe.pmin ? `od ${pMin.toLocaleString('pl-PL')}` : '';
+      const dof = pMax < safe.pmax ? `do ${pMax.toLocaleString('pl-PL')}` : '';
+      bits.push(`cena ${[od, dof].filter(Boolean).join(' ')} zł`);
+    }
+    if (aMin > safe.amin || aMax < safe.amax) {
+      const od = aMin > safe.amin ? `od ${aMin}` : '';
+      const dof = aMax < safe.amax ? `do ${aMax}` : '';
+      bits.push(`metraż ${[od, dof].filter(Boolean).join(' ')} m²`);
+    }
+    if (q) bits.push(`nr ${q}`);
+    return bits.join(' • ');
+  }, [loc, r, pMin, pMax, aMin, aMax, q, safe]);
+
   return (
     <form onSubmit={onSubmit} className={isPending ? 'opacity-80 pointer-events-none' : ''}>
-      <div className="flt-card grid gap-5">
+      <div className="flt-card grid gap-4">
         {/* CZEGO SZUKASZ (kategoria) */}
         <div>
           <label className="flt-lbl">Czego szukasz?</label>
@@ -254,6 +275,30 @@ export default function Filters({
           </div>
         </div>
 
+        {/* ROZWIŃ / ZWIŃ FILTRY */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <button
+            type="button"
+            onClick={() => setOpenFilters((s) => !s)}
+            className="flt-more"
+            aria-expanded={openFilters}
+          >
+            {openFilters ? 'Zwiń filtry' : 'Rozwiń filtry'}
+            <span className={`flt-more-ic ${openFilters ? 'is-open' : ''}`}>⌄</span>
+          </button>
+
+          {podsumowanie && !openFilters && (
+            <span className="flt-sum">{podsumowanie}</span>
+          )}
+          {podsumowanie && (
+            <button type="button" onClick={onReset} className="flt-clear">
+              Wyczyść
+            </button>
+          )}
+        </div>
+
+        {openFilters && (
+        <div className="grid gap-5">
         {/* LOKALIZACJA */}
         <div className="relative" ref={sugRef}>
           <label className="flt-lbl">Lokalizacja</label>
@@ -339,19 +384,6 @@ export default function Filters({
           </div>
         </div>
 
-        {/* WIĘCEJ FILTRÓW (promień + numer oferty) */}
-        <button
-          type="button"
-          onClick={() => setShowMore((s) => !s)}
-          className="flt-more"
-          aria-expanded={showMore}
-        >
-          {showMore ? 'Mniej filtrów' : 'Więcej filtrów'}
-          <span className={`flt-more-ic ${showMore ? 'is-open' : ''}`}>⌄</span>
-        </button>
-
-        {showMore && (
-          <div className="grid gap-5">
             {/* PROMIEŃ */}
             <div>
               <label className="flt-lbl">Promień od lokalizacji</label>
@@ -387,14 +419,14 @@ export default function Filters({
                 onChange={(e)=>setQ(e.target.value)}
               />
             </div>
-          </div>
-        )}
 
-        {/* AKCJE */}
-        <div className="flex gap-3 pt-1">
-          <button type="submit" className="flt-btn-primary flex-1 sm:flex-none">Szukaj</button>
-          <button type="button" onClick={onReset} className="flt-btn-ghost">Wyczyść</button>
+            {/* AKCJE */}
+            <div className="flex gap-3 pt-1">
+              <button type="submit" className="flt-btn-primary flex-1 sm:flex-none">Szukaj</button>
+              <button type="button" onClick={onReset} className="flt-btn-ghost">Wyczyść</button>
+            </div>
         </div>
+        )}
       </div>
 
       <style jsx global>{`
@@ -456,6 +488,13 @@ export default function Filters({
         .flt-more:hover{ text-decoration:underline }
         .flt-more-ic{ transition:transform .2s ease; display:inline-block; }
         .flt-more-ic.is-open{ transform:rotate(180deg); }
+
+        .flt-sum{ font-size:13px; color:var(--foreground-soft) }
+        .flt-clear{
+          font-size:13px; color:var(--foreground-soft); background:none; border:none;
+          padding:2px 0; cursor:pointer; text-decoration:underline; text-underline-offset:3px;
+        }
+        .flt-clear:hover{ color:var(--foreground) }
 
         .flt-sug{
           position:absolute; z-index:50; margin-top:6px; width:100%;

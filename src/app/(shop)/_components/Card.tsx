@@ -193,7 +193,7 @@ export default function Card({ l }: { l: CardListing }) {
     <Link
       href={`/oferta/${l.slug}`}
       prefetch={false}
-      className="group block overflow-hidden rounded-2xl border border-black/10 bg-[var(--surface)] transition duration-200 hover:border-[#E9C87D] hover:shadow-[0_14px_36px_rgba(20,18,14,0.10)] lg:flex lg:h-[236px] lg:items-stretch"
+      className="group block overflow-hidden rounded-2xl border border-black/10 bg-[var(--surface)] lg:flex lg:h-[236px] lg:items-stretch"
     >
       <Foto photos={photos} title={l.title} reserved={l.isReserved} />
 

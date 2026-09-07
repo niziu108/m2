@@ -205,8 +205,8 @@ export default async function CategoryPage({
   return (
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)]">
       <StructuredData jsonLd={breadcrumb} />
-      <section className="px-4 pt-8 pb-6 border-b border-[#E9C87D]/20">
-        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] leading-tight px-14 sm:px-16 text-[clamp(22px,4.2vw,40px)] mb-6">
+      <section className="px-4 pt-6 pb-5 border-b border-[#E9C87D]/20">
+        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] leading-tight px-14 sm:px-16 text-[clamp(22px,4.2vw,40px)] mb-4">
           {SEARCH_HEADING}
         </h1>
         <div className="max-w-3xl mx-auto">
@@ -222,7 +222,7 @@ export default async function CategoryPage({
         </div>
       </section>
 
-      <section className="px-4 py-6">
+      <section className="px-4 pt-5 pb-6">
         <div className="mx-auto w-full max-w-[min(1180px,95vw)]">
           {items.length ? (
             <>
