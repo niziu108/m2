@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import CategoryPage from '../(shop)/_components/CategoryPage';
 
 export const metadata: Metadata = {
-  title: 'Inne nieruchomości | M2 Nieruchomości',
+  title: 'Lokale i inne nieruchomości Bełchatów',
   description:
     'Pozostałe oferty nieruchomości w Bełchatowie i okolicach.',
   alternates: { canonical: '/inne' },

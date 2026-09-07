@@ -10,12 +10,13 @@ const FG = '#23201b';
 const ACCENT = '#E9C87D';
 
 type TargetId = 'hero' | 'jak-dzialamy' | 'oferta' | 'o-nas' | 'kontakt';
-type MenuItem = { label: string; id: TargetId };
+type MenuItem = { label: string; id?: TargetId; href?: string };
 
 const MENU: MenuItem[] = [
   { label: 'STRONA GŁÓWNA', id: 'hero' },
   { label: 'JAK DZIAŁAMY?', id: 'jak-dzialamy' },
-  { label: 'OFERTA', id: 'oferta' },
+  // Oferta prowadzi prosto do wyszukiwarki ze wszystkimi ofertami
+  { label: 'OFERTA', href: '/nieruchomosci' },
   { label: 'O NAS', id: 'o-nas' },
   { label: 'KONTAKT', id: 'kontakt' },
 ];
@@ -140,10 +141,16 @@ export default function GlobalMenu() {
             <nav className="relative flex-1 w-full">
               <ul className="h-full w-full max-w-5xl mx-auto px-6 pt-24 pb-28 flex flex-col items-center justify-center gap-6 text-center">
                 {MENU.map((item) => (
-                  <li key={item.id}>
-                    <button onClick={() => handleGo(item.id)} className={linkCls}>
-                      {item.label}
-                    </button>
+                  <li key={item.href ?? item.id}>
+                    {item.href ? (
+                      <Link href={item.href} onClick={() => setOpen(false)} className={linkCls}>
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <button onClick={() => handleGo(item.id!)} className={linkCls}>
+                        {item.label}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>

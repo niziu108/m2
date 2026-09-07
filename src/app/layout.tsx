@@ -65,6 +65,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const fbPixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
   const rating = await getPlaceRating();
 
+  // Link do wizytówki Google (jeśli mamy PLACE_ID) — spina stronę z profilem firmy
+  const placeId = process.env.PLACE_ID?.replace(/^places\//, '');
+  const mapUrl = placeId
+    ? `https://www.google.com/maps/place/?q=place_id:${placeId}`
+    : null;
+
   return (
     <html lang="pl">
       <body
@@ -113,6 +119,35 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               areaServed: [
                 { "@type": "City", name: "Bełchatów" },
                 { "@type": "AdministrativeArea", name: "powiat bełchatowski" },
+                { "@type": "City", name: "Zelów" },
+                { "@type": "City", name: "Kleszczów" },
+                { "@type": "City", name: "Szczerców" },
+                { "@type": "City", name: "Drużbice" },
+                { "@type": "City", name: "Kluki" },
+                { "@type": "City", name: "Rusiec" },
+              ],
+              slogan: "Biuro nieruchomości Bełchatów",
+              knowsLanguage: "pl",
+              ...(mapUrl ? { hasMap: mapUrl } : {}),
+              makesOffer: [
+                {
+                  "@type": "Offer",
+                  itemOffered: {
+                    "@type": "Service",
+                    name: "Pośrednictwo w sprzedaży nieruchomości",
+                    serviceType: "Pośrednictwo w obrocie nieruchomościami",
+                    areaServed: { "@type": "City", name: "Bełchatów" },
+                  },
+                },
+                {
+                  "@type": "Offer",
+                  itemOffered: {
+                    "@type": "Service",
+                    name: "Bezpłatna wycena nieruchomości",
+                    serviceType: "Wycena nieruchomości",
+                    areaServed: { "@type": "City", name: "Bełchatów" },
+                  },
+                },
               ],
               contactPoint: [
                 {

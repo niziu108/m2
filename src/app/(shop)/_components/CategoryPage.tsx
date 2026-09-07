@@ -6,21 +6,33 @@ export const revalidate = 0;
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import Filters from './Filters';
-import Card from './Card';
+import Card, { type CardListing } from './Card';
 import StructuredData from '@/components/StructuredData';
 import { breadcrumbJsonLd } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
 
+type Cat = 'DOM' | 'MIESZKANIE' | 'DZIALKA' | 'INNE';
+
 // mapa kategorii -> ścieżka + etykieta (linkowanie wewnętrzne)
-const CATS: { key: 'DOM' | 'MIESZKANIE' | 'DZIALKA' | 'INNE'; label: string; path: string }[] = [
+const CATS: { key: Cat; label: string; path: string }[] = [
   { key: 'DOM',        label: 'Domy',       path: '/domy' },
   { key: 'MIESZKANIE', label: 'Mieszkania', path: '/mieszkania' },
   { key: 'DZIALKA',    label: 'Działki',    path: '/dzialki' },
   { key: 'INNE',       label: 'Inne',       path: '/inne' },
 ];
 
+// Ile zdjęć wrzucamy do karuzeli na liście (reszta jest na stronie oferty)
+const PHOTOS_PER_CARD = 10;
+
 // Teksty SEO pod frazy lokalne (naturalne, bez upychania)
 const SEO_COPY: Record<string, { h2: string; paras: string[] }> = {
+  ALL: {
+    h2: 'Nieruchomości na sprzedaż w Bełchatowie i okolicy',
+    paras: [
+      'Wszystkie aktualne oferty biura M2 Nieruchomości w jednym miejscu: domy, mieszkania, działki i lokale użytkowe w Bełchatowie oraz w powiecie bełchatowskim. Filtry po lokalizacji, cenie i metrażu pozwalają zawęzić listę do tego, czego naprawdę szukasz, bez wracania na stronę główną.',
+      'Każdą nieruchomość oglądamy osobiście, więc zdjęcia i opis zgadzają się ze stanem faktycznym. Działamy mobilnie w promieniu do 40 km od Bełchatowa i pokazujemy nieruchomości w dogodnym terminie, także w weekend.',
+    ],
+  },
   DOM: {
     h2: 'Domy na sprzedaż w Bełchatowie i okolicy',
     paras: [
@@ -31,7 +43,7 @@ const SEO_COPY: Record<string, { h2: string; paras: string[] }> = {
   MIESZKANIE: {
     h2: 'Mieszkania na sprzedaż w Bełchatowie',
     paras: [
-      'Przeglądasz mieszkania na sprzedaż w Bełchatowie? Zebraliśmy dla Ciebie aktualne oferta z cenami, metrażami i liczbą pokoi. Filtry po cenie, powierzchni i lokalizacji pomogą szybko znaleźć mieszkanie dopasowane do Twoich potrzeb i budżetu.',
+      'Przeglądasz mieszkania na sprzedaż w Bełchatowie? Zebraliśmy dla Ciebie aktualne oferty z cenami, metrażami i liczbą pokoi. Filtry po cenie, powierzchni i lokalizacji pomogą szybko znaleźć mieszkanie dopasowane do Twoich potrzeb i budżetu.',
       'Kupujesz albo sprzedajesz mieszkanie? Doradzimy przy wycenie, przygotowaniu oferty i formalnościach. Obsługujemy Bełchatów i okolice, a kontakt z nami jest możliwy przez siedem dni w tygodniu.',
     ],
   },
@@ -51,13 +63,16 @@ const SEO_COPY: Record<string, { h2: string; paras: string[] }> = {
   },
 };
 
-// Małe, ładne nagłówki na stronach wyszukiwarki
-const SEARCH_HEADING: Record<string, string> = {
-  DOM: 'Znajdź swój dom',
-  MIESZKANIE: 'Znajdź swoje mieszkanie',
-  DZIALKA: 'Znajdź swoją działkę',
-  INNE: 'Znajdź swoją nieruchomość',
-};
+// Jeden nagłówek na wszystkich stronach wyszukiwarki
+const SEARCH_HEADING = 'Znajdź swoją nieruchomość';
+
+function ofertyLabel(n: number) {
+  if (n === 1) return '1 oferta';
+  const last = n % 10;
+  const twoLast = n % 100;
+  const few = last >= 2 && last <= 4 && !(twoLast >= 12 && twoLast <= 14);
+  return `${n} ${few ? 'oferty' : 'ofert'}`;
+}
 
 export default async function CategoryPage({
   title,
@@ -65,7 +80,8 @@ export default async function CategoryPage({
   searchParams,
 }: {
   title: string;
-  category: 'DOM' | 'MIESZKANIE' | 'DZIALKA' | 'INNE';
+  /** null = wszystkie kategorie (jedna wyszukiwarka na /nieruchomosci) */
+  category: Cat | null;
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const sp = await searchParams;
@@ -81,11 +97,11 @@ export default async function CategoryPage({
   const aminN = amin ? Number(amin) : null;
   const amaxN = amax ? Number(amax) : null;
 
-  const where: any = { category };
+  const where: any = category ? { category } : {};
   if (q) where.listingNumber = { contains: q };
 
   const aggr = await prisma.listing.aggregate({
-    where: { category },
+    where: category ? { category } : {},
     _min: { price: true, area: true },
     _max: { price: true, area: true },
   });
@@ -102,19 +118,16 @@ export default async function CategoryPage({
     where.area = { gte: aminN ?? undefined, lte: amaxN ?? undefined };
   }
 
-  let items:
-    { id:string; slug:string; title:string; coverImageUrl:string|null;
-      price:number; area:number|null; bullets:string[]; isReserved:boolean;
-      location:string|null; listingNumber:string; }[] = [];
+  let items: CardListing[] = [];
 
   // Haversine po stronie DB, z rzutowaniem WSZYSTKICH parametrów
   if (lat != null && lng != null && r != null && !Number.isNaN(lat) && !Number.isNaN(lng) && !Number.isNaN(r)) {
     const rows = await prisma.$queryRaw<
-      (typeof items[number] & { distance_km: number | null })[]
+      (CardListing & { distance_km: number | null })[]
     >`
       SELECT
         l.id, l.slug, l.title, l."coverImageUrl", l.price, l.area, l.bullets, l."isReserved",
-        l.location, l."listingNumber", l."sortIndex",
+        l.location, l."listingNumber", l.category, l."sortIndex",
         CASE
           WHEN l.lat IS NOT NULL AND l.lng IS NOT NULL THEN
             6371 * acos(
@@ -125,7 +138,7 @@ export default async function CategoryPage({
           ELSE NULL
         END AS distance_km
       FROM "Listing" l
-      WHERE l.category = ${category}::"Category"
+      WHERE ( ${category}::text IS NULL OR l.category::text = ${category}::text )
         AND ( ${q ?? null}::text IS NULL OR l."listingNumber" ILIKE '%' || ${q ?? null}::text || '%' )
         AND ( ${pminN}::int4  IS NULL OR l.price >= ${pminN}::int4 )
         AND ( ${pmaxN}::int4  IS NULL OR l.price <= ${pmaxN}::int4 )
@@ -156,13 +169,34 @@ export default async function CategoryPage({
       select: {
         id: true, slug: true, title: true, coverImageUrl: true,
         price: true, area: true, bullets: true, isReserved: true,
-        location: true, listingNumber: true,
+        location: true, listingNumber: true, category: true,
       },
     });
   }
 
-  const seo = SEO_COPY[category] ?? SEO_COPY.INNE;
-  const selfPath = CATS.find((c) => c.key === category)?.path ?? '/';
+  // Zdjęcia do karuzeli na kartach: jedno zapytanie na całą listę
+  if (items.length) {
+    const rows = await prisma.image.findMany({
+      where: { listingId: { in: items.map((i) => i.id) } },
+      select: { listingId: true, url: true },
+      orderBy: { order: 'asc' },
+    });
+
+    const byListing = new Map<string, string[]>();
+    for (const row of rows) {
+      const arr = byListing.get(row.listingId) ?? [];
+      arr.push(row.url);
+      byListing.set(row.listingId, arr);
+    }
+
+    items = items.map((l) => {
+      const all = [l.coverImageUrl, ...(byListing.get(l.id) ?? [])].filter(Boolean) as string[];
+      return { ...l, photos: Array.from(new Set(all)).slice(0, PHOTOS_PER_CARD) };
+    });
+  }
+
+  const seo = SEO_COPY[category ?? 'ALL'] ?? SEO_COPY.ALL;
+  const selfPath = category ? (CATS.find((c) => c.key === category)?.path ?? '/') : '/nieruchomosci';
   const breadcrumb = breadcrumbJsonLd([
     { name: 'Strona główna', item: SITE_URL },
     { name: title, item: `${SITE_URL}${selfPath}` },
@@ -173,7 +207,7 @@ export default async function CategoryPage({
       <StructuredData jsonLd={breadcrumb} />
       <section className="px-4 pt-8 pb-6 border-b border-[#E9C87D]/20">
         <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] leading-tight px-14 sm:px-16 text-[clamp(22px,4.2vw,40px)] mb-6">
-          {SEARCH_HEADING[category] ?? 'Znajdź nieruchomość'}
+          {SEARCH_HEADING}
         </h1>
         <div className="max-w-3xl mx-auto">
           <Filters
@@ -189,16 +223,40 @@ export default async function CategoryPage({
       </section>
 
       <section className="px-4 py-6">
-        <div className="mx-auto w-full max-w-[min(1400px,95vw)]">
+        <div className="mx-auto w-full max-w-[min(1180px,95vw)]">
           {items.length ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {items.map((l) => <Card key={l.id} l={l} />)}
-            </div>
+            <>
+              <p className="mb-4 text-sm text-[var(--foreground-soft)]">
+                {ofertyLabel(items.length)}
+                {category ? ` w kategorii ${title.toLowerCase()}` : ''}
+              </p>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-1">
+                {items.map((l) => <Card key={l.id} l={l} />)}
+              </div>
+            </>
           ) : (
-            <div className="py-24 flex items-center justify-center text-center">
-              <h2 className="font-[Bungee] gold-grad text-[clamp(22px,5vw,48px)] tracking-[2px] leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-                W TEJ KATEGORII NIE MAMY OFERT,<br />ZAPRASZAMY WKRÓTCE.
+            <div className="py-20 flex flex-col items-center justify-center text-center gap-5">
+              <h2 className="font-[Bungee] gold-grad text-[clamp(20px,4vw,36px)] tracking-[1px] leading-tight">
+                BRAK OFERT DLA TYCH FILTRÓW
               </h2>
+              <p className="max-w-md text-[var(--foreground-soft)]">
+                Poszerz obszar szukania albo zmień kategorię powyżej. Możemy też szukać dla Ciebie
+                na bieżąco, wystarczy jeden telefon.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/nieruchomosci"
+                  className="rounded-xl bg-[#E9C87D] px-5 py-2.5 font-semibold text-[#2a2117]"
+                >
+                  Zobacz wszystkie oferty
+                </Link>
+                <a
+                  href="tel:+48605071605"
+                  className="rounded-xl border border-[#E9C87D] px-5 py-2.5 font-semibold text-[var(--gold-ink)]"
+                >
+                  Zadzwoń: 605 071 605
+                </a>
+              </div>
             </div>
           )}
         </div>
@@ -227,6 +285,11 @@ export default async function CategoryPage({
                 {c.label}
               </Link>
             ))}
+            {category && (
+              <Link href="/nieruchomosci" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">
+                Wszystkie oferty
+              </Link>
+            )}
             <Link href="/faq" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">
               Najczęstsze pytania
             </Link>

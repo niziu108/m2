@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
 const CATS = [
+  { label: "Wszystkie oferty", value: "/nieruchomosci" },
   { label: "Domy", value: "/domy" },
   { label: "Mieszkania", value: "/mieszkania" },
   { label: "Działki", value: "/dzialki" },
@@ -41,7 +42,8 @@ export default function Hero() {
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(cat || "/domy");
+    // bez wybranej kategorii pokazujemy po prostu wszystkie oferty
+    router.push(cat || "/nieruchomosci");
   };
 
   return (
@@ -106,6 +108,20 @@ export default function Hero() {
             ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
           </span>
         </h1>
+
+        {/* PODTYTUŁ – co robimy i gdzie (ważne też dla Google) */}
+        <p
+          className="
+            mt-3 max-w-[640px]
+            text-white/95
+            text-[clamp(13px,3.4vw,17px)]
+            leading-snug
+            drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]
+          "
+        >
+          Biuro nieruchomości w Bełchatowie. Domy, mieszkania i działki na sprzedaż
+          w Bełchatowie i okolicy do 40 km.
+        </p>
 
         {/* WYSZUKIWARKA */}
         <form

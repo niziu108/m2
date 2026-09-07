@@ -5,12 +5,12 @@ import type { Metadata } from 'next';
 import CategoryPage from '../(shop)/_components/CategoryPage';
 
 export const metadata: Metadata = {
-  title: 'Działki na sprzedaż | M2 Nieruchomości',
+  title: 'Działki na sprzedaż Bełchatów i okolice',
   description:
     'Działki na sprzedaż w Bełchatowie i okolicach. Sprawdź lokalizacje i ceny.',
   alternates: { canonical: '/dzialki' },
   openGraph: {
-    title: 'Działki na sprzedaż | M2 Nieruchomości',
+    title: 'Działki na sprzedaż Bełchatów | M2 Nieruchomości',
     description:
       'Aktualne działki na sprzedaż w Bełchatowie i okolicach.',
     url: '/dzialki',

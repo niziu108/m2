@@ -1,4 +1,8 @@
 // src/app/sitemap.xml/route.ts
+// Odświeżamy co godzinę, żeby nowe oferty trafiały do Google bez czekania na deploy.
+export const runtime = 'nodejs';
+export const revalidate = 3600;
+
 import 'server-only';
 import { prisma } from '@/lib/prisma';
 import { SITE_URL as SITE } from '@/lib/site';
@@ -9,6 +13,7 @@ export async function GET() {
   // Strony statyczne
   const staticUrls = [
     { loc: `${SITE}/`, changefreq: 'daily', priority: '1.0' },
+    { loc: `${SITE}/nieruchomosci`, changefreq: 'daily', priority: '0.9' },
     { loc: `${SITE}/domy`, changefreq: 'daily', priority: '0.9' },
     { loc: `${SITE}/mieszkania`, changefreq: 'daily', priority: '0.9' },
     { loc: `${SITE}/dzialki`, changefreq: 'daily', priority: '0.9' },

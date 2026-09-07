@@ -38,6 +38,9 @@ export default function Stopka() {
                 DANE FIRMY:
               </div>
               <div>M2 Nieruchomości</div>
+              <div className="text-[var(--foreground-soft)]">
+                Biuro nieruchomości w Bełchatowie i okolicy
+              </div>
               <div>NIP: 7691829620</div>
 
 
@@ -108,13 +111,7 @@ export default function Stopka() {
                 )}
               </li>
               <li>
-                {onHome ? (
-                  <Link href="#oferta" onClick={(e) => goSmooth(e, "oferta")} className={linkCls}>
-                    OFERTA
-                  </Link>
-                ) : (
-                  <Link href="/#oferta" className={linkCls}>OFERTA</Link>
-                )}
+                <Link href="/nieruchomosci" className={linkCls}>OFERTA</Link>
               </li>
               <li>
                 {onHome ? (

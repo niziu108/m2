@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
   if (!l) {
     // fallback dla nieznalezionych (Next pokaże 404, ale meta też będzie spójna)
     return {
-      title: 'Oferta | M2 Nieruchomości',
+      title: 'Oferta',
       description: 'Szczegóły oferty w M2 Nieruchomości.',
       alternates: { canonical: canonicalUrl },
       openGraph: {
@@ -72,7 +72,8 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
   }
 
   return {
-    title: `${l.title} | M2 Nieruchomości`,
+    // brand dokleja szablon z layoutu, tu byłoby drugi raz
+    title: l.title,
     description: l.shortDesc ?? undefined,
     alternates: { canonical: canonicalUrl },
     openGraph: {
@@ -222,11 +223,6 @@ export default async function Page({ params }: PageProps) {
                 <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">Telefon</dt>
                   <dd className="font-medium truncate">{data.contactPhone ?? '—'}</dd>
-                </div>
-
-                <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                  <dt className="opacity-70">E-mail</dt>
-                  <dd className="font-medium truncate">{data.contactEmail ?? '—'}</dd>
                 </div>
               </dl>
             </div>

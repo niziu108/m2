@@ -17,6 +17,15 @@ function useDebounced<T>(val:T, delay=300){
 
 type NomHit = { display_name:string; lat:string; lon:string; type?:string; class?:string };
 
+/** Jedna wyszukiwarka dla całego serwisu: kategoria to po prostu inna ścieżka. */
+const CATS: { label: string; path: string }[] = [
+  { label: 'Wszystkie',  path: '/nieruchomosci' },
+  { label: 'Domy',       path: '/domy' },
+  { label: 'Mieszkania', path: '/mieszkania' },
+  { label: 'Działki',    path: '/dzialki' },
+  { label: 'Inne',       path: '/inne' },
+];
+
 /** ZAWSZE 10 km – niezależnie od typu wyniku */
 function smartDefaultKm(_: { type?: string; class?: string } | null | undefined): number {
   return 10;
@@ -192,6 +201,26 @@ export default function Filters({
     });
   }
 
+  /** Zmiana kategorii bez wracania na stronę główną.
+   *  Zostaje lokalizacja, promień i numer oferty. Ceny i metraże są w każdej
+   *  kategorii inne, więc ich nie przenosimy (inaczej wyszłoby zero wyników). */
+  function goToCategory(path: string){
+    if (path === pathname) return;
+
+    const params = new URLSearchParams();
+    if (q) params.set('q', q);
+    if (lat!=null && lng!=null){
+      params.set('lat', String(lat));
+      params.set('lng', String(lng));
+      params.set('r', String(r>0 ? r : smartDefaultKm(metaRef.current)));
+    }
+    if (loc) params.set('loc', loc);
+
+    startTransition(()=>{
+      router.push(params.toString() ? `${path}?${params}` : path, { scroll: false });
+    });
+  }
+
   function onReset(){
     startTransition(()=>{
       setQ('');
@@ -207,6 +236,24 @@ export default function Filters({
   return (
     <form onSubmit={onSubmit} className={isPending ? 'opacity-80 pointer-events-none' : ''}>
       <div className="flt-card grid gap-5">
+        {/* CZEGO SZUKASZ (kategoria) */}
+        <div>
+          <label className="flt-lbl">Czego szukasz?</label>
+          <div className="flex flex-wrap gap-2">
+            {CATS.map((c) => (
+              <button
+                type="button"
+                key={c.path}
+                onClick={()=>goToCategory(c.path)}
+                className={`flt-pill ${pathname === c.path ? 'is-active' : ''}`}
+                aria-current={pathname === c.path ? 'page' : undefined}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* LOKALIZACJA */}
         <div className="relative" ref={sugRef}>
           <label className="flt-lbl">Lokalizacja</label>

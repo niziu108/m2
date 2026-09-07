@@ -7,8 +7,8 @@ const nextConfig = {
   async redirects() {
     return [
       // aliasy z wyników Google
-      { source: '/oferty', destination: '/domy', permanent: true },
-      { source: '/oferta', destination: '/domy', permanent: true },
+      { source: '/oferty', destination: '/nieruchomosci', permanent: true },
+      { source: '/oferta', destination: '/nieruchomosci', permanent: true },
       { source: '/dom', destination: '/domy', permanent: true },
       { source: '/mieszkanie', destination: '/mieszkania', permanent: true },
       { source: '/dzialka', destination: '/dzialki', permanent: true },

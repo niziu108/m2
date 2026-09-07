@@ -5,12 +5,12 @@ import type { Metadata } from 'next';
 import CategoryPage from '../(shop)/_components/CategoryPage';
 
 export const metadata: Metadata = {
-  title: 'Domy na sprzedaż | M2 Nieruchomości',
+  title: 'Domy na sprzedaż Bełchatów i okolice',
   description:
     'Aktualne domy na sprzedaż w Bełchatowie i okolicach. Sprawdź zdjęcia, metraże i ceny.',
   alternates: { canonical: '/domy' },
   openGraph: {
-    title: 'Domy na sprzedaż | M2 Nieruchomości',
+    title: 'Domy na sprzedaż Bełchatów | M2 Nieruchomości',
     description:
       'Domy w Bełchatowie i okolicach – bieżące oferty z cenami i zdjęciami.',
     url: '/domy',
