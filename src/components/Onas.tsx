@@ -59,7 +59,7 @@ export default function Onas() {
             name="KARINA"
             role="właścicielka firmy, kontakt z klientem, sprzedaż"
             tagline="pozytywna wariatka"
-            imgSrc="/Karina.jpeg"
+            imgSrc="/karinaa.jpeg"
           />
           <Person
             name="DANIEL"
