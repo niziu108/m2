@@ -5,6 +5,7 @@ import GlobalMenu from "@/components/GlobalMenu";
 import Stopka from "@/components/Stopka";
 import PageLoader from "./PageLoader";
 import CookieBar from "@/components/CookieBar";
+import PromoHausmar from "@/components/PromoHausmar";
 import Script from "next/script";
 import StructuredData from "@/components/StructuredData"; // ⬅️ DODANE
 import { SITE_URL } from "@/lib/site";
@@ -217,6 +218,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         {/* Pasek cookies */}
         <CookieBar />
+
+        {/* Baner reklamowy: Hausmar, ul. Iglasta */}
+        <PromoHausmar />
 
         {/* === Facebook Pixel (włącza się tylko gdy jest ID w .env) === */}
         {fbPixelId && (
