@@ -43,6 +43,58 @@ export function toPLN(n: number) {
   return n.toLocaleString('pl-PL') + ' zł';
 }
 
+// ── SEO: tytuł i opis pod wyszukiwarkę, składane z danych oferty ────────
+// Tytuły w panelu są hasłami („DZIAŁKA ROLNA”, „Ty wybierasz dom…”), a ludzie szukają
+// „dom na sprzedaż Kluki”. Dlatego w <title> idzie rodzaj + miejsce + metraż + cena,
+// a hasło z panelu zostaje nagłówkiem na stronie.
+const SEO_TYPE: Record<string, string> = {
+  DOM: 'Dom',
+  MIESZKANIE: 'Mieszkanie',
+  DZIALKA: 'Działka',
+  INNE: 'Nieruchomość',
+};
+
+function plainText(s?: string | null) {
+  return (s ?? '')
+    .replace(/\[\[\/?[a-z]+\]\]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function niceTitle(s: string) {
+  const t = plainText(s).replace(/[.\s]+$/, '');
+  // CAPS LOCK z panelu -> zdanie
+  if (t && t === t.toUpperCase()) return t.charAt(0) + t.slice(1).toLowerCase();
+  return t;
+}
+
+// „WOLA GŁUPICKA, GMINA DRUŻBICE” -> „Wola Głupicka, gmina Drużbice”
+function niceLocation(s?: string | null) {
+  return plainText(s)
+    .split(',')
+    .map((part) => {
+      let p = part.trim();
+      if (p && p === p.toUpperCase() && /\p{L}/u.test(p)) {
+        p = p.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_m, a, b) => a + b.toUpperCase());
+      }
+      return p.replace(/^(Gmina|Powiat|Ul\.|Os\.|Osiedle)\s/, (m) => m.toLowerCase());
+    })
+    .filter(Boolean)
+    .join(', ');
+}
+
+function seoParts(l: { category: string; title: string; location: string | null; area: number | null; price: number }) {
+  // działki wrzucone do „Inne” (np. pod dom senioralny) też nazywamy działkami
+  const type =
+    l.category === 'INNE' && /działk/i.test(l.title) ? 'Działka' : SEO_TYPE[l.category] ?? 'Nieruchomość';
+  const loc = niceLocation(l.location) || 'Bełchatów';
+  const facts = [
+    l.area ? `${l.area.toLocaleString('pl-PL')} m²` : null,
+    l.price > 0 ? toPLN(l.price) : null,
+  ].filter(Boolean);
+  return { type, loc, facts };
+}
+
 // ── Metadata (Next 15: params to Promise) ───────────────────────────────
 type GenProps = { params: Promise<{ slug: string }> };
 
@@ -54,7 +106,10 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
 
   const l = await prisma.listing.findUnique({
     where: { slug },
-    select: { title: true, shortDesc: true, coverImageUrl: true },
+    select: {
+      title: true, shortDesc: true, coverImageUrl: true,
+      category: true, location: true, area: true, price: true,
+    },
   });
 
   if (!l) {
@@ -71,15 +126,25 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
     };
   }
 
+  const { type, loc, facts } = seoParts(l);
+  // brand dokleja szablon z layoutu
+  const seoTitle = [`${type} na sprzedaż ${loc}`, ...facts].join(', ');
+  const hook = niceTitle(l.title);
+  // shortDesc często powtarza hasło z nagłówka, nie dublujemy go w opisie
+  const short = plainText(l.shortDesc).split(hook).join(' ').replace(/\s+/g, ' ').replace(/\s+([.,])/g, '$1').replace(/^[.,\s]+/, '').trim();
+  let description = `${hook}. ${type} na sprzedaż: ${loc}${facts.length ? `, ${facts.join(', ')}` : ''}.`;
+  if (short) description += ` ${short}`;
+  description += ' M2 Nieruchomości Bełchatów, tel. 605 071 605.';
+  if (description.length > 300) description = description.slice(0, 297).replace(/\s+\S*$/, '') + '…';
+
   return {
-    // brand dokleja szablon z layoutu, tu byłoby drugi raz
-    title: l.title,
-    description: l.shortDesc ?? undefined,
+    title: seoTitle,
+    description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
       url: canonicalUrl,
-      title: `${l.title} | M2 Nieruchomości`,
-      description: l.shortDesc ?? undefined,
+      title: `${hook} | ${type} ${loc}`,
+      description,
       images: l.coverImageUrl ? [{ url: l.coverImageUrl }] : undefined,
     },
     // (opcjonalnie) Twitter — nie przeszkadza FB, a pomaga w X/Twitter Cards
@@ -162,7 +227,7 @@ export default async function Page({ params }: PageProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 items-start min-w-0">
           {/* LEWA KARTA = GALERIA */}
           <div className="sm:rounded-2xl border-0 sm:border sm:border-black/10 p-0 sm:p-3 md:p-4 sm:bg-[var(--surface)] h-full min-w-0">
-            <Gallery images={pics} />
+            <Gallery images={pics} alt={`${niceTitle(data.title)}, ${niceLocation(data.location) || 'Bełchatów'}`} />
 
             {/* WIRTUALNY SPACER — pod galerią (tylko jeśli jest) */}
             {data.virtualTourUrl && (

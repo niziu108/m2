@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { cldOptimize } from '@/lib/img';
 
-export default function Gallery({ images }: { images: string[] }) {
+export default function Gallery({ images, alt = '' }: { images: string[]; alt?: string }) {
   const [idx, setIdx] = useState(0);
   const [open, setOpen] = useState(false);
   const railRef = useRef<HTMLDivElement>(null);
@@ -107,7 +107,7 @@ export default function Gallery({ images }: { images: string[] }) {
           <img
             key={curr}
             src={cldOptimize(curr, 1400)}
-            alt=""
+            alt={alt ? `${alt}, zdjęcie ${idx + 1}` : ''}
             data-savable
             className="absolute inset-0 w-full h-full object-cover cursor-zoom-in"
             onClick={() => {
@@ -168,7 +168,7 @@ export default function Gallery({ images }: { images: string[] }) {
                     i === idx ? 'border-[#E9C87D] ring-2 ring-[#E9C87D33]' : 'border-black/10'
                   }`}
                 >
-                  <img src={cldOptimize(src, 320)} alt="" loading="lazy" className="w-full h-full object-cover" />
+                  <img src={cldOptimize(src, 320)} alt={alt ? `${alt}, zdjęcie ${i + 1}` : ''} loading="lazy" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -179,7 +179,7 @@ export default function Gallery({ images }: { images: string[] }) {
       {/* LIGHTBOX */}
       {open && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-2 sm:p-4"
+          className="fixed inset-0 z-[10001] flex items-center justify-center bg-black/90 p-2 sm:p-4"
           onClick={() => setOpen(false)}
         >
           {/* Zamknij */}

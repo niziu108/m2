@@ -65,6 +65,13 @@ const SEO_COPY: Record<string, { h2: string; paras: string[] }> = {
 
 // Jeden nagłówek na wszystkich stronach wyszukiwarki
 const SEARCH_HEADING = 'Znajdź swoją nieruchomość';
+const H1_PHRASE: Record<string, string> = {
+  ALL: 'Nieruchomości na sprzedaż Bełchatów i okolice',
+  DOM: 'Domy na sprzedaż Bełchatów i okolice',
+  MIESZKANIE: 'Mieszkania na sprzedaż Bełchatów',
+  DZIALKA: 'Działki na sprzedaż Bełchatów i okolice',
+  INNE: 'Lokale i inne nieruchomości Bełchatów',
+};
 
 function ofertyLabel(n: number) {
   if (n === 1) return '1 oferta';
@@ -206,8 +213,14 @@ export default async function CategoryPage({
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)]">
       <StructuredData jsonLd={breadcrumb} />
       <section className="px-4 pt-6 pb-5 border-b border-[#E9C87D]/20">
-        <h1 className="font-[Bungee] gold-grad text-center tracking-[0.5px] leading-tight px-14 sm:px-16 text-[clamp(22px,4.2vw,40px)] mb-4">
-          {SEARCH_HEADING}
+        <h1 className="text-center px-14 sm:px-16 mb-4">
+          {/* fraza pod Google (jak na stronie głównej), hasło zostaje dużym napisem */}
+          <span className="block mb-1.5 text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--foreground-soft)]">
+            {H1_PHRASE[category ?? 'ALL'] ?? H1_PHRASE.ALL}
+          </span>
+          <span className="block font-[Bungee] gold-grad tracking-[0.5px] leading-tight text-[clamp(22px,4.2vw,40px)]">
+            {SEARCH_HEADING}
+          </span>
         </h1>
         <div className="max-w-3xl mx-auto">
           <Filters
