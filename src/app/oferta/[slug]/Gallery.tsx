@@ -14,15 +14,7 @@ export default function Gallery({ images }: { images: string[] }) {
     if (idx >= images.length) setIdx(0);
   }, [images.length, idx]);
 
-  if (!images || images.length === 0) {
-    return (
-      <div className="aspect-video rounded-2xl border border-black/10 bg-black/30 grid place-items-center min-w-0">
-        brak zdjęć
-      </div>
-    );
-  }
-
-  const curr = images[idx];
+  const curr = images[idx] ?? images[0];
 
   const prev = useCallback(
     () => setIdx((i) => (i === 0 ? images.length - 1 : i - 1)),
@@ -43,7 +35,28 @@ export default function Gallery({ images }: { images: string[] }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [prev, next]);
 
-  // ❌ USUNIĘTO auto-scroll miniaturek
+  // Wczytaj z wyprzedzeniem sąsiednie zdjęcia (duże, a przy otwartym powiększeniu też pełne),
+  // żeby strzałka zmieniała zdjęcie od razu, a nie po ściągnięciu pliku.
+  useEffect(() => {
+    const n = images.length;
+    if (n < 2) return;
+    for (const d of [1, -1, 2]) {
+      const src = images[(idx + d + n) % n];
+      new Image().src = cldOptimize(src, 1400);
+      if (open) new Image().src = cldOptimize(src, 2000);
+    }
+    if (open) new Image().src = cldOptimize(images[idx], 2000);
+  }, [idx, open, images]);
+
+  // Pasek miniaturek podąża za wybranym zdjęciem (tylko poziomo, strona się nie rusza)
+  useEffect(() => {
+    const rail = railRef.current;
+    const thumb = rail?.children[idx] as HTMLElement | undefined;
+    if (!rail || !thumb) return;
+    const left = thumb.offsetLeft - (rail.clientWidth - thumb.clientWidth) / 2;
+    rail.scrollTo({ left, behavior: 'smooth' });
+  }, [idx]);
+
   const canScroll = images.length > 5;
   const scrollBy = (dx: number) => railRef.current?.scrollBy({ left: dx, behavior: 'smooth' });
 
@@ -66,6 +79,14 @@ export default function Gallery({ images }: { images: string[] }) {
     }
   };
 
+  if (!images || images.length === 0) {
+    return (
+      <div className="aspect-video rounded-2xl border border-black/10 bg-black/30 grid place-items-center min-w-0">
+        brak zdjęć
+      </div>
+    );
+  }
+
   return (
     <>
       {/* DUŻE ZDJĘCIE */}
@@ -76,7 +97,15 @@ export default function Gallery({ images }: { images: string[] }) {
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
+          {/* miniatura (już w pamięci) pod spodem, żeby zmiana była natychmiastowa */}
           <img
+            src={cldOptimize(curr, 320)}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <img
+            key={curr}
             src={cldOptimize(curr, 1400)}
             alt=""
             data-savable
@@ -198,12 +227,20 @@ export default function Gallery({ images }: { images: string[] }) {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            <img
-              src={cldOptimize(curr, 2000)}
-              alt=""
-              data-savable
-              className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl mx-auto"
-            />
+            <div className="relative">
+              <img
+                src={cldOptimize(curr, 1400)}
+                alt=""
+                className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl mx-auto"
+              />
+              <img
+                key={curr}
+                src={cldOptimize(curr, 2000)}
+                alt=""
+                data-savable
+                className="absolute inset-0 w-full h-full object-contain rounded-2xl"
+              />
+            </div>
           </div>
         </div>
       )}
