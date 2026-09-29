@@ -1,28 +1,12 @@
+/* Cienki pasek u góry zamiast pełnoekranowego logo: treść nie jest zasłaniana,
+   a po kliknięciu w ofertę widać, że strona się wczytuje. */
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[9997] grid place-items-center bg-[var(--background)]">
-      <div
-        aria-hidden
-        className="m2-breathe"
-        style={{
-          width: 220,
-          height: 220,
-          backgroundColor: "#E9C87D",
-          WebkitMask: 'url("/logo.webp") center / contain no-repeat',
-          mask: 'url("/logo.webp") center / contain no-repeat',
-        }}
-      />
-      {/* Zwykły <style>, nie styled-jsx */}
+    <div aria-hidden className="fixed inset-x-0 top-0 z-[9997] h-[2px] overflow-hidden">
+      <div className="m2-bar h-full w-1/3 bg-[#b8913a]" />
       <style>{`
-        @keyframes m2-breathe { 
-          0% { transform: scale(1) } 
-          50% { transform: scale(1.08) } 
-          100% { transform: scale(1) } 
-        }
-        .m2-breathe {
-          animation: m2-breathe 1.6s ease-in-out infinite;
-          transform-origin: center;
-        }
+        @keyframes m2-bar { 0% { transform: translateX(-100%) } 100% { transform: translateX(300%) } }
+        .m2-bar { animation: m2-bar 1s ease-in-out infinite; }
       `}</style>
     </div>
   );

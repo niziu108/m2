@@ -249,14 +249,14 @@ export default async function Page({ params }: PageProps) {
           <aside className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-2 sm:p-5 md:p-6 bg-[var(--surface)] h-full flex min-w-0">
             <div className="w-full flex flex-col gap-3 sm:gap-4 md:my-auto min-w-0">
               {/* TYTUŁ OFERTY */}
-              <h1 className="text-[clamp(19px,2.6vw,28px)] font-semibold leading-snug tracking-tight text-[var(--foreground)]">
+              <h1 className="font-display text-[clamp(26px,3vw,36px)] leading-[1.12] text-[var(--ink)]">
                 {data.title}
               </h1>
 
               {/* CENA */}
               <div className="mb-1">
                 <div className="text-xs tracking-wide uppercase opacity-70">Cena</div>
-                <div className="font-[Bungee] gold-grad text-[clamp(20px,3.8vw,36px)] leading-tight">
+                <div className="font-display gold-grad text-[clamp(28px,4.2vw,42px)] leading-tight">
                   {toPLN(data.price)}
                 </div>
               </div>
@@ -312,7 +312,7 @@ export default async function Page({ params }: PageProps) {
         {/* KARTA KONTAKTU DO TEJ OFERTY */}
         <div className="mt-8 md:mt-10">
           <div className="sm:rounded-2xl border-0 sm:border sm:border-[#E9C87D]/30 px-3 py-5 sm:p-6 md:p-8 bg-[var(--surface)] text-center">
-            <h3 className="font-[Bungee] gold-grad mb-2 text-[clamp(18px,3vw,28px)]">
+            <h3 className="font-display text-[var(--ink)] mb-2 text-[clamp(26px,3.6vw,36px)] leading-tight">
               Zainteresowała Cię ta oferta?
             </h3>
             <p className="text-[var(--foreground-soft)] mb-5 max-w-xl mx-auto">
@@ -341,7 +341,7 @@ export default async function Page({ params }: PageProps) {
         {/* NAJCZĘSTSZE PYTANIA */}
         <div className="mt-8 md:mt-10">
           <div className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-5 sm:p-6 md:p-8 bg-[var(--surface)]">
-            <h3 className="font-[Bungee] gold-grad mb-4 text-center text-[clamp(18px,3vw,28px)]">
+            <h3 className="font-display text-[var(--ink)] mb-4 text-center text-[clamp(26px,3.6vw,36px)] leading-tight">
               Najczęstsze pytania
             </h3>
             <div className="space-y-3 max-w-2xl mx-auto">

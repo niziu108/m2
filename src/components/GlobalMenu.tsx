@@ -7,18 +7,18 @@ import { usePathname, useRouter } from 'next/navigation';
 
 const BG = '#f4f2ec';
 const FG = '#23201b';
-const ACCENT = '#E9C87D';
+const ACCENT = '#c9a24a';
 
 type TargetId = 'hero' | 'jak-dzialamy' | 'oferta' | 'o-nas' | 'kontakt';
 type MenuItem = { label: string; id?: TargetId; href?: string };
 
 const MENU: MenuItem[] = [
-  { label: 'STRONA GŁÓWNA', id: 'hero' },
-  { label: 'JAK DZIAŁAMY?', id: 'jak-dzialamy' },
+  { label: 'Strona główna', id: 'hero' },
+  { label: 'Jak działamy', id: 'jak-dzialamy' },
   // Oferta prowadzi prosto do wyszukiwarki ze wszystkimi ofertami
-  { label: 'OFERTA', href: '/nieruchomosci' },
-  { label: 'O NAS', id: 'o-nas' },
-  { label: 'KONTAKT', id: 'kontakt' },
+  { label: 'Oferta', href: '/nieruchomosci' },
+  { label: 'O nas', id: 'o-nas' },
+  { label: 'Kontakt', id: 'kontakt' },
 ];
 
 function BurgerIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -81,9 +81,9 @@ export default function GlobalMenu() {
 
   // Klasy linków – większe na tel
   const linkCls =
-    'font-bungee uppercase tracking-wide text-[var(--gold-ink)] ' +
-    'text-[clamp(28px,9vw,56px)] sm:text-[clamp(28px,6vw,60px)] ' +
-    'hover:opacity-85 transition-opacity';
+    'font-display !text-[var(--ink)] hover:!text-[var(--accent-deep)] ' +
+    'text-[clamp(34px,9.5vw,60px)] sm:text-[clamp(36px,6vw,64px)] leading-none ' +
+    'transition-colors';
 
   return (
     <>

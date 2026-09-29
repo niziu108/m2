@@ -46,12 +46,11 @@ export default function SeoBelchatow() {
       className="w-full bg-[var(--background)] py-14 md:py-20"
     >
       <div className="mx-auto max-w-5xl px-4">
-        <h2
-          className="gold-grad text-center leading-tight tracking-[0.04em] text-[clamp(22px,4vw,40px)]"
-          style={{ fontFamily: 'Bungee, system-ui, sans-serif' }}
-        >
-          BIURO NIERUCHOMOŚCI BEŁCHATÓW
-        </h2>
+        <div className="flex flex-col items-center text-center">
+          <span className="eyebrow">M2 Nieruchomości</span>
+          <h2 className="section-title mt-3">Biuro nieruchomości Bełchatów</h2>
+          <span className="gold-rule mt-5" aria-hidden />
+        </div>
 
         <div className="mx-auto mt-7 max-w-4xl space-y-4 text-center text-[15px] leading-relaxed text-[var(--foreground)] md:mt-9 md:text-[16px] md:leading-8">
           <p>
@@ -74,10 +73,10 @@ export default function SeoBelchatow() {
           {PUNKTY.map((punkt) => (
             <li
               key={punkt.t}
-              className="rounded-2xl border border-[#E9C87D]/45 bg-[var(--surface)] px-4 py-5 text-center"
+              className="rounded-2xl border border-black/8 bg-[var(--surface)] px-4 py-6 text-center shadow-[0_1px_2px_rgba(20,18,14,0.04)]"
             >
-              <span className="mx-auto mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#E9C87D]">
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="#2a2117" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <span className="mx-auto mb-3 flex h-9 w-9 items-center justify-center rounded-full border border-[#b8913a]/60">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="#8a661b" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12.5l4.5 4.5L19 7" />
                 </svg>
               </span>
@@ -101,7 +100,7 @@ export default function SeoBelchatow() {
             <Link
               key={l.href}
               href={l.href}
-              className="rounded-full border border-[#E9C87D]/60 px-4 py-2 text-[13px] font-medium text-[var(--foreground)] transition hover:border-[#E9C87D] hover:bg-[#E9C87D]/15"
+              className="rounded-full border border-black/12 px-4 py-2 text-[13px] font-medium !text-[var(--foreground)] transition hover:border-[#b8913a]"
             >
               {l.label}
             </Link>

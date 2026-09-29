@@ -218,7 +218,7 @@ export default async function CategoryPage({
           <span className="block mb-1.5 text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--foreground-soft)]">
             {H1_PHRASE[category ?? 'ALL'] ?? H1_PHRASE.ALL}
           </span>
-          <span className="block font-[Bungee] gold-grad tracking-[0.5px] leading-tight text-[clamp(22px,4.2vw,40px)]">
+          <span className="block font-display text-[var(--ink)] leading-tight text-[clamp(30px,5vw,48px)]">
             {SEARCH_HEADING}
           </span>
         </h1>
@@ -249,8 +249,8 @@ export default async function CategoryPage({
             </>
           ) : (
             <div className="py-20 flex flex-col items-center justify-center text-center gap-5">
-              <h2 className="font-[Bungee] gold-grad text-[clamp(20px,4vw,36px)] tracking-[1px] leading-tight">
-                BRAK OFERT DLA TYCH FILTRÓW
+              <h2 className="font-display text-[var(--ink)] text-[clamp(28px,4.4vw,40px)] leading-tight">
+                Brak ofert dla tych filtrów
               </h2>
               <p className="max-w-md text-[var(--foreground-soft)]">
                 Poszerz obszar szukania albo zmień kategorię powyżej. Możemy też szukać dla Ciebie
@@ -278,7 +278,7 @@ export default async function CategoryPage({
       {/* SEKCJA SEO + LINKOWANIE WEWNĘTRZNE */}
       <section className="px-4 pb-16 pt-4 border-t border-black/5">
         <div className="mx-auto w-full max-w-3xl text-[var(--foreground-soft)]">
-          <h2 className="font-[Bungee] gold-grad text-[clamp(18px,3.6vw,28px)] tracking-[1px] mb-4">
+          <h2 className="font-display text-[var(--ink)] text-[clamp(26px,4vw,36px)] leading-tight mb-4">
             {seo.h2}
           </h2>
           <div className="space-y-3 text-sm sm:text-base leading-relaxed">

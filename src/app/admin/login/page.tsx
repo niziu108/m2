@@ -14,7 +14,7 @@ export default function AdminLogin() {
   return (
     <main className="min-h-[100svh] grid place-items-center bg-[#131313] text-[#d9d9d9]">
       <form onSubmit={onSubmit} className="p-6 w-[min(420px,90vw)] rounded-2xl border border-[#E9C87D]/30">
-        <h1 className="font-[Bungee] text-2xl mb-4 text-[#E9C87D]">Panel M2</h1>
+        <h1 className="font-display text-2xl mb-4 text-[#E9C87D]">Panel M2</h1>
         <input
           type="password"
           value={pwd}

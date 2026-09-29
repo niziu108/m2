@@ -36,7 +36,7 @@ export default async function Admin({ searchParams }: AdminProps) {
   return (
     <main className="p-6 bg-[#131313] text-[#d9d9d9] min-h-[100svh]">
       <header className="flex flex-col items-center gap-5 mb-10">
-        <h1 className="font-[Bungee] text-3xl text-[#E9C87D] tracking-[1px] text-center">
+        <h1 className="font-display text-3xl text-[#E9C87D] tracking-[1px] text-center">
           PANEL OFERT
         </h1>
 

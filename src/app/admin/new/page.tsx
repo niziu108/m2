@@ -214,7 +214,7 @@ export default function NewPage() {
   return (
     <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] p-6">
       <header className="mb-6">
-        <h1 className="font-[Bungee] text-2xl text-[#E9C87D] text-center">Dodaj ofertę</h1>
+        <h1 className="font-display text-2xl text-[#E9C87D] text-center">Dodaj ofertę</h1>
         <div className="mt-3 flex justify-center gap-3">
           <Link href="/admin" className="px-4 py-2 rounded-xl border border-white/10">Powrót</Link>
           <button onClick={save} disabled={saving} className="px-4 py-2 rounded-xl bg-[#E9C87D] text-black font-medium disabled:opacity-60">
@@ -350,7 +350,7 @@ export default function NewPage() {
         <section className="space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="opacity-80">Krótki opis</span>
-            <button type="button" className="btn-gold" onClick={() => { const ta = descRef.current; if (!ta) return; const next = wrapSelection(ta, '[[gold]]', '[[/gold]]'); setForm((f) => ({ ...f, shortDesc: next })); }}>Złoty Bungee</button>
+            <button type="button" className="btn-gold" onClick={() => { const ta = descRef.current; if (!ta) return; const next = wrapSelection(ta, '[[gold]]', '[[/gold]]'); setForm((f) => ({ ...f, shortDesc: next })); }}>Złoty wyróżnik</button>
             <button type="button" className="btn-dark" onClick={() => { const ta = descRef.current; if (!ta) return; const next = wrapSelection(ta, '[[center]]', '[[/center]]'); setForm((f) => ({ ...f, shortDesc: next })); }}>Wyśrodkuj</button>
             <button type="button" className="btn-dark" onClick={() => { const ta = descRef.current; if (!ta) return; const next = wrapSelection(ta, '- ', ''); setForm((f) => ({ ...f, shortDesc: next })); }}>Lista</button>
             <button type="button" className="btn-dark" onClick={() => { const ta = descRef.current; if (!ta) return; const next = wrapSelection(ta, '[[bold]]', '[[/bold]]'); setForm((f) => ({ ...f, shortDesc: next })); }}>Pogrub</button>
@@ -378,7 +378,7 @@ export default function NewPage() {
         .input{ background:#00000066; border:1px solid #ffffff1a; border-radius:12px; padding:12px 14px; width:100% }
         .btn-gold{ background:#E9C87D; color:#000; border-radius:10px; padding:8px 12px }
         .btn-dark{ background:#00000066; border:1px solid #ffffff1a; border-radius:10px; padding:8px 12px }
-        .mk-gold{ color:#E9C87D; font-family:Bungee, system-ui, sans-serif }
+        .mk-gold{ color:#E9C87D; font-family:var(--font-display), Georgia, serif; font-weight:600 }
         .mk-center{ text-align:center }
         .prose :global(ul){ margin:0; padding:0 }
         .prose :global(li){ margin:4px 0 }

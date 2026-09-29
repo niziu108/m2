@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { MouseEvent } from "react";
 
-const ACCENT = "#E9C87D";
+const ACCENT = "#d9c48f";
 const FG = "#3a362f";
 const BG = "#efece3";
 
@@ -21,7 +21,7 @@ export default function Stopka() {
   };
 
   const linkCls =
-    "font-bungee uppercase tracking-[0.035em] hover:opacity-90 text-[var(--gold-ink)]";
+    "font-display text-[22px] md:text-[24px] !text-[var(--ink)] hover:!text-[var(--accent-deep)] transition-colors";
 
   return (
     <footer className="text-[var(--foreground)]" style={{ backgroundColor: BG }}>
@@ -34,8 +34,8 @@ export default function Stopka() {
           {/* Lewa: DANE FIRMY */}
           <div className="order-2 md:order-1">
             <div className="space-y-2 md:space-y-1 text-base leading-7">
-              <div className="font-bungee uppercase tracking-[0.035em] text-[var(--gold-ink)]">
-                DANE FIRMY:
+              <div className="eyebrow">
+                Dane firmy
               </div>
               <div>M2 Nieruchomości</div>
               <div className="text-[var(--foreground-soft)]">
@@ -44,15 +44,15 @@ export default function Stopka() {
               <div>NIP: 7691829620</div>
 
 
-              <div className="font-bungee uppercase pt-2 tracking-[0.035em] text-[var(--gold-ink)]">
-                ADRES:
+              <div className="eyebrow pt-4">
+                Adres
               </div>
               <div>97-400, Bełchatów</div>
               <div>Mazury 10</div>
               <div>Działamy mobilnie</div>
 
-              <div className="font-bungee uppercase pt-2 tracking-[0.035em] text-[var(--gold-ink)]">
-                KONTAKT:
+              <div className="eyebrow pt-4">
+                Kontakt
               </div>
 
               {/* Wymuszamy jasny kolor (nie żółty) */}
@@ -95,44 +95,44 @@ export default function Stopka() {
               <li>
                 {onHome ? (
                   <Link href="#hero" onClick={(e) => goSmooth(e, "hero")} className={linkCls}>
-                    STRONA GŁÓWNA
+                    Strona główna
                   </Link>
                 ) : (
-                  <Link href="/#hero" className={linkCls}>STRONA GŁÓWNA</Link>
+                  <Link href="/#hero" className={linkCls}>Strona główna</Link>
                 )}
               </li>
               <li>
                 {onHome ? (
                   <Link href="#jak-dzialamy" onClick={(e) => goSmooth(e, "jak-dzialamy")} className={linkCls}>
-                    JAK DZIAŁAMY?
+                    Jak działamy
                   </Link>
                 ) : (
-                  <Link href="/#jak-dzialamy" className={linkCls}>JAK DZIAŁAMY?</Link>
+                  <Link href="/#jak-dzialamy" className={linkCls}>Jak działamy</Link>
                 )}
               </li>
               <li>
-                <Link href="/nieruchomosci" className={linkCls}>OFERTA</Link>
+                <Link href="/nieruchomosci" className={linkCls}>Oferta</Link>
               </li>
               <li>
                 {onHome ? (
                   <Link href="#o-nas" onClick={(e) => goSmooth(e, "o-nas")} className={linkCls}>
-                    O NAS
+                    O nas
                   </Link>
                 ) : (
-                  <Link href="/#o-nas" className={linkCls}>O NAS</Link>
+                  <Link href="/#o-nas" className={linkCls}>O nas</Link>
                 )}
               </li>
               <li>
                 {onHome ? (
                   <Link href="#kontakt" onClick={(e) => goSmooth(e, "kontakt")} className={linkCls}>
-                    KONTAKT
+                    Kontakt
                   </Link>
                 ) : (
-                  <Link href="/#kontakt" className={linkCls}>KONTAKT</Link>
+                  <Link href="/#kontakt" className={linkCls}>Kontakt</Link>
                 )}
               </li>
               <li>
-                <Link href="/faq" className={linkCls}>FAQ</Link>
+                <Link href="/faq" className={linkCls}>Najczęstsze pytania</Link>
               </li>
             </ul>
           </nav>

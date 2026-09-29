@@ -63,10 +63,12 @@ function Foto({
   photos,
   title,
   reserved,
+  stacked,
 }: {
   photos: string[];
   title: string;
   reserved: boolean;
+  stacked: boolean;
 }) {
   const [i, setI] = useState(0);
   const startX = useRef<number | null>(null);
@@ -107,7 +109,9 @@ function Foto({
 
   return (
     <div
-      className="relative overflow-hidden bg-black/5 aspect-[16/10] lg:aspect-auto lg:h-full lg:w-[42%] lg:shrink-0"
+      className={`relative overflow-hidden bg-black/5 aspect-[16/10] ${
+        stacked ? '' : 'lg:aspect-auto lg:h-full lg:w-[42%] lg:shrink-0'
+      }`}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
@@ -174,7 +178,8 @@ function Foto({
   );
 }
 
-export default function Card({ l }: { l: CardListing }) {
+/** `stacked` = zawsze zdjęcie nad tekstem (siatka na stronie głównej). */
+export default function Card({ l, stacked = false }: { l: CardListing; stacked?: boolean }) {
   const photos = (
     l.photos && l.photos.length ? l.photos : l.coverImageUrl ? [l.coverImageUrl] : []
   ).filter(Boolean);
@@ -193,13 +198,15 @@ export default function Card({ l }: { l: CardListing }) {
     <Link
       href={`/oferta/${l.slug}`}
       prefetch={false}
-      className="group block overflow-hidden rounded-2xl border border-black/10 bg-[var(--surface)] lg:flex lg:h-[236px] lg:items-stretch"
+      className={`group block overflow-hidden rounded-2xl border border-black/10 bg-[var(--surface)] ${
+        stacked ? 'flex flex-col' : 'lg:flex lg:h-[236px] lg:items-stretch'
+      }`}
     >
-      <Foto photos={photos} title={l.title} reserved={l.isReserved} />
+      <Foto photos={photos} title={l.title} reserved={l.isReserved} stacked={stacked} />
 
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 p-4 sm:p-5 lg:p-6">
+      <div className={`flex min-w-0 flex-1 flex-col gap-2 p-4 sm:p-5 ${stacked ? '' : 'justify-center lg:p-6'}`}>
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-          <span className="font-[Bungee] gold-grad text-[clamp(20px,5vw,28px)] leading-none">
+          <span className="font-display gold-grad text-[clamp(24px,5vw,31px)] leading-none">
             {toPLN(l.price)}
           </span>
           {perM2 && (
@@ -209,7 +216,7 @@ export default function Card({ l }: { l: CardListing }) {
           )}
         </div>
 
-        <h3 className="line-clamp-2 text-[16px] font-semibold leading-snug text-[var(--foreground)] sm:text-[17px] lg:text-[19px]">
+        <h3 className={`line-clamp-2 text-[16px] font-semibold leading-snug text-[var(--foreground)] sm:text-[17px] ${stacked ? '' : 'lg:text-[19px]'}`}>
           {l.title}
         </h3>
 
@@ -233,7 +240,7 @@ export default function Card({ l }: { l: CardListing }) {
           </ul>
         )}
 
-        <span className="mt-2 hidden text-[13px] font-semibold tracking-wide text-[#b1861d] lg:inline-block">
+        <span className={`mt-2 hidden text-[13px] font-semibold tracking-wide text-[var(--accent-deep)] ${stacked ? '' : 'lg:inline-block'}`}>
           Zobacz ofertę &rarr;
         </span>
       </div>

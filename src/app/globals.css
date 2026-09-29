@@ -8,14 +8,17 @@
   --foreground-soft: #5c574e;   /* przygaszony tekst */
   --line: rgba(20,18,14,0.12);  /* delikatne linie/ramki */
   --gold: #E9C87D;              /* jasne złoto (wypełnienia, na ciemnym) */
-  --gold-ink: #E9C87D;          /* jasne złoto wszędzie (jak wcześniej) */
+  --gold-ink: #9a7424;          /* złoto do tekstu na jasnym tle (#E9C87D było nieczytelne) */
   --accent: #b1861d;            /* głębsze złoto tylko do linków/zaznaczenia (czytelność) */
+  --accent-deep: #8a661b;       /* ciemne złoto: tekst na jasnym tle (czytelny kontrast) */
+  --ink: #1d1a15;               /* nagłówki */
 }
 
 /* Złoty gradient do dużych nagłówków (poziomy i symetryczny,
    żeby przy zawinięciu tekstu na telefonie każda linia wyglądała tak samo) */
 .gold-grad {
-  background-image: linear-gradient(90deg, #c8951a 0%, #E9C87D 50%, #c8951a 100%);
+  /* ciemniejsze, „antyczne” złoto: jasne #E9C87D na kremowym tle było prawie nieczytelne */
+  background-image: linear-gradient(90deg, #8a661b 0%, #b8913a 50%, #8a661b 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -46,8 +49,43 @@ html, body {
 }
 
 /* === FONTY === */
-.font-bungee {
-  font-family: var(--font-bungee), var(--font-inter), system-ui, sans-serif;
+/* Nagłówki: Cormorant Garamond (szeryf). Treść zostaje w Inter. */
+.font-display {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  /* cyfry równej wysokości (Cormorant domyślnie ma „nautyczne”, ceny wyglądały krzywo) */
+  font-variant-numeric: lining-nums;
+}
+
+/* Mała etykieta nad nagłówkiem sekcji (wersaliki z rozstrzeleniem) */
+.eyebrow {
+  display: block;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+/* Nagłówek sekcji: grafit, szeryf */
+.section-title {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  font-size: clamp(34px, 5vw, 56px);
+  font-variant-numeric: lining-nums;
+}
+
+/* Cienka złota kreska pod nagłówkiem */
+.gold-rule {
+  display: block;
+  width: 56px;
+  height: 1px;
+  background: #b8913a;
 }
 
 /* === LINKI === */
@@ -100,13 +138,12 @@ img::selection {
   line-height: 1.6;
 }
 
-/* złoty tekst Bungee */
+/* wyróżnienie w opisie oferty ([[gold]]) */
 .desc .desc-gold {
-  color: var(--gold-ink);
-  font-family: Bungee, ui-sans-serif, system-ui, -apple-system,
-    Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial,
-    "Apple Color Emoji", "Segoe UI Emoji";
-  letter-spacing: 0.5px;
+  color: var(--accent-deep);
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 1.2em;
 }
 
 /* wyśrodkowany blok */
@@ -132,9 +169,10 @@ img::selection {
 
 /* === Dla starego parsera (jeśli coś używa jeszcze tych klas) === */
 .gold-bungee {
-  color: var(--gold-ink);
-  font-family: Bungee, ui-sans-serif, system-ui, -apple-system,
-    Segoe UI, Roboto, 'Helvetica Neue', Arial;
+  color: var(--accent-deep);
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 1.2em;
 }
 .center-block {
   text-align: center;

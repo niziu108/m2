@@ -76,9 +76,8 @@ export default function GoogleOpinie() {
       <section className="px-4 py-10 lg:py-14 bg-[var(--background)] border-t border-black/5">
         <div className="mx-auto w-full max-w-[min(1400px,95vw)]">
           <header className="mb-3 text-center">
-            <h2 className="font-[Bungee] gold-grad tracking-[2px] text-[clamp(26px,5vw,48px)]">
-              OPINIE KLIENTÓW
-            </h2>
+            <span className="eyebrow">Opinie z Google</span>
+            <h2 className="section-title mt-3">Co mówią nasi klienci</h2>
             <p className="text-xs text-black/50 mt-1">Ładuję opinie…</p>
           </header>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -99,9 +98,8 @@ export default function GoogleOpinie() {
       <section className="px-4 py-10 lg:py-14 bg-[var(--background)] border-t border-black/5">
         <div className="mx-auto w-full max-w-[min(1400px,95vw)]">
           <header className="mb-3 text-center">
-            <h2 className="font-[Bungee] gold-grad tracking-[2px] text-[clamp(26px,5vw,48px)]">
-              OPINIE KLIENTÓW
-            </h2>
+            <span className="eyebrow">Opinie z Google</span>
+            <h2 className="section-title mt-3">Co mówią nasi klienci</h2>
             <p className="text-xs text-black/50 mt-1">Brak opinii do pokazania.</p>
           </header>
         </div>
@@ -117,9 +115,8 @@ export default function GoogleOpinie() {
     <section className="px-4 py-10 lg:py-14 bg-[var(--background)] border-t border-black/5">
       <div className="mx-auto w-full max-w-[min(1400px,95vw)]">
         <header className="mb-2 text-center">
-          <h2 className="font-[Bungee] gold-grad tracking-[2px] text-[clamp(26px,5vw,48px)]">
-            OPINIE KLIENTÓW
-          </h2>
+          <span className="eyebrow">Opinie z Google</span>
+          <h2 className="section-title mt-3">Co mówią nasi klienci</h2>
 
           {googleUrl && (
             <a

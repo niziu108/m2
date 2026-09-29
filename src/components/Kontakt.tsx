@@ -92,11 +92,11 @@ export default function Kontakt() {
 
   const lines = useMemo(
     () => [
-      { text: 'KONTAKT:', delay: 0, highlight: true },
-      { text: 'tel. 605 071 605', delay: 120 },
-      { text: 'tel. 661 099 666', delay: 180 },
-      { text: 'mail: biuro@m2.nieruchomosci.pl', delay: 260 },
-      { text: 'MEDIA SPOŁECZNOŚCIOWE:', delay: 380, highlight: true },
+      { text: 'Kontakt', delay: 0, highlight: true },
+      { text: '605 071 605', delay: 120 },
+      { text: '661 099 666', delay: 180 },
+      { text: 'biuro@m2.nieruchomosci.pl', delay: 260 },
+      { text: 'Media społecznościowe', delay: 380, highlight: true },
     ],
     []
   );
@@ -107,48 +107,40 @@ export default function Kontakt() {
       ref={sectionRef}
       aria-label="Sekcja kontaktowa"
       className="
-        relative w-full h-[100svh] overflow-hidden bg-[var(--background)] text-[var(--foreground)]
+        relative w-full lg:min-h-[100svh] py-16 lg:py-10 overflow-hidden bg-[var(--background)] text-[var(--foreground)]
         pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]
       "
     >
       <div
         className="
-          mx-auto h-full w-full max-w-7xl
-          flex flex-col items-center justify-center gap-8 px-5 lg:px-8
+          mx-auto h-full lg:min-h-[inherit] w-full max-w-7xl
+          flex flex-col items-center justify-center gap-8 px-5 lg:px-16
           lg:grid lg:grid-cols-2 lg:items-center lg:gap-12
         "
       >
         {/* LEWA STRONA */}
-        <div className="order-1 font-bungee tracking-tight w-full break-words">
-          {/* Nagłówek KONTAKT */}
+        <div className="order-1 w-full break-words">
+          {/* Nagłówek */}
           <FadeUp show={inView} delay={lines[0].delay}>
-            <div
-              className="
-                text-[var(--gold-ink)]
-                text-[clamp(22px,8.2vw,52px)] lg:text-[clamp(28px,4.2vw,48px)]
-                max-[380px]:text-[clamp(20px,7.6vw,36px)]
-                leading-[1.04]
-              "
-            >
-              KONTAKT:
-            </div>
+            <span className="eyebrow">Kontakt</span>
+            <div className="section-title mt-3">Porozmawiajmy o Twojej nieruchomości</div>
+            <span className="gold-rule mt-5" aria-hidden />
           </FadeUp>
 
           {/* Telefon 1 */}
           <FadeUp show={inView} delay={lines[1].delay}>
             <div
               className="
-                mt-3
-                text-[clamp(15px,4.2vw,30px)] lg:text-[clamp(18px,2.2vw,28px)]
-                max-[380px]:text-[clamp(14px,3.9vw,20px)]
+                mt-7 font-display
+                text-[clamp(26px,6.4vw,38px)]
               "
             >
               <a
                 href="tel:+48605071605"
                 style={{ color: '#23201b' }}
-                className="hover:text-[var(--gold-ink)] focus:text-[var(--gold-ink)] transition-colors"
+                className="hover:!text-[var(--accent-deep)] focus:!text-[var(--accent-deep)] transition-colors"
               >
-                tel. 605 071 605
+                605 071 605
               </a>
             </div>
           </FadeUp>
@@ -157,17 +149,16 @@ export default function Kontakt() {
           <FadeUp show={inView} delay={lines[2].delay}>
             <div
               className="
-                mt-1.5
-                text-[clamp(15px,4.2vw,30px)] lg:text-[clamp(18px,2.2vw,28px)]
-                max-[380px]:text-[clamp(14px,3.9vw,20px)]
+                mt-1 font-display
+                text-[clamp(26px,6.4vw,38px)]
               "
             >
               <a
                 href="tel:+48661099666"
                 style={{ color: '#23201b' }}
-                className="hover:text-[var(--gold-ink)] focus:text-[var(--gold-ink)] transition-colors"
+                className="hover:!text-[var(--accent-deep)] focus:!text-[var(--accent-deep)] transition-colors"
               >
-                tel. 661 099 666
+                661 099 666
               </a>
             </div>
           </FadeUp>
@@ -176,34 +167,23 @@ export default function Kontakt() {
           <FadeUp show={inView} delay={lines[3].delay}>
             <div
               className="
-                mt-2
-                text-[clamp(14px,3.9vw,26px)] lg:text-[clamp(16px,2vw,24px)]
-                max-[380px]:text-[clamp(13px,3.6vw,19px)]
+                mt-3
+                text-[clamp(15px,4vw,19px)]
               "
             >
               <a
                 href="mailto:biuro@m2.nieruchomosci.pl"
                 style={{ color: '#23201b' }}
-                className="hover:text-[var(--gold-ink)] focus:text-[var(--gold-ink)] transition-colors"
+                className="hover:!text-[var(--accent-deep)] focus:!text-[var(--accent-deep)] transition-colors"
               >
-                mail: biuro@m2.nieruchomosci.pl
+                biuro@m2.nieruchomosci.pl
               </a>
             </div>
           </FadeUp>
 
           {/* MEDIA SPOŁECZNOŚCIOWE */}
           <FadeUp show={inView} delay={lines[4].delay}>
-            <div
-              className="
-                mt-8 lg:mt-12
-                text-[var(--gold-ink)]
-                text-[clamp(22px,8.2vw,52px)] lg:text-[clamp(28px,4.2vw,48px)]
-                max-[380px]:text-[clamp(20px,7.6vw,36px)]
-                leading-[1.04]
-              "
-            >
-              MEDIA SPOŁECZNOŚCIOWE:
-            </div>
+            <span className="eyebrow mt-10 lg:mt-12">Media społecznościowe</span>
           </FadeUp>
 
           {/* IKONY */}

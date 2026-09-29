@@ -44,7 +44,7 @@ export default function ImagesUploader({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="font-[Bungee] text-[#E9C87D]">Zdjęcia</label>
+      <label className="font-display text-[#E9C87D]">Zdjęcia</label>
       <input
         type="file"
         multiple

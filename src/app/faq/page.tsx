@@ -83,8 +83,8 @@ export default function Page() {
       <BackArrow />
 
       <section className="px-4 pt-10 pb-16 mx-auto w-full max-w-3xl">
-        <h1 className="font-[Bungee] gold-grad text-center leading-tight px-14 sm:px-16 tracking-[1px] text-[clamp(24px,5.2vw,44px)] mb-8">
-          NAJCZĘSTSZE PYTANIA
+        <h1 className="font-display text-[var(--ink)] text-center leading-tight px-14 sm:px-16 text-[clamp(34px,5.6vw,56px)] mb-8">
+          Najczęstsze pytania
         </h1>
 
         <div className="space-y-4">

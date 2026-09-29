@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter, Bungee } from "next/font/google";
+import { Geist_Mono, Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import GlobalMenu from "@/components/GlobalMenu";
 import Stopka from "@/components/Stopka";
-import PageLoader from "./PageLoader";
 import CookieBar from "@/components/CookieBar";
 import PromoHausmar from "@/components/PromoHausmar";
 import Script from "next/script";
@@ -15,10 +14,16 @@ import { getPlaceRating } from "@/lib/place";
 const OG_IMAGE = "/og.jpg";
 
 // === FONTY ===
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+// latin-ext jest konieczny: bez niego ą, ę, ł, ś itd. brały się z czcionki systemowej
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
-const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
-const bungee = Bungee({ weight: "400", subsets: ["latin"], display: "swap", variable: "--font-bungee" });
+const inter = Inter({ subsets: ["latin", "latin-ext"], display: "swap", variable: "--font-inter" });
+// Nagłówki: klasyczny szeryf (styl dużych biur premium), zamiast Bungee
+const display = Cormorant_Garamond({
+  weight: ["500", "600", "700"],
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-display",
+});
 
 // === META ===
 export const metadata: Metadata = {
@@ -76,10 +81,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="pl">
       <body
         className={[
-          geistSans.variable,
           geistMono.variable,
           inter.variable,
-          bungee.variable,
+          display.variable,
           "antialiased",
           "bg-[var(--background)] text-[var(--foreground)]",
         ].join(" ")}
@@ -212,9 +216,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         {/* Stopka */}
         <Stopka />
-
-        {/* Loader tylko przy wejściu na stronę główną (bez migania przy nawigacji) */}
-        <PageLoader />
 
         {/* Pasek cookies */}
         <CookieBar />

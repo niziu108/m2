@@ -81,7 +81,7 @@ export default function ReorderPage() {
   return (
     <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] p-6">
       <header className="mb-6">
-        <h1 className="font-[Bungee] text-2xl text-[#E9C87D] text-center">Kolejność ofert</h1>
+        <h1 className="font-display text-2xl text-[#E9C87D] text-center">Kolejność ofert</h1>
         <div className="mt-3 flex justify-center gap-3">
           <Link href="/admin" className="px-4 py-2 rounded-xl border border-white/10">
             Powrót

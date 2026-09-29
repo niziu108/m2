@@ -10,7 +10,7 @@ export default function PrivacyPage() {
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)]">
       <section className="px-4 py-10">
         <div className="mx-auto w-full max-w-[min(900px,92vw)]">
-          <h1 className="font-[Bungee] text-[var(--gold-ink)] text-[clamp(26px,4.5vw,40px)] tracking-[1px] mb-6 text-center">
+          <h1 className="font-display text-[var(--ink)] text-[clamp(32px,5vw,48px)] mb-6 text-center">
             Polityka prywatności
           </h1>
 

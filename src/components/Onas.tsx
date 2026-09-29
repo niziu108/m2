@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-const YELLOW = '#E9C87D';
+const YELLOW = '#c9a24a';
 const TEXT = '#23201b';
 
 // wolniejsza, płynna animacja od dołu
@@ -39,12 +39,11 @@ export default function Onas() {
           whileInView="animate"
           variants={fadeUp}
           viewport={{ once: true, amount: 0.4 }}
-          className="gold-grad text-center leading-none tracking-[0.06em] select-none"
-          style={{ fontFamily: 'Bungee, system-ui, sans-serif' }}
+          className="flex flex-col items-center text-center select-none"
         >
-          <span className="block text-[30px] md:text-[44px] lg:text-[52px]">
-            POZNAJ NASZ ZESPÓŁ
-          </span>
+          <span className="eyebrow">O nas</span>
+          <span className="section-title mt-3 block">Poznaj nasz zespół</span>
+          <span className="gold-rule mt-5" aria-hidden />
         </motion.h2>
 
         {/* Kółka bliżej nagłówka */}
@@ -56,19 +55,19 @@ export default function Onas() {
           className="mt-10 md:mt-14 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12"
         >
           <Person
-            name="KARINA"
+            name="Karina"
             role="właścicielka firmy, kontakt z klientem, sprzedaż"
             tagline="pozytywna wariatka"
             imgSrc="/karinaa.jpeg"
           />
           <Person
-            name="DANIEL"
+            name="Daniel"
             role="oferty, filmy, strona internetowa"
             tagline="sportowy zapaleniec"
             imgSrc="/Daniel.jpeg"
           />
           <Person
-            name="PAULA"
+            name="Paula"
             role="media społecznościowe, zdjęcia"
             tagline="rekin biznesu"
             imgSrc="/Paula.jpeg"
@@ -145,11 +144,8 @@ function Person({
         />
       </div>
 
-      {/* Imię — Bungee, żółte */}
-      <div
-        className="mt-4 md:mt-5 text-[18px] md:text-[20px] tracking-wide uppercase"
-        style={{ color: YELLOW, fontFamily: 'Bungee, system-ui, sans-serif' }}
-      >
+      {/* Imię */}
+      <div className="mt-4 md:mt-5 font-display text-[26px] md:text-[30px] leading-none text-[var(--ink)]">
         {name}
       </div>
 

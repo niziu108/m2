@@ -2,8 +2,8 @@
 
 export default function NotFoundClient() {
   return (
-    <h1 className="font-[Bungee] text-[var(--gold-ink)] text-center text-[clamp(22px,5vw,48px)]">
-      NIE ZNALEZIONO TEJ OFERTY
+    <h1 className="font-display text-[var(--ink)] text-center text-[clamp(32px,5vw,52px)]">
+      Nie znaleziono tej oferty
     </h1>
   );
 }

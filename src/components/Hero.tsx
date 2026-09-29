@@ -12,7 +12,19 @@ const CATS = [
   { label: "Inne", value: "/inne" },
 ];
 
-export default function Hero() {
+// Wizytówka Google z opiniami (ten sam PLACE_ID co w GoogleOpinie)
+const REVIEWS_URL = "https://search.google.com/local/reviews?placeid=ChIJM50TlD4bGkcRCI5xxkS1cIo";
+
+/** 1 opinia, 2-4 opinie, 5+ opinii (z wyjątkiem 12-14) */
+function opinieLabel(n: number) {
+  if (n === 1) return "opinia";
+  const last = n % 10, twoLast = n % 100;
+  return last >= 2 && last <= 4 && !(twoLast >= 12 && twoLast <= 14) ? "opinie" : "opinii";
+}
+
+type Rating = { ratingValue: number; reviewCount: number } | null;
+
+export default function Hero({ rating = null }: { rating?: Rating }) {
   const router = useRouter();
   const [cat, setCat] = useState("");
   const [open, setOpen] = useState(false);
@@ -76,9 +88,9 @@ export default function Hero() {
           height={200}
           priority
           className="
-            w-[160px]
-            sm:w-[160px]
-            md:w-[200px]
+            w-[132px]
+            sm:w-[150px]
+            md:w-[180px]
             h-auto
             mb-[0.16em]
             opacity-95
@@ -87,45 +99,39 @@ export default function Hero() {
         />
 
         {/* NAPIS */}
-        <h1
-          className="
-            font-bungee
-            text-[#dfba61]
-            leading-[1.25]
-            drop-shadow-[0_3px_10px_rgba(0,0,0,0.6)]
-            text-[clamp(28px,8vw,56px)]
-            sm:text-[clamp(26px,5vw,58px)]
-            max-w-[95%]
-            sm:max-w-[80%]
-            md:max-w-[70%]
-            lg:max-w-[60%]
-          "
-        >
+        <h1 className="max-w-[95%] sm:max-w-[82%] md:max-w-[72%] lg:max-w-[62%]">
           {/* pierwsza linia nagłówka: fraza, na którą chcemy być w Google */}
           <span
             className="
-              mb-3 block
-              text-white/90
-              text-[clamp(11px,3vw,17px)]
-              tracking-[0.1em] sm:tracking-[0.16em]
-              leading-[1.45]
+              mb-4 block
+              text-[#E9C87D]
+              text-[clamp(11px,2.8vw,14px)]
+              font-semibold uppercase
+              tracking-[0.24em]
               drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]
             "
           >
-            BIURO NIERUCHOMOŚCI BEŁCHATÓW
+            Biuro nieruchomości Bełchatów
           </span>
 
-          <span className="block">
-            ZNAJDŹ MIEJSCE, <br /> KTÓRE POKOCHASZ.
+          <span
+            className="
+              block font-display text-white
+              leading-[1.05]
+              text-[clamp(40px,10vw,60px)] sm:text-[clamp(44px,6.4vw,84px)]
+              drop-shadow-[0_3px_14px_rgba(0,0,0,0.55)]
+            "
+          >
+            Znajdź miejsce, <br /> które pokochasz.
           </span>
         </h1>
 
         {/* PODTYTUŁ – co robimy i gdzie (ważne też dla Google) */}
         <p
           className="
-            mt-3 max-w-[640px]
+            mt-4 max-w-[640px]
             text-white/95
-            text-[clamp(13px,3.4vw,17px)]
+            text-[clamp(14px,3.6vw,18px)]
             leading-snug
             drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]
           "
@@ -196,6 +202,23 @@ export default function Hero() {
             </button>
           </div>
         </form>
+
+        {/* ZAUFANIE: ocena z wizytówki Google (to samo źródło co dane strukturalne) */}
+        <a
+          href={REVIEWS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[13px] sm:text-[14px] !text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+        >
+          <span className="tracking-[0.12em] text-[#E9C87D]" aria-hidden>★★★★★</span>
+          <span>
+            {rating
+              ? <><strong className="font-semibold">{rating.ratingValue.toFixed(1).replace('.', ',')}</strong> w Google · {rating.reviewCount} {opinieLabel(rating.reviewCount)}</>
+              : <>Opinie klientów w Google</>}
+          </span>
+          <span className="hidden sm:inline text-white/60">|</span>
+          <span className="hidden sm:inline">Kupujący nie płaci prowizji</span>
+        </a>
       </div>
     </section>
   );

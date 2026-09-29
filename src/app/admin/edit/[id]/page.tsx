@@ -238,7 +238,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
   return (
     <main className="min-h-[100svh] bg-[#131313] text-[#d9d9d9] p-6">
       <header className="mb-6 text-center">
-        <h1 className="font-[Bungee] text-2xl text-[#E9C87D]">Edycja oferty</h1>
+        <h1 className="font-display text-2xl text-[#E9C87D]">Edycja oferty</h1>
         <div className="mt-3 flex justify-center gap-3">
           <Link href="/admin" className="px-4 py-2 rounded-xl border border-white/10">Powrót</Link>
           <button onClick={save} disabled={saving} className="px-4 py-2 rounded-xl bg-[#E9C87D] text-black font-medium disabled:opacity-60">
@@ -389,7 +389,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
               const ta = descRef.current; if (!ta) return;
               const next = wrapSelection(ta, '[[gold]]', '[[/gold]]');
               setForm((f) => (f ? { ...f, shortDesc: next } : f));
-            }}>Złoty Bungee</button>
+            }}>Złoty wyróżnik</button>
 
             <button type="button" className="btn-dark" onClick={() => {
               const ta = descRef.current; if (!ta) return;
@@ -437,7 +437,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
         .input{ background:#00000066; border:1px solid #ffffff1a; border-radius:12px; padding:12px 14px; width:100% }
         .btn-gold{ background:#E9C87D; color:#000; border-radius:10px; padding:8px 12px }
         .btn-dark{ background:#00000066; border:1px solid #ffffff1a; border-radius:10px; padding:8px 12px }
-        .mk-gold{ color:#E9C87D; font-family:Bungee, system-ui, sans-serif }
+        .mk-gold{ color:#E9C87D; font-family:var(--font-display), Georgia, serif; font-weight:600 }
         .mk-center{ text-align:center }
         .prose :global(ul){ margin:0; padding:0 }
         .prose :global(li){ margin:4px 0 }

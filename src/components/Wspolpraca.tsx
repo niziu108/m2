@@ -12,7 +12,7 @@ type Item = {
 const SECTIONS: Item[] = [
   {
     number: '01.',
-    title: 'DOSTĘPNOŚĆ',
+    title: 'Dostępność',
     content: `Odbieramy telefony o każdej porze — bez względu na dzień i godzinę.  
 
 Jesteśmy dla Ciebie zawsze, gdy potrzebujesz wsparcia, informacji lub szybkiej reakcji.  
@@ -20,7 +20,7 @@ Dzięki temu proces sprzedaży i zakupu przebiega płynnie i bez stresu.`,
   },
   {
     number: '02.',
-    title: 'PROWIZJA',
+    title: 'Prowizja',
     content: `Kupujący nie płaci prowizji — żadnych ukrytych kosztów.  
 
 Stawiamy na pełną transparentność i uczciwe warunki współpracy.  
@@ -28,7 +28,7 @@ Wiesz dokładnie, za co płacisz i jakie działania podejmujemy w Twoim imieniu.
   },
   {
     number: '03.',
-    title: 'PREZENTACJA NIERUCHOMOŚCI',
+    title: 'Prezentacja nieruchomości',
     content: `Profesjonalne zdjęcia, filmy i wirtualne spacery.  
 
 Każda oferta zyskuje wyjątkową oprawę wizualną, która przyciąga uwagę  
@@ -36,7 +36,7 @@ i pozwala zaprezentować nieruchomość w najlepszym świetle.`,
   },
   {
     number: '04.',
-    title: 'MAKSYMALNA WIDOCZNOŚĆ OFERTY',
+    title: 'Maksymalna widoczność oferty',
     content: `Twoja oferta trafia na Otodom, OLX, Facebooka, tylkodzialki.pl, naszą stronę internetową
 oraz do wewnętrznej bazy klientów poszukujących.
 
@@ -44,7 +44,7 @@ Dbamy o to, by dotarła do właściwych osób — szybko i skutecznie.`,
   },
   {
     number: '05.',
-    title: 'AI — NOWOCZESNE ROZWIĄZANIA',
+    title: 'Nowoczesne narzędzia i AI',
     content: `Wykorzystujemy sztuczną inteligencję, by maksymalnie zwiększyć potencjał ofert.  
 
 AI pomaga nam tworzyć lepsze opisy, analizować rynek i dopasowywać strategię sprzedaży  
@@ -81,10 +81,9 @@ export default function Wspolpraca() {
           viewport={{ once: true, amount: 0.25 }}
           className="flex flex-col items-center gap-3 mb-12 md:mb-16 text-center"
         >
-          <span className="font-bungee gold-grad uppercase text-2xl md:text-4xl leading-[1] tracking-[0.02em]">
-            DLACZEGO WARTO WSPÓŁPRACOWAĆ Z NAMI?
-          </span>
-          <div className="h-[2px] w-24 bg-[#E9C87D] mt-3"></div>
+          <span className="eyebrow">Jak działamy</span>
+          <h2 className="section-title">Dlaczego warto współpracować z nami?</h2>
+          <span className="gold-rule mt-2" aria-hidden />
         </motion.div>
 
         {/* LISTA */}
@@ -98,22 +97,22 @@ export default function Wspolpraca() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
-                className="border-t border-[#E9C87D]/60"
+                className="border-t border-black/10"
               >
                 <button
                   onClick={() => setOpenIndex(opened ? null : i)}
-                  className="w-full grid grid-cols-12 items-center gap-4 py-5 md:py-7 text-left hover:bg-white/5 transition-colors duration-200"
+                  className="w-full grid grid-cols-12 items-center gap-4 py-5 md:py-7 text-left hover:bg-black/[0.015] transition-colors duration-200"
                 >
                   {/* NUMER */}
                   <span className="col-span-2 select-none">
-                    <span className="font-bungee block text-3xl md:text-5xl leading-none text-[#E9C87D]">
+                    <span className="font-display block text-3xl md:text-5xl leading-none text-[#b8913a]">
                       {s.number}
                     </span>
                   </span>
 
                   {/* TYTUŁ */}
                   <span className="col-span-9">
-                    <span className="font-bungee block uppercase tracking-[0.025em] text-2xl md:text-3xl leading-tight text-[var(--foreground)]">
+                    <span className="font-display block text-[26px] md:text-[36px] leading-tight text-[var(--ink)]">
                       {s.title}
                     </span>
                   </span>
@@ -128,7 +127,7 @@ export default function Wspolpraca() {
                       xmlns="http://www.w3.org/2000/svg"
                       animate={{ rotate: opened ? 180 : 0 }}
                       transition={{ duration: 0.28 }}
-                      className="shrink-0 text-[#E9C87D]"
+                      className="shrink-0 text-[#b8913a]"
                     >
                       <path
                         d="M6 9l6 6 6-6"
@@ -149,7 +148,7 @@ export default function Wspolpraca() {
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.35 }}
-                      className="overflow-hidden border-t border-[#E9C87D]/60"
+                      className="overflow-hidden border-t border-black/10"
                     >
                       <div className="pb-7 md:pb-8 pl-2 md:pl-[calc(16.666%)] pr-2 md:pr-8 text-[15px] md:text-[19px] leading-relaxed text-[var(--foreground-soft)] font-inter whitespace-pre-line">
                         {s.content}
@@ -160,7 +159,7 @@ export default function Wspolpraca() {
               </motion.div>
             );
           })}
-          <div className="border-t border-[#E9C87D]/60" />
+          <div className="border-t border-black/10" />
         </div>
       </div>
     </section>
