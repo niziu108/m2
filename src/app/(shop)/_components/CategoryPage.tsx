@@ -285,6 +285,20 @@ export default async function CategoryPage({
             {seo.paras.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
+            {category === 'DZIALKA' && (
+              <p>
+                Szukasz działki dalej niż w okolicy Bełchatowa? Współpracujemy z portalem{' '}
+                <a
+                  href="https://tylkodzialki.pl"
+                  target="_blank"
+                  rel="noopener"
+                  className="font-semibold text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80"
+                >
+                  tylkodzialki.pl
+                </a>
+                , gdzie znajdziesz działki na sprzedaż z całej Polski, w tym nasze oferty.
+              </p>
+            )}
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">

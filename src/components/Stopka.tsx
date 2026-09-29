@@ -52,6 +52,22 @@ export default function Stopka() {
               <div>Działamy mobilnie</div>
 
               <div className="eyebrow pt-4">
+                Partner
+              </div>
+              {/* Współpraca z portalem działek (link w każdej stopce) */}
+              <div>
+                <a
+                  href="https://tylkodzialki.pl"
+                  target="_blank"
+                  rel="noopener"
+                  className="font-semibold !text-[var(--accent-deep)] hover:underline"
+                >
+                  tylkodzialki.pl
+                </a>
+              </div>
+              <div className="text-[var(--foreground-soft)]">Portal z działkami na sprzedaż w całej Polsce</div>
+
+              <div className="eyebrow pt-4">
                 Kontakt
               </div>
 
