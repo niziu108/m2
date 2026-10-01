@@ -10,6 +10,7 @@ import ViewTracker from './ViewTracker';        // ⬅️ DODANE
 import StructuredData from '@/components/StructuredData';
 import { listingToJsonLd, breadcrumbJsonLd } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
+import { offerFacts, floorLabel, roomsLabel, areaLabel, type OfferFacts } from '@/lib/offerFacts';
 
 // ── CONFIG ──────────────────────────────────────────────────────────────
 // mapowanie kategorii -> strona kategorii (breadcrumby + typ oferty)
@@ -83,15 +84,22 @@ function niceLocation(s?: string | null) {
     .join(', ');
 }
 
-function seoParts(l: { category: string; title: string; location: string | null; area: number | null; price: number }) {
+// Fakty w kolejności, w jakiej ludzie je wpisują: „3 pokoje 63,61 m² I piętro loggia”
+function factList(f: OfferFacts, maxExtras: number) {
+  return [roomsLabel(f.rooms), areaLabel(f.area), floorLabel(f.floor), ...f.extras.slice(0, maxExtras)].filter(
+    (x): x is string => !!x
+  );
+}
+
+function seoParts(
+  l: { category: string; title: string; location: string | null; area: number | null; price: number },
+  f: OfferFacts
+) {
   // działki wrzucone do „Inne” (np. pod dom senioralny) też nazywamy działkami
   const type =
     l.category === 'INNE' && /działk/i.test(l.title) ? 'Działka' : SEO_TYPE[l.category] ?? 'Nieruchomość';
   const loc = niceLocation(l.location) || 'Bełchatów';
-  const facts = [
-    l.area ? `${l.area.toLocaleString('pl-PL')} m²` : null,
-    l.price > 0 ? toPLN(l.price) : null,
-  ].filter(Boolean);
+  const facts = [...factList(f, 1), ...(l.price > 0 ? [toPLN(l.price)] : [])];
   return { type, loc, facts };
 }
 
@@ -109,6 +117,7 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
     select: {
       title: true, shortDesc: true, coverImageUrl: true,
       category: true, location: true, area: true, price: true,
+      bullets: true, body: true,
     },
   });
 
@@ -126,13 +135,16 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
     };
   }
 
-  const { type, loc, facts } = seoParts(l);
+  const f = offerFacts(l);
+  const { type, loc, facts } = seoParts(l, f);
   // brand dokleja szablon z layoutu
   const seoTitle = [`${type} na sprzedaż ${loc}`, ...facts].join(', ');
   const hook = niceTitle(l.title);
   // shortDesc często powtarza hasło z nagłówka, nie dublujemy go w opisie
   const short = plainText(l.shortDesc).split(hook).join(' ').replace(/\s+/g, ' ').replace(/\s+([.,])/g, '$1').replace(/^[.,\s]+/, '').trim();
-  let description = `${hook}. ${type} na sprzedaż: ${loc}${facts.length ? `, ${facts.join(', ')}` : ''}.`;
+  // w opisie wszystkie atuty (loggia, piwnica, winda…), w tytule tylko najmocniejszy
+  const descFacts = [...factList(f, 9), ...(l.price > 0 ? [toPLN(l.price)] : [])];
+  let description = `${type} na sprzedaż: ${loc}${descFacts.length ? `, ${descFacts.join(', ')}` : ''}. ${hook}.`;
   if (short) description += ` ${short}`;
   description += ' M2 Nieruchomości Bełchatów, tel. 605 071 605.';
   if (description.length > 300) description = description.slice(0, 297).replace(/\s+\S*$/, '') + '…';
@@ -176,10 +188,13 @@ export default async function Page({ params }: PageProps) {
 
   // "Liczba pokoi" tylko dla DOM/MIESZKANIE
   const showRooms = data.category === 'DOM' || data.category === 'MIESZKANIE';
-  const roomsValue =
-    (data as any).rooms ??
-    (Array.isArray((data as any).bullets) && (data as any).bullets[0]) ??
-    null;
+  const facts = offerFacts(data);
+  const roomsValue = facts.rooms ?? (data.bullets[0] || null);
+  const seo = seoParts(data, facts);
+  // np. „Mieszkanie na sprzedaż · 3 pokoje · 63,61 m² · I piętro · loggia · Bełchatów, os. Czaplinieckie”
+  const h1Phrase = [`${seo.type} na sprzedaż`, ...factList(facts, 2), seo.loc].join(' · ');
+  // „Bełchatów, os. Czaplinieckie” -> miejscowość + osiedle/ulica osobno w schemacie
+  const [locality, ...street] = (niceLocation(data.location) || 'Bełchatów').split(',').map((x) => x.trim());
 
   // ── DANE STRUKTURALNE (schema.org) ──────────────────────────────────────
   const cat = CATEGORY_INFO[data.category] ?? CATEGORY_INFO.INNE;
@@ -188,16 +203,18 @@ export default async function Page({ params }: PageProps) {
   const jsonLdOffer = listingToJsonLd({
     id: String(data.id),
     slug: data.slug,
-    title: data.title,
-    description: data.shortDesc || undefined,
+    title: `${niceTitle(data.title)}, ${h1Phrase.replaceAll(' · ', ', ')}`,
+    description: plainText(data.shortDesc) || undefined,
     type: cat.type,
     price: Number(data.price),
     currency: 'PLN',
     availability: data.isReserved ? 'LimitedAvailability' : 'InStock',
-    areaM2: data.area || undefined,
-    rooms: typeof roomsValue === 'number' ? roomsValue : undefined,
+    areaM2: facts.area || undefined,
+    rooms: facts.rooms ?? undefined,
+    floor: facts.floor ?? undefined,
     address: {
-      addressLocality: data.location || 'Bełchatów',
+      ...(street.length ? { streetAddress: street.join(', ') } : {}),
+      addressLocality: locality,
       addressRegion: 'łódzkie',
       addressCountry: 'PL',
     },
@@ -214,7 +231,7 @@ export default async function Page({ params }: PageProps) {
   const jsonLdBreadcrumbs = breadcrumbJsonLd([
     { name: 'Strona główna', item: SITE_URL },
     { name: cat.label, item: `${SITE_URL}${cat.path}` },
-    { name: data.title, item: offerUrl },
+    { name: niceTitle(data.title), item: offerUrl },
   ]);
 
   return (
@@ -249,8 +266,12 @@ export default async function Page({ params }: PageProps) {
           <aside className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-2 sm:p-5 md:p-6 bg-[var(--surface)] h-full flex min-w-0">
             <div className="w-full flex flex-col gap-3 sm:gap-4 md:my-auto min-w-0">
               {/* TYTUŁ OFERTY */}
-              <h1 className="font-display text-[clamp(26px,3vw,36px)] leading-[1.12] text-[var(--ink)]">
-                {data.title}
+              {/* mała fraza pod wyszukiwarkę + duże hasło z panelu, jak H1 kategorii */}
+              <h1 className="text-[var(--ink)]">
+                <span className="block mb-2 text-[13px] sm:text-sm font-semibold leading-snug text-[var(--gold-ink)]">{h1Phrase}</span>
+                <span className="font-display block text-[clamp(26px,3vw,36px)] leading-[1.12]">
+                  {niceTitle(data.title)}
+                </span>
               </h1>
 
               {/* CENA */}
@@ -265,7 +286,7 @@ export default async function Page({ params }: PageProps) {
               <dl className="grid grid-cols-1 gap-2.5 sm:gap-3 text-sm min-w-0">
                 <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">Powierzchnia</dt>
-                  <dd className="font-medium truncate">{data.area ? `${data.area} m²` : '—'}</dd>
+                  <dd className="font-medium truncate">{areaLabel(facts.area) ?? '—'}</dd>
                 </div>
 
                 <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
@@ -277,6 +298,20 @@ export default async function Page({ params }: PageProps) {
                   <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                     <dt className="opacity-70">Liczba pokoi</dt>
                     <dd className="font-medium truncate">{roomsValue ?? '—'}</dd>
+                  </div>
+                )}
+
+                {facts.floor != null && (
+                  <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                    <dt className="opacity-70">Piętro</dt>
+                    <dd className="font-medium truncate">{floorLabel(facts.floor)}</dd>
+                  </div>
+                )}
+
+                {facts.extras.length > 0 && (
+                  <div className="flex justify-between items-center gap-4 rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                    <dt className="opacity-70 shrink-0">Dodatkowo</dt>
+                    <dd className="font-medium text-right">{facts.extras.join(', ')}</dd>
                   </div>
                 )}
 
