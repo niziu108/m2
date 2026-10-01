@@ -188,12 +188,12 @@ export default function Gallery({ images, alt = '' }: { images: string[]; alt?: 
               e.stopPropagation();
               setOpen(false);
             }}
-            className="absolute top-3 right-3 sm:top-6 sm:right-6 px-4 h-10 rounded-xl bg-black/60 hover:bg-black/80 text-white ring-1 ring-white/25 shadow-lg"
+            className="absolute z-10 top-3 right-3 sm:top-6 sm:right-6 px-4 h-10 rounded-xl bg-black/60 hover:bg-black/80 text-white ring-1 ring-white/25 shadow-lg"
           >
             Zamknij ✕
           </button>
 
-          {/* Strzałki */}
+          {/* Strzałki (z-10: na telefonie pionowo zdjęcie ma pełną szerokość i bez tego je zakrywało) */}
           {images.length > 1 && (
             <>
               <button
@@ -202,7 +202,7 @@ export default function Gallery({ images, alt = '' }: { images: string[]; alt?: 
                   prev();
                 }}
                 aria-label="Poprzednie zdjęcie"
-                className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 h-12 w-12 grid place-items-center rounded-full bg-black/60 hover:bg-black/80 text-white text-3xl leading-none shadow-lg ring-1 ring-white/25"
+                className="absolute z-10 left-3 sm:left-6 top-1/2 -translate-y-1/2 h-12 w-12 grid place-items-center rounded-full bg-black/60 hover:bg-black/80 text-white text-3xl leading-none shadow-lg ring-1 ring-white/25"
               >
                 ‹
               </button>
@@ -212,7 +212,7 @@ export default function Gallery({ images, alt = '' }: { images: string[]; alt?: 
                   next();
                 }}
                 aria-label="Następne zdjęcie"
-                className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 h-12 w-12 grid place-items-center rounded-full bg-black/60 hover:bg-black/80 text-white text-3xl leading-none shadow-lg ring-1 ring-white/25"
+                className="absolute z-10 right-3 sm:right-6 top-1/2 -translate-y-1/2 h-12 w-12 grid place-items-center rounded-full bg-black/60 hover:bg-black/80 text-white text-3xl leading-none shadow-lg ring-1 ring-white/25"
               >
                 ›
               </button>
