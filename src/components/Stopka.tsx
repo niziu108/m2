@@ -188,14 +188,24 @@ export default function Stopka() {
             oraz informacji uzyskanych od właścicieli, mogą podlegać aktualizacji i nie stanowią ofert
             określonych w art. 66 i następnych K.C.
           </p>
-          <Link
-            href="/polityka-prywatnosci"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[12px] underline-offset-4 hover:underline whitespace-nowrap text-center sm:text-right"
-          >
-            Polityka prywatności
-          </Link>
+          <div className="flex flex-col items-center gap-1 sm:items-end">
+            <Link
+              href="/polityka-prywatnosci"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[12px] underline-offset-4 hover:underline whitespace-nowrap text-center sm:text-right"
+            >
+              Polityka prywatności
+            </Link>
+            {/* Tu można w każdej chwili wyrazić albo cofnąć zgodę na cookies */}
+            <button
+              type="button"
+              onClick={() => window.cookieConsent?.forceShow()}
+              className="text-[12px] text-[var(--accent)] underline-offset-4 hover:underline whitespace-nowrap"
+            >
+              Ustawienia cookies
+            </button>
+          </div>
         </div>
 
         {/* Podpis */}
