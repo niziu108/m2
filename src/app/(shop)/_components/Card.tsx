@@ -138,7 +138,7 @@ function Foto({
             // pierwsza karta to główna treść ekranu: wczytujemy ją od razu, resztę dopiero przy przewijaniu
             loading={priority ? 'eager' : 'lazy'}
             fetchPriority={priority ? 'high' : 'auto'}
-            decoding="async"
+            decoding={priority ? 'sync' : 'async'}
             draggable={false}
             className="absolute inset-0 h-full w-full object-cover"
           />
