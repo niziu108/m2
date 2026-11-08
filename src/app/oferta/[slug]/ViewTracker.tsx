@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { navState } from '@/components/NavProgress';
 
 export default function ViewTracker({ listingId }: { listingId: string }) {
   useEffect(() => {
@@ -11,10 +12,13 @@ export default function ViewTracker({ listingId }: { listingId: string }) {
 
     const controller = new AbortController();
     const t = setTimeout(() => {
+      // Nagłówek referer tego zapytania to sama oferta, a document.referrer po kliknięciu linku na stronie
+      // zostaje taki, jak przy wejściu na witrynę (Google albo pusto). Dlatego przejście po stronie sprawdzamy osobno.
+      const referrer = navState.internal ? location.origin : document.referrer;
       fetch('/api/views', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ listingId }),
+        body: JSON.stringify({ listingId, referrer }),
         keepalive: true,
         signal: controller.signal,
       }).catch(() => {});

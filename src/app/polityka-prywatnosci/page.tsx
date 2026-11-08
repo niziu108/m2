@@ -211,7 +211,9 @@ export default function PrivacyPage() {
               <strong>Licznik wyświetleń ofert:</strong> po otwarciu oferty zapisujemy w naszej bazie
               numer i adres oferty, czas wejścia, informacje o przeglądarce i urządzeniu oraz skrót
               (hash) adresu IP zamiast samego adresu. Dzięki temu ta sama osoba nie jest liczona kilka
-              razy w ciągu 6 godzin. Nie używamy do tego plików cookie. Dane przechowujemy tak długo, jak
+              razy w ciągu 6 godzin. Zapisujemy też, skąd nastąpiło wejście: z naszej strony, z innej
+              strony lub aplikacji (tylko jej nazwę, np. facebook.com, bez reszty adresu) albo bez takiej
+              informacji. Nie używamy do tego plików cookie. Dane przechowujemy tak długo, jak
               są potrzebne do statystyk ofert.
             </p>
           </article>

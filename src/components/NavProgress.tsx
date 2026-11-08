@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-/** Czy człowiek przeszedł już jakąś stronę w obrębie witryny (czytane przez przycisk „Wróć”). */
+/** Czy człowiek przeszedł już jakąś stronę w obrębie witryny (czytane przez przycisk „Wróć” i licznik odsłon). */
 export const navState = { internal: false };
 
 /* Cienki złoty pasek u góry po kliknięciu w link. Stara strona zostaje widoczna, aż nowa będzie
