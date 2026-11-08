@@ -1,12 +1,16 @@
 // src/app/api/admin/listings/[id]/route.ts
-import { NextResponse } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/adminAuth'
 
 /** GET /api/admin/listings/:id */
 export async function GET(
-  _req: Request,
+  req: NextRequest,
   ctx: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin(req)
+  if (denied) return denied
+
   const { id } = await ctx.params
   const item = await prisma.listing.findUnique({
     where: { id },
@@ -21,9 +25,12 @@ export async function GET(
  *  Dzięki temu toggle rezerwacji nie nadpisze tytułu, kategorii itd.
  */
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   ctx: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin(req)
+  if (denied) return denied
+
   const { id } = await ctx.params
 
   try {
@@ -85,9 +92,12 @@ export async function PATCH(
 
 /** (opcjonalnie) DELETE */
 export async function DELETE(
-  _req: Request,
+  req: NextRequest,
   ctx: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin(req)
+  if (denied) return denied
+
   const { id } = await ctx.params
   await prisma.image.deleteMany({ where: { listingId: id } })
   await prisma.listing.delete({ where: { id } })

@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 
 const PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
@@ -8,7 +9,9 @@ const PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
    „Akceptuję” nic nie pobiera się z Facebooka ani nic do niego nie idzie. Z tego samego powodu
    nie ma tu wersji <noscript>: bez JavaScriptu nie da się wyrazić zgody. */
 export default function FbPixel() {
-  if (!PIXEL_ID) return null;
+  // Panel nie jest stroną dla klientów: przeglądarka z zapisaną zgodą nie ładuje tam piksela.
+  const inPanel = usePathname()?.startsWith('/admin');
+  if (!PIXEL_ID || inPanel) return null;
 
   return (
     // lazyOnload: przy kolejnej wizycie piksel startuje po wczytaniu strony i nie konkuruje ze

@@ -2,8 +2,9 @@
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/adminAuth';
 
 function slugify(s: string) {
   return (s || 'oferta')
@@ -14,7 +15,10 @@ function slugify(s: string) {
     .replace(/^-+|-+$/g, '');
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const data = await req.json();
 

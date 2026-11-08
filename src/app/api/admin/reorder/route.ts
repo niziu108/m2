@@ -1,10 +1,14 @@
 // src/app/api/admin/reorder/route.ts
 export const runtime = 'nodejs';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/adminAuth';
 
 // GET -> krótkie dane do panelu reorder
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const rows = await prisma.listing.findMany({
       orderBy: [{ sortIndex: 'asc' }, { createdAt: 'desc' }],
@@ -28,7 +32,10 @@ export async function GET() {
 type Body = { orderedIds: string[] };
 
 // POST -> zapisuje kolejność
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const body = (await req.json()) as Body;
     if (!body || !Array.isArray(body.orderedIds)) {
