@@ -12,8 +12,10 @@ const StructuredData = ({ jsonLd }: { jsonLd: JSONLD }) => {
         <script
           key={i}
           type="application/ld+json"
-          // ważne: czysty JSON bez formatowania
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }}
+          // ważne: czysty JSON bez formatowania.
+          // Znak „<” idzie jako kod unicode: tekst z panelu (np. tytuł z „</script>”) nie może zamknąć
+          // tego znacznika, a po odczytaniu JSON-a to dalej ten sam znak.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(item).replace(/</g, "\\u003c") }}
         />
       ))}
     </>

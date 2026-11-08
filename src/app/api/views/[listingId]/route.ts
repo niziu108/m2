@@ -3,6 +3,8 @@ export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+const MAX_DAYS = 3650;
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ listingId: string }> }
@@ -11,6 +13,9 @@ export async function GET(
 
   const url = new URL(req.url);
   const days = Number(url.searchParams.get('days') ?? '90');
+  if (!Number.isInteger(days) || days < 1 || days > MAX_DAYS) {
+    return NextResponse.json({ error: `days must be a whole number from 1 to ${MAX_DAYS}` }, { status: 400 });
+  }
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
   const [total, grouped] = await Promise.all([

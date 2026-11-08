@@ -154,7 +154,8 @@ export async function GET() {
 
     // ZAMIANA: nie 500, tylko 200 + puste opinie
     if (!apiKey || !placeId) {
-      const body = { reviews: [], source: null, error: 'Brak GOOGLE_PLACES_API_KEY lub PLACE_ID w .env' };
+      console.error('[google-reviews] Brak GOOGLE_PLACES_API_KEY lub PLACE_ID');
+      const body = { reviews: [], source: null };
       MEM_CACHE = { ts: now, body };
       return NextResponse.json(body, { status: 200 });
     }
@@ -168,7 +169,6 @@ export async function GET() {
       url?: string;
     }> = [];
     let source: 'v1' | 'legacy' | null = null;
-    let warn: string | undefined;
 
     try {
       const v1 = await fetchV1(apiKey, placeId);
@@ -176,7 +176,8 @@ export async function GET() {
       source = v1.source;
       if (!reviews.length) throw new Error('v1 returned 0 reviews');
     } catch (eV1: unknown) {
-      warn = String((eV1 as Error)?.message || eV1);
+      // Odpowiedzi Google z błędami są tylko do logów serwera, nie dla odwiedzających
+      console.warn('[google-reviews] Places v1:', String((eV1 as Error)?.message || eV1));
       const legacy = await fetchLegacy(apiKey, placeId);
       reviews = legacy.reviews;
       source = legacy.source;
@@ -186,7 +187,7 @@ export async function GET() {
     const seed = (year * 1000 + week) ^ (reviews.length * 2654435761);
     const picked = shuffleSeeded(reviews, seed).slice(0, Math.min(WEEKLY_PICK, reviews.length));
 
-    const body = { reviews: picked, source, week: { year, week }, warn };
+    const body = { reviews: picked, source, week: { year, week } };
     MEM_CACHE = { ts: now, body };
 
     return NextResponse.json(body, {
@@ -194,7 +195,8 @@ export async function GET() {
     });
   } catch (e: unknown) {
     // ZAMIANA: nie 500, tylko 200 + puste opinie (żeby UI nie wyglądał na zepsuty)
-    const body = { reviews: [], source: null, error: String((e as Error)?.message || e) };
+    console.error('[google-reviews] Nie udało się pobrać opinii:', String((e as Error)?.message || e));
+    const body = { reviews: [], source: null };
     MEM_CACHE = { ts: Date.now(), body };
     return NextResponse.json(body, { status: 200 });
   }

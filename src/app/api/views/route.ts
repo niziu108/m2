@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 
+// To jedyny zapis do bazy bez logowania, więc wpuszczamy tylko istniejącą ofertę i przycięte nagłówki
+const LISTING_ID = /^[A-Za-z0-9_-]{1,64}$/; // id to cuid (25 znaków), reszta to zapas
+const MAX_HEADER_CHARS = 512;
+
 function getClientIp(req: NextRequest) {
   const xf = req.headers.get("x-forwarded-for");
   if (xf) return xf.split(",")[0].trim();
@@ -25,9 +29,17 @@ export async function POST(req: NextRequest) {
     payload = await req.json();
   } catch {}
 
-  const listingId = payload?.listingId?.toString?.() || "";
-  if (!listingId) {
+  const listingId = payload?.listingId;
+  if (typeof listingId !== "string" || !LISTING_ID.test(listingId)) {
     return NextResponse.json({ error: "listingId required" }, { status: 400 });
+  }
+
+  const listing = await prisma.listing.findUnique({
+    where: { id: listingId },
+    select: { id: true },
+  });
+  if (!listing) {
+    return NextResponse.json({ error: "listing not found" }, { status: 404 });
   }
 
   const referer = req.headers.get("referer");
@@ -47,7 +59,13 @@ export async function POST(req: NextRequest) {
 
   if (!exists) {
     await prisma.listingView.create({
-      data: { listingId, source, referrer: referer || null, ua, ipHash },
+      data: {
+        listingId,
+        source,
+        referrer: referer ? referer.slice(0, MAX_HEADER_CHARS) : null,
+        ua: ua.slice(0, MAX_HEADER_CHARS),
+        ipHash,
+      },
     });
   }
 

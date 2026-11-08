@@ -28,7 +28,6 @@ type ApiResp =
       reviews: Review[];
       source: "v1" | "legacy" | null;
       week?: { year: number; week: number };
-      warn?: string;
       error?: undefined;
     }
   | { reviews: Review[]; source: null; error: string };
@@ -135,10 +134,6 @@ export default function GoogleOpinie() {
               />
             </a>
           )}
-
-          {"warn" in data! && (data as any).warn ? (
-            <p className="text-[11px] text-black/40 mt-1">{(data as any).warn}</p>
-          ) : null}
 
           <div className="mt-4">
             <a
