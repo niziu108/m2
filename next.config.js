@@ -4,6 +4,16 @@ const nextConfig = {
   typescript: { ignoreBuildErrors: true },
   images: { unoptimized: true },
 
+  // Zdjęcia z /public: przeglądarka trzyma je 30 dni zamiast pytać o nie przy każdym wejściu
+  async headers() {
+    return [
+      {
+        source: '/:file((?!_next/).*\\.(?:webp|jpe?g|png|svg|ico))',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=604800' }],
+      },
+    ];
+  },
+
   async redirects() {
     return [
       // aliasy z wyników Google

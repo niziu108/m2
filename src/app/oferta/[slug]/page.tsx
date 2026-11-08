@@ -11,6 +11,13 @@ import StructuredData from '@/components/StructuredData';
 import { listingToJsonLd, breadcrumbJsonLd } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
 import { offerFacts, floorLabel, roomsLabel, areaLabel, type OfferFacts } from '@/lib/offerFacts';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import OfferCallBar from './OfferCallBar';
+import PodobneOferty from './PodobneOferty';
+import { cldOgImage } from '@/lib/img';
+import { getAllListings } from '@/lib/listings';
+import { MIN_OFFERS_TO_INDEX, placeCounts, placeOf } from '@/lib/places';
+import { niceLocation, niceTitle, plainText, toPLN } from '@/lib/text';
 
 // ── CONFIG ──────────────────────────────────────────────────────────────
 // mapowanie kategorii -> strona kategorii (breadcrumby + typ oferty)
@@ -40,9 +47,6 @@ function renderShortDesc(src?: string) {
   if (!src) return '';
   return applyInlineTags(src).replace(/\n/g, '<br/>');
 }
-export function toPLN(n: number) {
-  return n.toLocaleString('pl-PL') + ' zł';
-}
 
 // ── SEO: tytuł i opis pod wyszukiwarkę, składane z danych oferty ────────
 // Tytuły w panelu są hasłami („DZIAŁKA ROLNA”, „Ty wybierasz dom…”), a ludzie szukają
@@ -54,35 +58,6 @@ const SEO_TYPE: Record<string, string> = {
   DZIALKA: 'Działka',
   INNE: 'Nieruchomość',
 };
-
-function plainText(s?: string | null) {
-  return (s ?? '')
-    .replace(/\[\[\/?[a-z]+\]\]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function niceTitle(s: string) {
-  const t = plainText(s).replace(/[.\s]+$/, '');
-  // CAPS LOCK z panelu -> zdanie
-  if (t && t === t.toUpperCase()) return t.charAt(0) + t.slice(1).toLowerCase();
-  return t;
-}
-
-// „WOLA GŁUPICKA, GMINA DRUŻBICE” -> „Wola Głupicka, gmina Drużbice”
-function niceLocation(s?: string | null) {
-  return plainText(s)
-    .split(',')
-    .map((part) => {
-      let p = part.trim();
-      if (p && p === p.toUpperCase() && /\p{L}/u.test(p)) {
-        p = p.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_m, a, b) => a + b.toUpperCase());
-      }
-      return p.replace(/^(Gmina|Powiat|Ul\.|Os\.|Osiedle)\s/, (m) => m.toLowerCase());
-    })
-    .filter(Boolean)
-    .join(', ');
-}
 
 // Fakty w kolejności, w jakiej ludzie je wpisują: „3 pokoje 63,61 m² I piętro loggia”
 function factList(f: OfferFacts, maxExtras: number) {
@@ -122,16 +97,11 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
   });
 
   if (!l) {
-    // fallback dla nieznalezionych (Next pokaże 404, ale meta też będzie spójna)
+    // sprzedana lub zdjęta oferta: strona zwraca 404 i podsuwa aktualne oferty
     return {
-      title: 'Oferta',
-      description: 'Szczegóły oferty w M2 Nieruchomości.',
-      alternates: { canonical: canonicalUrl },
-      openGraph: {
-        url: canonicalUrl,
-        title: 'Oferta | M2 Nieruchomości',
-        description: 'Szczegóły oferty w M2 Nieruchomości.',
-      },
+      title: 'Oferta niedostępna',
+      description: 'Ta oferta nie jest już dostępna. Zobacz aktualne nieruchomości M2 Nieruchomości w Bełchatowie i okolicy.',
+      robots: { index: false, follow: true },
     };
   }
 
@@ -149,23 +119,29 @@ export async function generateMetadata({ params }: GenProps): Promise<Metadata> 
   description += ' M2 Nieruchomości Bełchatów, tel. 605 071 605.';
   if (description.length > 300) description = description.slice(0, 297).replace(/\s+\S*$/, '') + '…';
 
+  // Podgląd po wrzuceniu linku na Facebooka lub WhatsAppa: zdjęcie oferty w lekkim JPG 1200x630
+  const shareTitle = `${hook} | ${type} ${loc}`;
+  const shareImage = cldOgImage(l.coverImageUrl);
+
   return {
     title: seoTitle,
     description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
       url: canonicalUrl,
-      title: `${hook} | ${type} ${loc}`,
+      title: shareTitle,
       description,
-      images: l.coverImageUrl ? [{ url: l.coverImageUrl }] : undefined,
+      type: 'website',
+      siteName: 'M2 Nieruchomości',
+      locale: 'pl_PL',
+      images: shareImage ? [{ url: shareImage, width: 1200, height: 630, alt: shareTitle }] : undefined,
     },
-    // (opcjonalnie) Twitter — nie przeszkadza FB, a pomaga w X/Twitter Cards
-    // twitter: {
-    //   card: 'summary_large_image',
-    //   title: `${l.title} | M2 Nieruchomości`,
-    //   description: l.shortDesc ?? undefined,
-    //   images: l.coverImageUrl ? [l.coverImageUrl] : undefined,
-    // },
+    twitter: {
+      card: 'summary_large_image',
+      title: shareTitle,
+      description,
+      images: shareImage ? [shareImage] : undefined,
+    },
   };
 }
 
@@ -228,17 +204,29 @@ export default async function Page({ params }: PageProps) {
     },
   });
 
+  // Lista ofert do „Podobnych” i do linku na stronę gminy; bez bazy strona oferty i tak ma działać
+  const all = await getAllListings().catch(() => []);
+  const place = placeOf(data.location);
+  // na stronę gminy linkujemy dopiero, gdy ma dość ofert, żeby trafić do Google
+  const placeLink =
+    place && (placeCounts(all).get(place.slug) ?? 0) >= MIN_OFFERS_TO_INDEX
+      ? { name: place.name, path: `/nieruchomosci/${place.slug}` }
+      : null;
+
   const jsonLdBreadcrumbs = breadcrumbJsonLd([
     { name: 'Strona główna', item: SITE_URL },
     { name: cat.label, item: `${SITE_URL}${cat.path}` },
+    ...(placeLink ? [{ name: placeLink.name, item: `${SITE_URL}${placeLink.path}` }] : []),
     { name: niceTitle(data.title), item: offerUrl },
   ]);
+
+  const phone = data.contactPhone ?? '605 071 605';
 
   return (
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)] overflow-x-hidden">
       <StructuredData jsonLd={[jsonLdOffer, jsonLdBreadcrumbs]} />
-      <BackArrow label="Wróć do listy ofert" />
-      
+      <BackArrow label="Wróć do listy ofert" fallbackHref={cat.path} />
+
       <section className="px-0 sm:px-4 pt-14 pb-4 sm:pt-16 sm:pb-6 mx-auto w-full max-w-[min(1400px,95vw)]">
         {/* GÓRA: galeria + panel info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 items-start min-w-0">
@@ -265,6 +253,15 @@ export default async function Page({ params }: PageProps) {
           {/* PRAWA KARTA = TABELA DANYCH */}
           <aside className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-2 sm:p-5 md:p-6 bg-[var(--surface)] h-full flex min-w-0">
             <div className="w-full flex flex-col gap-3 sm:gap-4 md:my-auto min-w-0">
+              <Breadcrumbs
+                items={[
+                  { name: 'Strona główna', href: '/' },
+                  { name: cat.label, href: cat.path },
+                  ...(placeLink ? [{ name: placeLink.name, href: placeLink.path }] : []),
+                  { name: data.listingNumber ? `Oferta ${data.listingNumber}` : 'Oferta' },
+                ]}
+              />
+
               {/* TYTUŁ OFERTY */}
               {/* mała fraza pod wyszukiwarkę + duże hasło z panelu, jak H1 kategorii */}
               <h1 className="text-[var(--ink)]">
@@ -289,8 +286,8 @@ export default async function Page({ params }: PageProps) {
                   <dd className="font-medium truncate">{areaLabel(facts.area) ?? '—'}</dd>
                 </div>
 
-                <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
-                  <dt className="opacity-70">Lokalizacja</dt>
+                <div className="flex justify-between items-center gap-4 rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
+                  <dt className="opacity-70 shrink-0">Lokalizacja</dt>
                   <dd className="font-medium truncate">{data.location ?? '—'}</dd>
                 </div>
 
@@ -322,7 +319,14 @@ export default async function Page({ params }: PageProps) {
 
                 <div className="flex justify-between items-center rounded-lg border border-black/10 px-3 py-2.5 md:px-4 md:py-3 min-w-0">
                   <dt className="opacity-70">Telefon</dt>
-                  <dd className="font-medium truncate">{data.contactPhone ?? '—'}</dd>
+                  <dd className="font-medium truncate">
+                    <a
+                      href={`tel:${phone.replace(/\s+/g, '')}`}
+                      className="!text-[var(--accent-deep)] underline underline-offset-2"
+                    >
+                      {phone}
+                    </a>
+                  </dd>
                 </div>
               </dl>
             </div>
@@ -345,21 +349,21 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         {/* KARTA KONTAKTU DO TEJ OFERTY */}
-        <div className="mt-8 md:mt-10">
+        <div id="kontakt-oferta" className="mt-8 md:mt-10">
           <div className="sm:rounded-2xl border-0 sm:border sm:border-[#E9C87D]/30 px-3 py-5 sm:p-6 md:p-8 bg-[var(--surface)] text-center">
-            <h3 className="font-display text-[var(--ink)] mb-2 text-[clamp(26px,3.6vw,36px)] leading-tight">
+            <h2 className="font-display text-[var(--ink)] mb-2 text-[clamp(26px,3.6vw,36px)] leading-tight">
               Zainteresowała Cię ta oferta?
-            </h3>
+            </h2>
             <p className="text-[var(--foreground-soft)] mb-5 max-w-xl mx-auto">
               Zadzwoń lub napisz, chętnie umówimy oglądanie i odpowiemy na wszystkie pytania.
               {data.listingNumber ? ` Podaj numer oferty: ${data.listingNumber}.` : ''}
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <a
-                href={`tel:${(data.contactPhone ?? '605 071 605').replace(/\s+/g, '')}`}
-                className="rounded-xl bg-[#E9C87D] text-[#131313] font-semibold px-6 py-3 select-none"
+                href={`tel:${phone.replace(/\s+/g, '')}`}
+                className="rounded-xl bg-[#E9C87D] !text-[#131313] font-semibold px-6 py-3 select-none"
               >
-                Zadzwoń: {data.contactPhone ?? '605 071 605'}
+                Zadzwoń: {phone}
               </a>
               <a
                 href={`mailto:${data.contactEmail ?? 'biuro@m2.nieruchomosci.pl'}?subject=${encodeURIComponent(
@@ -373,12 +377,14 @@ export default async function Page({ params }: PageProps) {
           </div>
         </div>
 
+        <PodobneOferty current={data} all={all} category={cat} />
+
         {/* NAJCZĘSTSZE PYTANIA */}
         <div className="mt-8 md:mt-10">
           <div className="sm:rounded-2xl border-0 sm:border sm:border-black/10 px-3 py-5 sm:p-6 md:p-8 bg-[var(--surface)]">
-            <h3 className="font-display text-[var(--ink)] mb-4 text-center text-[clamp(26px,3.6vw,36px)] leading-tight">
+            <h2 className="font-display text-[var(--ink)] mb-4 text-center text-[clamp(26px,3.6vw,36px)] leading-tight">
               Najczęstsze pytania
-            </h3>
+            </h2>
             <div className="space-y-3 max-w-2xl mx-auto">
               {[
                 {
@@ -424,6 +430,8 @@ export default async function Page({ params }: PageProps) {
 
         <ViewTracker listingId={data.id.toString()} /> {/* ⬅️ DODANE */}
       </section>
+
+      <OfferCallBar phone={phone} price={toPLN(data.price)} listingNumber={data.listingNumber} />
     </main>
   );
 }

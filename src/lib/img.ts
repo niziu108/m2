@@ -21,3 +21,20 @@ export function cldOptimize(url?: string | null, width?: number): string {
 
   return `${before}${t.join(',')}/${after}`;
 }
+
+/** srcset z kilku szerokości: telefon pobiera mniejszy plik niż komputer. Spoza Cloudinary: brak. */
+export function cldSrcSet(url: string | null | undefined, widths: number[]): string | undefined {
+  if (!url || !url.includes(MARKER)) return undefined;
+  if (/\/image\/upload\/(f_auto|q_auto)/.test(url)) return undefined;
+  return widths.map((w) => `${cldOptimize(url, w)} ${w}w`).join(', ');
+}
+
+/** Podgląd do Facebooka i WhatsAppa: 1200x630 w JPG, bo surowy PNG potrafi być za ciężki na miniaturę. */
+export function cldOgImage(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  const i = url.indexOf(MARKER);
+  if (i === -1) return url;
+  const before = url.slice(0, i + MARKER.length);
+  const after = url.slice(i + MARKER.length);
+  return `${before}f_jpg,q_auto,w_1200,h_630,c_fill/${after}`;
+}

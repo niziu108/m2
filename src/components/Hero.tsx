@@ -64,16 +64,18 @@ export default function Hero({ rating = null }: { rating?: Rating }) {
       className="relative w-full h-[100svh] overflow-hidden"
       aria-label="Sekcja hero M2 Nieruchomości"
     >
-      {/* TŁO */}
-      <Image
-        src="/hero.webp"
-        alt="M2 Nieruchomości Bełchatów, biuro nieruchomości"
-        fill
-        priority
-        fetchPriority="high"
-        sizes="100vw"
-        className="object-cover"
-      />
+      {/* TŁO: telefon dostaje pionowy wycinek środka zdjęcia (83 KB zamiast 519 KB) */}
+      <picture>
+        <source media="(max-width: 767px) and (orientation: portrait)" srcSet="/hero-mobile.webp" />
+        <source media="(max-width: 1280px)" srcSet="/hero-1280.webp" />
+        <img
+          src="/hero.webp"
+          alt="M2 Nieruchomości Bełchatów, biuro nieruchomości"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </picture>
 
       {/* PRZYCIEMNIENIE */}
       <div className="absolute inset-0 bg-black/40 z-[5]" />
@@ -82,7 +84,7 @@ export default function Hero({ rating = null }: { rating?: Rating }) {
       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center select-none px-6 pb-[10vh] sm:pb-[8vh]">
         {/* LOGO */}
         <Image
-          src="/logo.webp"
+          src="/logo-480.webp"
           alt="M2 Nieruchomości – logo"
           width={200}
           height={200}

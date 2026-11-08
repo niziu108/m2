@@ -8,8 +8,10 @@ import { prisma } from '@/lib/prisma';
 import Filters from './Filters';
 import Card, { type CardListing } from './Card';
 import StructuredData from '@/components/StructuredData';
-import { breadcrumbJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, itemListJsonLd } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
+import { indexablePlaces } from '@/lib/places';
+import { PLOT_KINDS } from '@/lib/plotKinds';
 
 type Cat = 'DOM' | 'MIESZKANIE' | 'DZIALKA' | 'INNE';
 
@@ -22,7 +24,7 @@ const CATS: { key: Cat; label: string; path: string }[] = [
 ];
 
 // Ile zdjęć wrzucamy do karuzeli na liście (reszta jest na stronie oferty)
-const PHOTOS_PER_CARD = 10;
+const PHOTOS_PER_CARD = 6;
 
 // Teksty SEO pod frazy lokalne (naturalne, bez upychania)
 const SEO_COPY: Record<string, { h2: string; paras: string[] }> = {
@@ -209,9 +211,18 @@ export default async function CategoryPage({
     { name: title, item: `${SITE_URL}${selfPath}` },
   ]);
 
+  // Skróty do stron miejscowości i rodzajów działek: tylko na pełnej liście, nie po filtrowaniu
+  const hasFilters = !!(q || pmin || pmax || amin || amax || lat != null);
+  const shortcuts = hasFilters
+    ? []
+    : [
+        ...(category === 'DZIALKA' ? PLOT_KINDS.map((k) => ({ label: k.name, href: `/dzialki/${k.slug}` })) : []),
+        ...indexablePlaces(items).map((p) => ({ label: p.name, href: `/nieruchomosci/${p.slug}` })),
+      ];
+
   return (
     <main className="min-h-[100svh] bg-[var(--background)] text-[var(--foreground)]">
-      <StructuredData jsonLd={breadcrumb} />
+      <StructuredData jsonLd={hasFilters || !items.length ? breadcrumb : [breadcrumb, itemListJsonLd(items, SITE_URL)]} />
       <section className="px-4 pt-6 pb-5 border-b border-[#E9C87D]/20">
         <h1 className="text-center px-14 sm:px-16 mb-4">
           {/* fraza pod Google (jak na stronie głównej), hasło zostaje dużym napisem */}
@@ -243,8 +254,25 @@ export default async function CategoryPage({
                 {ofertyLabel(items.length)}
                 {category ? ` w kategorii ${title.toLowerCase()}` : ''}
               </p>
+              {shortcuts.length > 0 && (
+                <nav aria-label="Szukaj według miejsca i rodzaju" className="no-scrollbar -mx-4 mb-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+                  <ul className="flex w-max gap-2 md:w-auto md:flex-wrap">
+                    {shortcuts.map((s) => (
+                      <li key={s.href}>
+                        <Link
+                          href={s.href}
+                          prefetch={false}
+                          className="inline-block whitespace-nowrap rounded-full border border-black/12 bg-[var(--surface)] px-3.5 py-1.5 text-[13px] font-medium !text-[var(--foreground)] transition hover:border-[#b8913a]"
+                        >
+                          {s.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-1">
-                {items.map((l) => <Card key={l.id} l={l} />)}
+                {items.map((l, i) => <Card key={l.id} l={l} priority={i === 0} />)}
               </div>
             </>
           ) : (
@@ -317,6 +345,9 @@ export default async function CategoryPage({
                 Wszystkie oferty
               </Link>
             )}
+            <Link href="/wycena-nieruchomosci" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">
+              Bezpłatna wycena
+            </Link>
             <Link href="/faq" className="text-[var(--gold-ink)] underline underline-offset-4 hover:opacity-80">
               Najczęstsze pytania
             </Link>

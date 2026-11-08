@@ -1,22 +1,17 @@
 export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import type { Metadata } from 'next';
 import CategoryPage from '../(shop)/_components/CategoryPage';
+import { categoryMetadata } from '@/lib/categoryMeta';
 
-export const metadata: Metadata = {
-  title: 'Działki na sprzedaż Bełchatów i okolice',
-  description:
-    'Działki na sprzedaż w Bełchatowie i okolicach. Sprawdź lokalizacje i ceny.',
-  alternates: { canonical: '/dzialki' },
-  openGraph: {
-    title: 'Działki na sprzedaż Bełchatów | M2 Nieruchomości',
-    description:
-      'Aktualne działki na sprzedaż w Bełchatowie i okolicach.',
-    url: '/dzialki',
-    type: 'website',
-  },
-};
+export function generateMetadata() {
+  return categoryMetadata({
+    category: 'DZIALKA',
+    path: '/dzialki',
+    title: 'Działki na sprzedaż Bełchatów i okolice',
+    lead: 'Działki budowlane i rolne na sprzedaż w Bełchatowie i okolicy do 40 km, z lokalizacją, metrażem i ceną za m².',
+  });
+}
 
 export default function Page({
   searchParams,

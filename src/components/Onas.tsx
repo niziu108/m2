@@ -58,19 +58,19 @@ export default function Onas() {
             name="Karina"
             role="właścicielka firmy, kontakt z klientem, sprzedaż"
             tagline="pozytywna wariatka"
-            imgSrc="/karinaa.jpeg"
+            imgSrc="/karina-400.webp"
           />
           <Person
             name="Daniel"
             role="oferty, filmy, strona internetowa"
             tagline="sportowy zapaleniec"
-            imgSrc="/Daniel.jpeg"
+            imgSrc="/daniel-400.webp"
           />
           <Person
             name="Paula"
             role="media społecznościowe, zdjęcia"
             tagline="rekin biznesu"
-            imgSrc="/Paula.jpeg"
+            imgSrc="/paula-400.webp"
           />
         </motion.div>
 

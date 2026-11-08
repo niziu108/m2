@@ -80,6 +80,7 @@ export default function CookieBar() {
       className="fixed inset-x-0 bottom-0 z-[2147483647] border-t"
       style={{ background: '#131313', color: '#fbfaf5', borderColor: 'rgba(251,250,245,.2)' }}
       role="dialog"
+      aria-label="Informacja o plikach cookie"
       aria-live="polite"
     >
       <div className="mx-auto max-w-6xl px-3 sm:px-6 py-2 flex items-center gap-3 sm:gap-4">
@@ -89,7 +90,7 @@ export default function CookieBar() {
             href="/polityka-prywatnosci"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 text-[var(--gold-ink)]"
+            className="underline underline-offset-2 !text-[#E9C87D]"
           >
             Polityce prywatności
           </Link>.

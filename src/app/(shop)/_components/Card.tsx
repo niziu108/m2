@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { cldOptimize } from '@/lib/img';
+import { cldOptimize, cldSrcSet } from '@/lib/img';
 
 export function toPLN(n: number) {
   return n.toLocaleString('pl-PL') + ' zł';
@@ -22,6 +22,12 @@ export type CardListing = {
   category?: string | null;
   photos?: string[];
 };
+
+const CARD_WIDTHS = [400, 640, 800, 1000];
+// Na telefonie celowo mniej niż 100vw: zdjęcie w karcie ma ok. 350 px, a ekran o gęstości 3x
+// pobierałby ponad 1000 px szerokości, czego na tym rozmiarze i tak nie widać.
+const SIZES_STACKED = '(min-width: 1024px) 380px, (min-width: 640px) 48vw, 72vw';
+const SIZES_ROW = '(min-width: 1024px) 480px, (min-width: 768px) 48vw, 72vw';
 
 /** W bazie zdarza się sam liczba pokoi ("3"). Na karcie ma być "3 pokoje". */
 function opisCechy(bullet: string, category?: string | null) {
@@ -62,13 +68,17 @@ function IconCamera({ className = '' }: { className?: string }) {
 function Foto({
   photos,
   title,
+  location,
   reserved,
   stacked,
+  priority,
 }: {
   photos: string[];
   title: string;
+  location: string | null;
   reserved: boolean;
   stacked: boolean;
+  priority: boolean;
 }) {
   const [i, setI] = useState(0);
   const startX = useRef<number | null>(null);
@@ -76,6 +86,7 @@ function Foto({
 
   const many = photos.length > 1;
   const go = (dir: number) => setI((v) => (v + dir + photos.length) % photos.length);
+  const current = photos[i] ?? photos[0];
 
   const arrow = (dir: number) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -120,9 +131,13 @@ function Foto({
       {photos.length ? (
         <>
           <img
-            src={cldOptimize(photos[i] ?? photos[0], 900)}
-            alt={title}
-            loading="lazy"
+            sizes={stacked ? SIZES_STACKED : SIZES_ROW}
+            srcSet={cldSrcSet(current, CARD_WIDTHS)}
+            src={cldOptimize(current, 800)}
+            alt={location ? `${title}, ${location}` : title}
+            // pierwsza karta to główna treść ekranu: wczytujemy ją od razu, resztę dopiero przy przewijaniu
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
             decoding="async"
             draggable={false}
             className="absolute inset-0 h-full w-full object-cover"
@@ -132,9 +147,10 @@ function Foto({
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
 
           <img
-            src="/logo.webp"
+            src="/logo-168.webp"
             alt=""
             aria-hidden="true"
+            loading="lazy"
             className="pointer-events-none absolute right-3 top-3 w-[56px] opacity-90 drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]"
           />
 
@@ -179,7 +195,15 @@ function Foto({
 }
 
 /** `stacked` = zawsze zdjęcie nad tekstem (siatka na stronie głównej). */
-export default function Card({ l, stacked = false }: { l: CardListing; stacked?: boolean }) {
+export default function Card({
+  l,
+  stacked = false,
+  priority = false,
+}: {
+  l: CardListing;
+  stacked?: boolean;
+  priority?: boolean;
+}) {
   const photos = (
     l.photos && l.photos.length ? l.photos : l.coverImageUrl ? [l.coverImageUrl] : []
   ).filter(Boolean);
@@ -202,7 +226,14 @@ export default function Card({ l, stacked = false }: { l: CardListing; stacked?:
         stacked ? 'flex flex-col' : 'lg:flex lg:h-[236px] lg:items-stretch'
       }`}
     >
-      <Foto photos={photos} title={l.title} reserved={l.isReserved} stacked={stacked} />
+      <Foto
+        photos={photos}
+        title={l.title}
+        location={l.location}
+        reserved={l.isReserved}
+        stacked={stacked}
+        priority={priority}
+      />
 
       <div className={`flex min-w-0 flex-1 flex-col gap-2 p-4 sm:p-5 ${stacked ? '' : 'justify-center lg:p-6'}`}>
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">

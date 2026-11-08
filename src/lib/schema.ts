@@ -128,6 +128,24 @@ export function listingToJsonLd(input: ListingSchemaInput): Record<string, any> 
   return node;
 }
 
+/** ItemList: lista ofert na stronie kategorii lub miejscowości. */
+export function itemListJsonLd(
+  items: { slug: string; title: string }[],
+  siteUrl: string
+): Record<string, any> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${siteUrl}/oferta/${it.slug}`,
+      name: it.title,
+    })),
+  };
+}
+
 /** BreadcrumbList z listy elementów { name, item(absolutny URL) }. */
 export function breadcrumbJsonLd(items: { name: string; item: string }[]): Record<string, any> {
   return {

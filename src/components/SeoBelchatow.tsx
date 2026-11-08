@@ -1,19 +1,10 @@
 import Link from 'next/link';
+import { PLACE_LINKS } from '@/lib/popularLinks';
 
 /* Sekcja lokalna na stronie głównej.
    Dla ludzi: konkret czym się zajmujemy i gdzie.
    Dla Google: fraza "biuro nieruchomości Bełchatów" w widocznym tekście
-   plus linki do stron z ofertami. */
-
-const OKOLICE = [
-  'Zelów',
-  'Kleszczów',
-  'Szczerców',
-  'Drużbice',
-  'Kluki',
-  'Rusiec',
-  'Łękińsko',
-];
+   plus linki do stron z ofertami i stron miejscowości. */
 
 const PUNKTY = [
   {
@@ -35,6 +26,8 @@ const LINKI = [
   { label: 'Domy na sprzedaż', href: '/domy' },
   { label: 'Mieszkania na sprzedaż', href: '/mieszkania' },
   { label: 'Działki na sprzedaż', href: '/dzialki' },
+  { label: 'Działki budowlane', href: '/dzialki/budowlane' },
+  { label: 'Bezpłatna wycena', href: '/wycena-nieruchomosci' },
   { label: 'Najczęstsze pytania', href: '/faq' },
 ];
 
@@ -90,9 +83,17 @@ export default function SeoBelchatow() {
           ))}
         </ul>
 
-        <p className="mx-auto mt-7 max-w-3xl text-center text-sm text-[var(--foreground-soft)]">
-          Działamy w Bełchatowie i okolicy: {OKOLICE.join(', ')} oraz sąsiednie
-          miejscowości.
+        <p className="mx-auto mt-7 max-w-3xl text-center text-sm leading-6 text-[var(--foreground-soft)]">
+          Działamy w Bełchatowie i okolicy:{' '}
+          {PLACE_LINKS.map((l, i) => (
+            <span key={l.href}>
+              {i > 0 && ', '}
+              <Link href={l.href} prefetch={false} className="!text-[var(--accent-deep)] underline underline-offset-2">
+                {l.label}
+              </Link>
+            </span>
+          ))}
+          , a także Kluki, Rusiec i sąsiednie miejscowości.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">

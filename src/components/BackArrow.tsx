@@ -1,28 +1,39 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import type { MouseEvent } from 'react';
+import { navState } from '@/components/NavProgress';
 
-export default function BackArrow({ label = 'Wróć' }: { label?: string }) {
+function cameFromThisSite() {
+  if (navState.internal) return true;
+  if (window.history.length <= 1) return false;
+  try {
+    return new URL(document.referrer).origin === location.origin;
+  } catch {
+    return false;
+  }
+}
+
+/* Zwykły link do listy, a „wstecz” tylko dla kogoś, kto przyszedł z naszej strony:
+   po wejściu z Google albo Facebooka router.back() wyrzucał człowieka z powrotem do wyników. */
+export default function BackArrow({
+  label = 'Wróć',
+  fallbackHref = '/',
+}: {
+  label?: string;
+  fallbackHref?: string;
+}) {
   const router = useRouter();
   const [showGuard, setShowGuard] = useState(false);
-  const [canGoBack, setCanGoBack] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // 🔹 Wystarczy sprawdzić długość historii
-    if (window.history.length > 1) {
-      setCanGoBack(true);
-    }
-  }, []);
-
-  const handleClick = () => {
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || !cameFromThisSite()) return;
+    e.preventDefault();
     setShowGuard(true);
     setTimeout(() => router.back(), 10);
   };
-
-  if (!canGoBack) return null; // ukryj, jeśli nie ma historii
 
   return (
     <>
@@ -38,7 +49,9 @@ export default function BackArrow({ label = 'Wróć' }: { label?: string }) {
         />
       )}
 
-      <button
+      <Link
+        href={fallbackHref}
+        prefetch={false}
         onClick={handleClick}
         aria-label={label}
         className="
@@ -47,7 +60,7 @@ export default function BackArrow({ label = 'Wróć' }: { label?: string }) {
           rounded-full px-3 py-1.5
           border border-[#E9C87D]
           bg-[var(--background)]/85 backdrop-blur-[2px]
-          text-[var(--gold-ink)]
+          !text-[var(--gold-ink)]
           text-[12px] sm:text-[13px] font-semibold
           hover:bg-[#E9C87D]/20
           active:scale-[0.96]
@@ -66,7 +79,7 @@ export default function BackArrow({ label = 'Wróć' }: { label?: string }) {
           <path d='M15 18l-6-6 6-6' />
         </svg>
         {label}
-      </button>
+      </Link>
     </>
   );
 }

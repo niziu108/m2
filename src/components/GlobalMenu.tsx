@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -17,6 +16,7 @@ const MENU: MenuItem[] = [
   { label: 'Jak działamy', id: 'jak-dzialamy' },
   // Oferta prowadzi prosto do wyszukiwarki ze wszystkimi ofertami
   { label: 'Oferta', href: '/nieruchomosci' },
+  { label: 'Bezpłatna wycena', href: '/wycena-nieruchomosci' },
   { label: 'O nas', id: 'o-nas' },
   { label: 'Kontakt', id: 'kontakt' },
 ];
@@ -43,6 +43,9 @@ function scrollToId(id: TargetId) {
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+/* Animacje na samym CSS: menu jest na każdej podstronie, więc biblioteka animacji
+   dokładała ciężki JavaScript do każdego wejścia. Linki siedzą w HTML także przy
+   zamkniętym menu, dzięki czemu Google widzi główną nawigację. */
 export default function GlobalMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -88,76 +91,70 @@ export default function GlobalMenu() {
   return (
     <>
       {/* BURGER/CRoss – zawsze PRZYWIERZCHNIE w prawym górnym rogu */}
-      <motion.button
+      <button
         aria-label={open ? 'Zamknij menu' : 'Otwórz menu'}
+        aria-expanded={open}
         onClick={() => setOpen((s) => !s)}
-        className="fixed top-2 right-3 sm:top-3 sm:right-4 z-[110] p-2 rounded-lg"
-        animate={{ rotate: open ? 180 : 0 }}
-        transition={{ type: 'tween', duration: 0.35 }}
-        style={{ color: ACCENT, background: 'transparent', willChange: 'transform' }}
+        className={`fixed top-2 right-3 sm:top-3 sm:right-4 z-[110] p-2 rounded-lg bg-transparent transition-transform duration-300 ${
+          open ? 'rotate-180' : ''
+        }`}
+        style={{ color: ACCENT }}
       >
         {/* swap ikon z delikatnym crossfade */}
         <div className="relative w-9 h-9">
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            initial={false}
-            animate={{ opacity: open ? 0 : 1, scale: open ? 0.9 : 1 }}
-            transition={{ duration: 0.2 }}
+          <div
+            className={`absolute inset-0 flex items-center justify-center transition duration-200 ${
+              open ? 'opacity-0 scale-90' : 'opacity-100 scale-100'
+            }`}
           >
             <BurgerIcon className="w-8 h-8 sm:w-9 sm:h-9" />
-          </motion.div>
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            initial={false}
-            animate={{ opacity: open ? 1 : 0, scale: open ? 1 : 0.9 }}
-            transition={{ duration: 0.2, delay: open ? 0.05 : 0 }}
+          </div>
+          <div
+            className={`absolute inset-0 flex items-center justify-center transition duration-200 ${
+              open ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+            }`}
           >
             <CrossIcon className="w-8 h-8 sm:w-9 sm:h-9" />
-          </motion.div>
+          </div>
         </div>
-      </motion.button>
+      </button>
 
       {/* OVERLAY */}
-      <AnimatePresence>
-        {open && (
-          <motion.aside
-            key="menu-overlay"
-            initial={{ y: '-100%', opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '-100%', opacity: 0 }}
-            transition={{ type: 'tween', duration: 0.28 }}
-            className="fixed inset-0 z-[100] flex flex-col"
-            style={{ backgroundColor: BG, color: FG }}
-            aria-modal="true"
-            role="dialog"
-          >
-            {/* Klik w tło zamyka */}
-            <button
-              aria-hidden
-              onClick={() => setOpen(false)}
-              className="absolute inset-0 -z-10"
-            />
+      <aside
+        className={`fixed inset-0 z-[100] flex flex-col transition-[translate,opacity,visibility] duration-300 ease-out ${
+          open ? 'translate-y-0 opacity-100 visible' : '-translate-y-full opacity-0 invisible'
+        }`}
+        style={{ backgroundColor: BG, color: FG }}
+        aria-label="Menu"
+        aria-hidden={!open}
+        inert={!open}
+      >
+        {/* Klik w tło zamyka */}
+        <button
+          aria-hidden
+          tabIndex={-1}
+          onClick={() => setOpen(false)}
+          className="absolute inset-0 -z-10"
+        />
 
-            <nav className="relative flex-1 w-full">
-              <ul className="h-full w-full max-w-5xl mx-auto px-6 pt-24 pb-28 flex flex-col items-center justify-center gap-6 text-center">
-                {MENU.map((item) => (
-                  <li key={item.href ?? item.id}>
-                    {item.href ? (
-                      <Link href={item.href} onClick={() => setOpen(false)} className={linkCls}>
-                        {item.label}
-                      </Link>
-                    ) : (
-                      <button onClick={() => handleGo(item.id!)} className={linkCls}>
-                        {item.label}
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </motion.aside>
-        )}
-      </AnimatePresence>
+        <nav className="relative flex-1 w-full">
+          <ul className="h-full w-full max-w-5xl mx-auto px-6 pt-24 pb-28 flex flex-col items-center justify-center gap-6 text-center">
+            {MENU.map((item) => (
+              <li key={item.href ?? item.id}>
+                {item.href ? (
+                  <Link href={item.href} onClick={() => setOpen(false)} className={linkCls}>
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button onClick={() => handleGo(item.id!)} className={linkCls}>
+                    {item.label}
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
     </>
   );
 }

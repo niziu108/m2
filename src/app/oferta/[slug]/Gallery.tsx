@@ -1,10 +1,25 @@
 // src/app/oferta/[slug]/Gallery.tsx
 'use client';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { cldOptimize } from '@/lib/img';
+import { cldOptimize, cldSrcSet } from '@/lib/img';
+
+const MAIN_WIDTHS = [480, 720, 960, 1200, 1400];
+// Na telefonie celowo mniej niż 100vw: ekran o gęstości 3x brałby plik 1400 px, a różnicy
+// względem 960 px na tym rozmiarze nie widać, za to zdjęcie wczytuje się kilka razy dłużej.
+const MAIN_SIZES = '(min-width: 768px) 46vw, 72vw';
+
+/** Zapas na kolejne zdjęcie: ta sama wersja, którą za chwilę wybierze duże zdjęcie. */
+function preloadMain(src: string) {
+  const im = new Image();
+  im.sizes = MAIN_SIZES;
+  const set = cldSrcSet(src, MAIN_WIDTHS);
+  if (set) im.srcset = set;
+  im.src = cldOptimize(src, 1400);
+}
 
 export default function Gallery({ images, alt = '' }: { images: string[]; alt?: string }) {
   const [idx, setIdx] = useState(0);
+  const touchedGallery = useRef(false);
   const [open, setOpen] = useState(false);
   const railRef = useRef<HTMLDivElement>(null);
   const touchX = useRef<number | null>(null);
@@ -37,15 +52,25 @@ export default function Gallery({ images, alt = '' }: { images: string[]; alt?: 
 
   // Wczytaj z wyprzedzeniem sąsiednie zdjęcia (duże, a przy otwartym powiększeniu też pełne),
   // żeby strzałka zmieniała zdjęcie od razu, a nie po ściągnięciu pliku.
+  // Na starcie tylko jedno zdjęcie i dopiero po chwili, żeby zapas nie konkurował z pierwszym
+  // zdjęciem o łącze; po pierwszej zmianie zdjęcia wiadomo, że człowiek ogląda galerię.
   useEffect(() => {
     const n = images.length;
     if (n < 2) return;
-    for (const d of [1, -1, 2]) {
-      const src = images[(idx + d + n) % n];
-      new Image().src = cldOptimize(src, 1400);
-      if (open) new Image().src = cldOptimize(src, 2000);
-    }
-    if (open) new Image().src = cldOptimize(images[idx], 2000);
+    const firstLook = idx === 0 && !open && !touchedGallery.current;
+    if (!firstLook) touchedGallery.current = true;
+    const t = setTimeout(
+      () => {
+        for (const d of firstLook ? [1] : [1, -1, 2]) {
+          const src = images[(idx + d + n) % n];
+          preloadMain(src);
+          if (open) new Image().src = cldOptimize(src, 2000);
+        }
+        if (open) new Image().src = cldOptimize(images[idx], 2000);
+      },
+      firstLook ? 1500 : 0
+    );
+    return () => clearTimeout(t);
   }, [idx, open, images]);
 
   // Pasek miniaturek podąża za wybranym zdjęciem (tylko poziomo, strona się nie rusza)
@@ -106,8 +131,12 @@ export default function Gallery({ images, alt = '' }: { images: string[]; alt?: 
           />
           <img
             key={curr}
+            sizes={MAIN_SIZES}
+            srcSet={cldSrcSet(curr, MAIN_WIDTHS)}
             src={cldOptimize(curr, 1400)}
             alt={alt ? `${alt}, zdjęcie ${idx + 1}` : ''}
+            fetchPriority="high"
+            decoding="async"
             data-savable
             className="absolute inset-0 w-full h-full object-cover cursor-zoom-in"
             onClick={() => {

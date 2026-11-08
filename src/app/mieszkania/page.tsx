@@ -1,22 +1,17 @@
 export const runtime = 'nodejs';
 export const revalidate = 0;
 
-import type { Metadata } from 'next';
 import CategoryPage from '../(shop)/_components/CategoryPage';
+import { categoryMetadata } from '@/lib/categoryMeta';
 
-export const metadata: Metadata = {
-  title: 'Mieszkania na sprzedaż Bełchatów',
-  description:
-    'Aktualne mieszkania na sprzedaż w Bełchatowie i okolicach. Zobacz zdjęcia, metraże i ceny.',
-  alternates: { canonical: '/mieszkania' },
-  openGraph: {
-    title: 'Mieszkania na sprzedaż Bełchatów | M2 Nieruchomości',
-    description:
-      'Mieszkania w Bełchatowie i okolicach – bieżące oferty z cenami i zdjęciami.',
-    url: '/mieszkania',
-    type: 'website',
-  },
-};
+export function generateMetadata() {
+  return categoryMetadata({
+    category: 'MIESZKANIE',
+    path: '/mieszkania',
+    title: 'Mieszkania na sprzedaż Bełchatów',
+    lead: 'Aktualne mieszkania na sprzedaż w Bełchatowie i okolicy, ze zdjęciami, metrażem i ceną.',
+  });
+}
 
 export default function Page({
   searchParams,

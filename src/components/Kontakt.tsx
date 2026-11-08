@@ -226,7 +226,7 @@ export default function Kontakt() {
         <FadeUp show={inView} delay={200} className="order-2 w-full flex items-center justify-center">
           <div className="relative w-full max-w-[560px] lg:max-w-[720px] aspect-[4/3] lg:aspect-[5/4]">
             <Image
-              src="/kontakt-dark.png"
+              src="/kontakt-dark.webp"
               alt="Kontakt – ilustracja"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"

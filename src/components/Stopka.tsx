@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { MouseEvent } from "react";
+import { PLACE_LINKS } from "@/lib/popularLinks";
 
 const ACCENT = "#d9c48f";
 const FG = "#3a362f";
@@ -96,12 +97,12 @@ export default function Stopka() {
           {/* Środek: logo */}
           <div className="order-1 md:order-2 flex justify-center">
             <Image
-              src="/logo.webp"
+              src="/logo-480.webp"
               alt="M2 Nieruchomości"
-              width={280}
-              height={120}
+              width={480}
+              height={480}
+              loading="lazy"
               className="h-[150px] w-auto md:h-[190px]"
-              priority
             />
           </div>
 
@@ -128,6 +129,9 @@ export default function Stopka() {
               </li>
               <li>
                 <Link href="/nieruchomosci" className={linkCls}>Oferta</Link>
+              </li>
+              <li>
+                <Link href="/wycena-nieruchomosci" className={linkCls}>Bezpłatna wycena</Link>
               </li>
               <li>
                 {onHome ? (
@@ -157,6 +161,27 @@ export default function Stopka() {
 
       {/* DÓŁ — cienki ŻÓŁTY separator */}
       <div className="border-t-[0.5px]" style={{ borderColor: ACCENT }}>
+        {/* Linki do stron miejscowości na każdej podstronie */}
+        <nav aria-label="Oferty w okolicy" className="mx-auto max-w-6xl px-5 pt-4 text-center text-[13px] leading-6 sm:text-left">
+          <span className="text-[var(--foreground-soft)]">Oferty w okolicy: </span>
+          {PLACE_LINKS.map((l, i) => (
+            <span key={l.href}>
+              {i > 0 && <span className="text-[var(--foreground-soft)]"> · </span>}
+              <Link href={l.href} prefetch={false} className="!text-[var(--foreground)] underline-offset-4 hover:underline">
+                {l.label}
+              </Link>
+            </span>
+          ))}
+          <span className="text-[var(--foreground-soft)]"> · </span>
+          <Link href="/dzialki/budowlane" prefetch={false} className="!text-[var(--foreground)] underline-offset-4 hover:underline">
+            Działki budowlane
+          </Link>
+          <span className="text-[var(--foreground-soft)]"> · </span>
+          <Link href="/dzialki/rolne" prefetch={false} className="!text-[var(--foreground)] underline-offset-4 hover:underline">
+            Działki rolne
+          </Link>
+        </nav>
+
         <div className="mx-auto max-w-6xl px-5 py-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <p className="text-[12px] leading-snug max-w-4xl text-center sm:text-left">
             Opisy ofert zawartych na stronie internetowej sporządzane są na podstawie oględzin nieruchomości

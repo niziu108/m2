@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter, Cormorant_Garamond } from "next/font/google";
+import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import GlobalMenu from "@/components/GlobalMenu";
+import NavProgress from "@/components/NavProgress";
 import Stopka from "@/components/Stopka";
 import CookieBar from "@/components/CookieBar";
 import PromoHausmar from "@/components/PromoHausmar";
@@ -15,7 +16,6 @@ const OG_IMAGE = "/og.jpg";
 
 // === FONTY ===
 // latin-ext jest konieczny: bez niego ą, ę, ł, ś itd. brały się z czcionki systemowej
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin", "latin-ext"], display: "swap", variable: "--font-inter" });
 // Nagłówki: klasyczny szeryf (styl dużych biur premium), zamiast Bungee
 const display = Cormorant_Garamond({
@@ -81,7 +81,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="pl">
       <body
         className={[
-          geistMono.variable,
           inter.variable,
           display.variable,
           "antialiased",
@@ -90,6 +89,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       >
         {/* Globalne menu */}
         <GlobalMenu />
+
+        {/* Pasek przejścia między stronami */}
+        <NavProgress />
 
         {/* 🔎 Globalne schema.org */}
         <StructuredData
