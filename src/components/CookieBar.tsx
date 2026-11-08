@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-/** Cookie piksela leżą na domenie strony, więc przy cofnięciu zgody usuwamy je sami. */
+/** Cookie piksela leżą na domenie strony, więc bez zgody usuwamy je sami. */
 function removeFbCookies() {
   const parts = location.hostname.split('.');
   for (const name of ['_fbp', '_fbc']) {
@@ -61,6 +61,8 @@ export default function CookieBar() {
       const dismissed = sessionStorage.getItem(SS_DISMISS_KEY) === 'true';
 
       if (accepted) setConsented(true);
+      // Dawny piksel działał bez tej zgody, więc wiele przeglądarek ma jeszcze jego cookie.
+      else removeFbCookies();
 
       if (debug || (!accepted && !dismissed)) {
         setVisible(true);
